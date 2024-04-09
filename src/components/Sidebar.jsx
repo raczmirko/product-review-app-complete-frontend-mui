@@ -18,8 +18,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import LoginIcon from '@mui/icons-material/Login';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PublicIcon from '@mui/icons-material/Public';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 
@@ -185,7 +185,7 @@ export default function MiniDrawer({ isLoggedIn }) {
                         justifyContent: 'center',
                     }}
                     >
-                        {LogoutIcon}
+                        <LogoutIcon />
                     </ListItemIcon>
                     <ListItemText primary={"Log out"} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
