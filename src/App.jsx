@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignInSide from './pages/SignIn';
 import Register from './pages/Register';
 import Home from './pages/Home';
-import Alert from '@mui/material/Alert';
+import AlertSnackBar from './components/AlertSnackBar';
 
 const darkTheme = createTheme({
     palette: {
@@ -20,6 +20,9 @@ const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
     const [expiryTime, setExpiryTime] = useState(null);
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarText, setSnackBarText] = useState('');
+    const [snackBarStatus, setSnackBarStatus] = useState('info');
 
     useEffect(() => {
         const storedExpiryTime = localStorage.getItem('sessionExpiryTime');
@@ -34,7 +37,14 @@ const App = () => {
     const handleLogin = async () => {
         await fetchSessionLengthAndUsername();
         setIsLoggedIn(true);
-    };
+        showSnackBar('success', 'You have logged in successfully.');
+    }
+
+    function showSnackBar (status, text) {
+        setSnackBarOpen(true);
+        setSnackBarStatus(status);
+        setSnackBarText(text);
+    }
 
     const fetchSessionLengthAndUsername = async () => {
         const token = localStorage.getItem('token'); // Retrieve the token from localStorage
@@ -55,17 +65,18 @@ const App = () => {
             console.error('Error fetching session length:', error);
             return []; // Return an empty array if an error occurs
         }
-    };
+    }
 
     const logOut = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
         setIsLoggedIn(false);
-        <Alert severity="information">You have been logged out.</Alert>
-    };
+        showSnackBar('success', 'You have been logged out.');
+    }
 
     return (
         <ThemeProvider theme={darkTheme}>
+            <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             <CssBaseline />
             <Router>
                 <Sidebar isLoggedIn={isLoggedIn}/>

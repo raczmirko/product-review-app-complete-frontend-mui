@@ -85,7 +85,6 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
             showSnackBar('error', alertTextByStatusCode(response.status));
             throw new Error('Login failed');
         }
-        showSnackBar('success', 'Logged in successfully!')
         onLogin();
         return;
     })
