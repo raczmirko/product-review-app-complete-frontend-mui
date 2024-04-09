@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -147,7 +146,7 @@ export default function MiniDrawer({ isLoggedIn }) {
             <ListItem key={option.text} disablePadding sx={{ display: 'block' }}>
             {
                 (isLoggedIn || (!isLoggedIn && option.visibleWithoutLogin)) &&
-                <ListItemButton
+                <ListItemButton href={option.route}
                     sx={{
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
