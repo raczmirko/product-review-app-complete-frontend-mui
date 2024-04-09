@@ -13,7 +13,6 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AlertSnackBar from '../components/AlertSnackBar';
 import CountrySelector from '../components/CountrySelector';
-import FormControl from '@mui/material/FormControl';
 
 function Copyright(props) {
   return (
