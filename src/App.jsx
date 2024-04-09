@@ -79,7 +79,7 @@ const App = () => {
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             <CssBaseline />
             <Router>
-                <Sidebar isLoggedIn={isLoggedIn}/>
+                <Sidebar isLoggedIn={isLoggedIn} expiryTime={expiryTime} logOut={logOut}/>
                 <Routes>
                     <Route path="/" element={
                         <div>

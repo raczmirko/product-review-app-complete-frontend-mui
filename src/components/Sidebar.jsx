@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -22,6 +23,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PublicIcon from '@mui/icons-material/Public';
 import StorefrontIcon from '@mui/icons-material/Storefront';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const drawerWidth = 240;
 
@@ -90,9 +92,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function MiniDrawer({ isLoggedIn }) {
+export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [formattedTime, setFormattedTime] = useState("");
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -101,6 +104,36 @@ export default function MiniDrawer({ isLoggedIn }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+    useEffect(() => {
+        let timer;
+        if (isLoggedIn) {
+
+            timer = setInterval(() => {
+                // Get the current time
+                const currentTime = new Date().getTime();
+
+                // Calculate remaining seconds by subtracting the current time from the target time
+                const remainingSeconds = Math.max(Math.floor((expiryTime - currentTime) / 1000), 0);
+
+                // Format remaining seconds into minutes and seconds
+                const formattedMinutes = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
+                const formattedSeconds = String(remainingSeconds % 60).padStart(2, '0');
+
+                // Update state with the formatted time
+                setFormattedTime(`${formattedMinutes}:${formattedSeconds}`);
+
+                // If remainingSeconds is 0, call logOut and clear the interval
+                if (remainingSeconds === 0) {
+                    logOut();
+                    clearInterval(timer);
+                }
+            }, 1000);
+        }
+
+        // Clear interval on component unmount
+        return () => clearInterval(timer);
+    }, [isLoggedIn, expiryTime, logOut]);
 
     const sidebarOptions = [
         { icon: <HomeIcon />, text: 'Home', route: '/', visibleWithoutLogin: true},
@@ -112,27 +145,37 @@ export default function MiniDrawer({ isLoggedIn }) {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-                marginRight: 5,
-                ...(open && { display: 'none' }),
-            }}
-            >
-            <MenuIcon />
-            </IconButton>
-            <Typography variant="overline" noWrap component="div">
-            Product Review Application
-            </Typography>
-            <Box component='img' src='/icon.png' alt='logo' sx={{height: '50px', width:'auto'}} />
-        </Toolbar>
-      </AppBar>
+        <CssBaseline />
+        <AppBar position="fixed" open={open}>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={handleDrawerOpen}
+                    edge="start"
+                    sx={{
+                        marginRight: 5,
+                        ...(open && { display: 'none' }),
+                    }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    {isLoggedIn && (
+                        <Typography sx={{ display: 'flex', alignItems: 'center' }}>
+                        <AccessTimeIcon sx={{ marginRight: 1 }} />
+                        {formattedTime}
+                        </Typography>
+                    )}
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant="overline" noWrap component="div">
+                    Product Review Application
+                </Typography>
+                </Box>
+                <Box component="img" src="/icon.png" alt="logo" sx={{ height: '50px', width: 'auto', marginLeft: '10px' }} />
+            </Toolbar>
+        </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
