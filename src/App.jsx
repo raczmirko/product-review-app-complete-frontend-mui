@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import Sidebar from './components/Sidebar';
-import ParticleBackground from './components/ParticleBackground';
 import { ThemeContext, ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignInSide from './pages/SignIn';
-import Register from './pages/Register';
+import SignUp from './pages/SignUp';
 import Home from './pages/Home';
 import AlertSnackBar from './components/AlertSnackBar';
+import ParticleBackground from './components/ParticleBackground';
+import Container from '@mui/material/Container';
 
 const darkTheme = createTheme({
     palette: {
@@ -89,14 +90,15 @@ const App = () => {
                     } />
                     <Route path="/login" element={
                         <div>
-                            
                             <SignInSide onLogin={handleLogin} isLoggedIn={isLoggedIn} />
                         </div>
                     } />
                     <Route path="/register" element={
                         <div>
-                            <ParticleBackground />
-                            <Register />
+                            <Container sx={{position: 'absolute', zIndex:-1}}>
+                                <ParticleBackground/>
+                            </Container>
+                            <SignUp />
                         </div>
                     } />
                 </Routes>
