@@ -214,7 +214,7 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
           <ListItem key={"Logout"} disablePadding sx={{ display: 'block' }}>
             {
                 isLoggedIn && 
-                <ListItemButton
+                <ListItemButton onClick={logOut}
                 sx={{
                 minHeight: 48,
                 justifyContent: open ? 'initial' : 'center',
