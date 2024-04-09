@@ -1,4 +1,10 @@
 import { useEffect, useState } from 'react';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 // Function to fetch the list of countries from the API
 const fetchCountries = async () => {
@@ -15,7 +21,7 @@ const fetchCountries = async () => {
     }
 };
 
-const CountrySelector = ({ onSelect }) => {
+const CountrySelector = ({ selectedCountry, setSelectedCountry }) => {
     const [countries, setCountries] = useState([]);
 
     useEffect(() => {
@@ -25,15 +31,28 @@ const CountrySelector = ({ onSelect }) => {
             .catch(error => console.error('Error:', error));
     }, []);
 
+    const handleChange = (event) => {
+        setSelectedCountry(event.target.value);
+    };
+
     return (
-        <div className="selector">
-            <select onChange={(e) => onSelect(countries[e.target.selectedIndex - 1])} required>
-                <option value="">Select a country</option>
+        <FormControl fullWidth>
+            <InputLabel id="country-select-label">Country</InputLabel>
+            <Select
+            sx={{bgcolor:'white'}}
+            required
+            labelId="country-select-label"
+            variant='filled'
+            id="country-select"
+            value={selectedCountry}
+            label="Country"
+            onChange={(e) => handleChange(e)}
+            >
                 {countries.map(country => (
-                    <option key={country.countryCode} value={country.countryCode}>{country.name}</option>
+                    <MenuItem key={country.countryCode} value={country}>{country.name}</MenuItem>
                 ))}
-            </select>
-        </div>
+            </Select>
+      </FormControl>
     );
 };
 
