@@ -13,6 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AlertSnackBar from '../components/AlertSnackBar';
 import CountrySelector from '../components/CountrySelector';
+import FormControl from '@mui/material/FormControl';
 
 function Copyright(props) {
   return (
@@ -101,15 +102,12 @@ export default function SignUp() {
         })
         .then(response => {
             if (!response.ok) {
-                showSnackBar('error', 'Registration failed');
+                showSnackBar('error', getNotificationTextByStatusCode(response.status));
                 throw new Error('Registration failed');
             }
             else {
                 showSnackBar('success', 'Registration successful!');
                 //Clear form fields upon registration
-                setUsername('');
-                setPassword('');
-                setPasswordAgain('');
                 setSelectedCountry('');
             }
         })
@@ -134,13 +132,13 @@ export default function SignUp() {
                     alignItems: 'center',
                 }}
                 >
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign up
-                </Typography>
-                <Box component="form" noValidate onSubmit={handleRegistration} sx={{ mt: 3 }}>
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign up
+                    </Typography>
+                    <Box component='form' onSubmit={checkPasswordValidity} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <TextField 
@@ -175,16 +173,15 @@ export default function SignUp() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <CountrySelector selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} required/>
+                                <CountrySelector selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} isRequired='true'/>
                             </Grid>
                             
                         </Grid>
                         <Button
-                        type="button"
+                        type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        onClick={checkPasswordValidity}>
+                        sx={{ mt: 3, mb: 2 }}>
                         Sign Up
                         </Button>
                         <Grid container justifyContent="flex-end">
@@ -195,8 +192,8 @@ export default function SignUp() {
                             </Grid>
                         </Grid>
                     </Box>
+                    <Copyright sx={{ mt: 5 }} />
                 </Box>
-                <Copyright sx={{ mt: 5 }} />
             </Container>
         </Box>
     </ThemeProvider>
