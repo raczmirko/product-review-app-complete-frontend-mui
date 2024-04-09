@@ -114,22 +114,23 @@ export default function MiniDrawer({ isLoggedIn }) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
-              marginRight: 5,
-              ...(open && { display: 'none' }),
+                marginRight: 5,
+                ...(open && { display: 'none' }),
             }}
-          >
+            >
             <MenuIcon />
-          </IconButton>
-          <Typography variant="overline" noWrap component="div">
+            </IconButton>
+            <Typography variant="overline" noWrap component="div">
             Product Review Application
-          </Typography>
+            </Typography>
+            <Box component='img' src='/icon.png' alt='logo' sx={{height: '50px', width:'auto'}} />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
