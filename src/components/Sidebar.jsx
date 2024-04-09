@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { NavLink } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -22,7 +23,6 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PublicIcon from '@mui/icons-material/Public';
 import StorefrontIcon from '@mui/icons-material/Storefront';
-
 
 const drawerWidth = 240;
 
@@ -161,13 +161,36 @@ export default function MiniDrawer({ isLoggedIn }) {
                         justifyContent: 'center',
                     }}
                     >
-                    {option.icon}
+                        {option.icon}
                     </ListItemIcon>
                     <ListItemText primary={option.text} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
             }
             </ListItem>
           ))}
+          <ListItem key={"Logout"} disablePadding sx={{ display: 'block' }}>
+            {
+                isLoggedIn && 
+                <ListItemButton
+                sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+                }}
+                >
+                    <ListItemIcon
+                    sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                    }}
+                    >
+                        {LogoutIcon}
+                    </ListItemIcon>
+                    <ListItemText primary={"Log out"} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+            }
+          </ListItem>
         </List>
       </Drawer>
     </Box>
