@@ -15,6 +15,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AlertSnackBar from '../components/AlertSnackBar';
+import FormControl from '@mui/material/FormControl';
 
 function Copyright(props) {  
   return (
@@ -177,7 +178,7 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
               <Grid container>
                 
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="/register" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
