@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignInSide from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Home from './pages/Home';
+import Brands from './pages/Brands';
 import AlertSnackBar from './components/AlertSnackBar';
 import ParticleBackground from './components/ParticleBackground';
 import Container from '@mui/material/Container';
@@ -99,6 +100,11 @@ const App = () => {
                                 <ParticleBackground/>
                             </Container>
                             <SignUp />
+                        </div>
+                    } />
+                    <Route path="/brands" element={
+                        <div>
+                            <Brands />
                         </div>
                     } />
                 </Routes>

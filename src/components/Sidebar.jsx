@@ -139,8 +139,8 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
         { icon: <HomeIcon />, text: 'Home', route: '/', visibleWithoutLogin: true},
         { icon: <LoginIcon />, text: 'Login', route: '/login', visibleWithoutLogin: true },
         { icon: <PersonAddIcon />, text: 'Register', route: '/register', visibleWithoutLogin: true },
-        { icon: <StorefrontIcon />, text: 'Brands', route: '/brand', visibleWithoutLogin: false },
-        { icon: <PublicIcon />, text: 'Countries', route: '/country', visibleWithoutLogin: false }
+        { icon: <StorefrontIcon />, text: 'Brands', route: '/brands', visibleWithoutLogin: false },
+        { icon: <PublicIcon />, text: 'Countries', route: '/countries', visibleWithoutLogin: false }
     ];
 
   return (
@@ -236,6 +236,20 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
           </ListItem>
         </List>
       </Drawer>
+      {/* Adjust content margin based on sidebar state */}
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          bgcolor: 'background.default',
+          p: 3,
+          marginLeft: open ? `${drawerWidth}px` : 0, // Add margin if sidebar is open
+          transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+        }}
+      ></Box>
     </Box>
   );
 }
