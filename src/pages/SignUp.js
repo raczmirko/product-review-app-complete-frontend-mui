@@ -122,7 +122,7 @@ export default function SignUp() {
             justifyContent: 'center',
             minHeight: '100vh'
             }}>
-            <Container component="main" maxWidth="xs" sx={{bgcolor:'white', borderRadius: '15px', padding: 10, justifyContent: 'center'}}>
+            <Container component="main" maxWidth="xs" sx={{bgcolor:'white', borderRadius: '15px', padding: 10, justifyContent: 'center', border: '1px solid white'}}>
                 <CssBaseline />
                 <Box
                 sx={{
