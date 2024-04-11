@@ -26,22 +26,28 @@ const columns = [
 
 export default function BrandTable({ data }) {
 
-  return (
-    <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
-      <DataGrid
-        rows={data}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
+    return (
+        <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
+        <DataGrid
+            rows={data}
+            columns={columns}
+            getRowHeight={() => 'auto'}
+            initialState={{
+            pagination: {
+                paginationModel: {
+                pageSize: 10,
+                },
             },
-          },
-        }}
-        pageSizeOptions={[5, 10, 20]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-    </Box>
-  );
+            }}
+            pageSizeOptions={[10, 30, 50, 70, 100]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            sx={{
+                [`& .${gridClasses.cell}`]: {
+                py: 1,
+                },
+            }}    
+        />
+        </Box>
+    );
 }
