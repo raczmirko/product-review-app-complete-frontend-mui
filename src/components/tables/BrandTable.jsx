@@ -24,29 +24,47 @@ const columns = [
   },
 ];
 
-export default function BrandTable({ data }) {
+export default function BrandTable({ data, onFilterChange, onSortChange, onPaginationChange }) {
+    const handleFilterModelChange = (model) => {
+        if (onFilterChange) {
+            onFilterChange(model);
+        }
+    };
+    
+    const handleSortModelChange = (model) => {
+        if (onSortChange) {
+            onSortChange(model);
+        }
+    };
+
+    const handlePaginationModelChange = (model) => {
+        if (onPaginationChange) {
+            onPaginationChange(model);
+        }
+    };
 
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
         <DataGrid
+            autoHeight
+            autoPageSize
+            editMode="row" 
             rows={data}
             columns={columns}
-            getRowHeight={() => 'auto'}
-            initialState={{
-            pagination: {
-                paginationModel: {
-                pageSize: 10,
-                },
-            },
-            }}
+            filterMode="server"
+            sortMode="server"
+            paginationMode="server"
+            onFilterModelChange={handleFilterModelChange}
+            onSortModelChange={handleSortModelChange}
+            onPaginationModelChange={handlePaginationModelChange}
             pageSizeOptions={[10, 30, 50, 70, 100]}
             checkboxSelection
             disableRowSelectionOnClick
-            sx={{
-                [`& .${gridClasses.cell}`]: {
-                py: 1,
-                },
-            }}    
+            initialState={{
+                ...data.initialState,
+                pagination: { paginationModel: { pageSize: 10 } },
+            }}
+            sx={{ '--DataGrid-overlayHeight': '300px' }}
         />
         </Box>
     );
