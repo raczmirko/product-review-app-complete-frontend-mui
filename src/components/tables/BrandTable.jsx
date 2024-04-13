@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
+import AlertSnackBar from '../AlertSnackBar';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -43,7 +44,17 @@ export default function BrandTable() {
         pageSize: 10,
       });
     const [filterModel, setFilterModel] = React.useState({ items: [] });
-    const [sortModel, setSortModel] = React.useState([]);      
+    const [sortModel, setSortModel] = React.useState([]); 
+    
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarText, setSnackBarText] = useState('');
+    const [snackBarStatus, setSnackBarStatus] = useState('info');
+
+    function showSnackBar (status, text) {
+        setSnackBarOpen(true);
+        setSnackBarStatus(status);
+        setSnackBarText(text);
+    }
 
     const transformedBrands = brands.map(brand => ({
         id: brand.id,
@@ -68,28 +79,6 @@ export default function BrandTable() {
         }
         return text;
     }
-
-    const fetchBrands = async () => {
-        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-        const headers = {
-            'Authorization': `Bearer ${token}`
-        };
-        try {
-            const response = await fetch('http://localhost:8080/brand/all', { headers });
-            const errorMessage = getNotificationTextByStatusCode(response.status);
-            if (!response.ok) {
-                //setNotification({ type: "error", title:"error", text: "Failed to fetch brands with an error code " + errorMessage});
-                throw new Error(errorMessage);
-            }
-            const data = await response.json();
-            setBrands(data);
-            return;
-        } catch (error) {
-            console.error('Error fetching brands:', error);
-            //setNotification({ type: "error", title:"error", text: error});
-            return []; // Return an empty array if an error occurs
-        }
-    };
 
     const deleteBrand = async (id) => {
         const token = localStorage.getItem('token');
@@ -173,6 +162,7 @@ export default function BrandTable() {
 
             if (!response.ok) {
                 const errorMessage = 'Failed to find brands.';
+                showSnackBar('error', getNotificationTextByStatusCode(response.status));
                 throw new Error(errorMessage);
             }
             const data = await response.json();
@@ -213,34 +203,35 @@ export default function BrandTable() {
 
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
-        <DataGrid
-            autoHeight
-            editMode="row" 
-            rows={transformedBrands}
-            rowCount={totalElements}
-            columns={columns}
-            filterMode="server"
-            sortingMode="server"
-            paginationMode="server"
-            onFilterModelChange={handleFilterChange}
-            onSortModelChange={handleSortChange}
-            onPaginationModelChange={handlePaginationChange}
-            pageSizeOptions={[10, 30, 50, 70, 100]}
-            initialState={{
-                pagination: {
-                  paginationModel: paginationModel,
-                },
-                filter: {
-                    filterModel: filterModel,
-                },
-                sorting: {
-                    sortModel: sortModel
-                }
-            }}
-            checkboxSelection
-            disableRowSelectionOnClick
-            sx={{ '--DataGrid-overlayHeight': '300px' }}
-        />
+            <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
+            <DataGrid
+                autoHeight
+                editMode="row" 
+                rows={transformedBrands}
+                rowCount={totalElements}
+                columns={columns}
+                filterMode="server"
+                sortingMode="server"
+                paginationMode="server"
+                onFilterModelChange={handleFilterChange}
+                onSortModelChange={handleSortChange}
+                onPaginationModelChange={handlePaginationChange}
+                pageSizeOptions={[10, 30, 50, 70, 100]}
+                initialState={{
+                    pagination: {
+                    paginationModel: paginationModel,
+                    },
+                    filter: {
+                        filterModel: filterModel,
+                    },
+                    sorting: {
+                        sortModel: sortModel
+                    }
+                }}
+                checkboxSelection
+                disableRowSelectionOnClick
+                sx={{ '--DataGrid-overlayHeight': '300px' }}
+            />
         </Box>
     );
 }
