@@ -2,32 +2,58 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { DataGrid, GridToolbar, GridToolbarContainer } from '@mui/x-data-grid';
+import { DataGrid, 
+        GridToolbar, 
+        GridToolbarContainer,
+        GridRowModes,
+        GridActionsCellItem,
+        GridRowEditStopReasons } from '@mui/x-data-grid';
 import AlertSnackBar from '../AlertSnackBar';
 import CreateBrandModal from '../modals/CreateBrandModal';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Close';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
-const columns = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'name',
-    headerName: 'Name',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'countryOfOrigin',
-    headerName: 'Nationality',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'description',
-    headerName: 'Description',
-    width: 500,
-    editable: true,
-  },
-];
+function EditToolbar(props) {
+    const { setBrands, setRowModesModel } = props;
+  
+    const handleClick = () => {
+        const id = 'new';
+        setBrands((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
+        setRowModesModel((oldModel) => ({
+            ...oldModel,
+        [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      }));
+    };
+  
+    return (
+      <GridToolbarContainer>
+        <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+          Add record
+        </Button>
+      </GridToolbarContainer>
+    );
+}
+
+function computeMutation(newRow, oldRow) {
+    if (newRow.name !== oldRow.name) {
+        return `Name from '${oldRow.name}' to '${newRow.name}'`;
+    }
+    if (newRow.countryOfOrigin !== oldRow.countryOfOrigin) {
+        return `Country from '${oldRow.countryOfOrigin || ''}' to '${newRow.countryOfOrigin || ''}'`;
+    }
+    if (newRow.description !== oldRow.description) {
+        return `Description from '${oldRow.description || ''}' to '${newRow.description || ''}'`;
+    }
+    return null;
+}
 
 export default function BrandTable() {
 
@@ -42,6 +68,8 @@ export default function BrandTable() {
     const [orderByColumn, setOrderByColumn] = useState('name');
     const [orderByDirection, setOrderByDirection] = useState('asc');
 
+    const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
+
     const [modalActive, setModalActive] = useState(false);
 
     const [paginationModel, setPaginationModel] = React.useState({
@@ -50,6 +78,7 @@ export default function BrandTable() {
       });
     const [filterModel, setFilterModel] = React.useState({ items: [] });
     const [sortModel, setSortModel] = React.useState([]); 
+    const [rowModesModel, setRowModesModel] = React.useState({});
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
     
@@ -151,9 +180,37 @@ export default function BrandTable() {
                 //setNotification({ type: "error", title:"error", text: error});
                 return []; // Return an empty array if an error occurs
             }
+    };
+
+    const modifyBrand = async (newBrand) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         };
 
-    const modifyBrand = async () => {};
+        // Setting the countryOfOrigin property to undefined otherwise the DTO mapping will fail
+        newBrand.countryOfOrigin = undefined;
+
+        try {
+            const response = await fetch(`http://localhost:8080/brand/${newBrand.id}/modify`, {
+                method: 'PUT',
+                headers,
+                body: JSON.stringify(newBrand)
+            });
+
+            if (!response.ok) {
+                const errorMessage = 'Failed to update brand.';
+                showSnackBar('error', getNotificationTextByStatusCode(response.status));
+                throw new Error(errorMessage);
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error deleting brand:', error);
+            return []; // Return an empty array if an error occurs
+        }
+    };
 
     const searchBrands = async () => {
         if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('name')};
@@ -232,6 +289,175 @@ export default function BrandTable() {
         setPageNumber(paginationModel.page + 1);
     };
 
+    // Edit-related functionality
+
+    const handleRowEditStop = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            event.defaultMuiPrevented = true;
+        }
+    };
+    
+    const handleEditClick = (id) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+        console.log("EDITING" + id)
+    };
+    
+    const handleSaveClick = (id) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+        console.log("SAVING" + id)
+    };
+    
+    const handleDeleteClick = (id) => () => {
+        deleteBrand(id);
+        searchBrands();
+    };
+    
+    const handleCancelClick = (id) => () => {
+        setRowModesModel({
+          ...rowModesModel,
+          [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+    
+        const editedRow = brands.find((row) => row.id === id);
+        if (editedRow.isNew) {
+          setBrands(brands.filter((brand) => brand.id !== id));
+        }
+    };
+    
+    const handleRowModesModelChange = (newRowModesModel) => {
+        setRowModesModel(newRowModesModel);
+    };
+
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 90 },
+        {
+          field: 'name',
+          headerName: 'Name',
+          width: 150,
+          editable: true,
+        },
+        {
+          field: 'countryOfOrigin',
+          headerName: 'Nationality',
+          width: 150,
+          editable: true,
+        },
+        {
+          field: 'description',
+          headerName: 'Description',
+          width: 500,
+          editable: true,
+        },
+        {
+          field: 'actions',
+          type: 'actions',
+          headerName: 'Actions',
+          width: 100,
+          cellClassName: 'actions',
+          getActions: ({ id }) => {
+            const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+      
+            if (isInEditMode) {
+              return [
+                <GridActionsCellItem
+                  icon={<SaveIcon />}
+                  label="Save"
+                  sx={{
+                    color: 'primary.main',
+                  }}
+                  onClick={handleSaveClick(id)}
+                />,
+                <GridActionsCellItem
+                  icon={<CancelIcon />}
+                  label="Cancel"
+                  className="textPrimary"
+                  onClick={handleCancelClick(id)}
+                  color="inherit"
+                />,
+              ];
+            }
+      
+            return [
+              <GridActionsCellItem
+                icon={<EditIcon />}
+                label="Edit"
+                className="textPrimary"
+                onClick={handleEditClick(id)}
+                color="inherit"
+              />,
+              <GridActionsCellItem
+                icon={<DeleteIcon />}
+                label="Delete"
+                onClick={handleDeleteClick(id)}
+                color="inherit"
+              />,
+            ];
+          }
+    }];
+
+    const processRowUpdate = React.useCallback(
+        (newRow, oldRow) =>
+          new Promise((resolve, reject) => {
+            const mutation = computeMutation(newRow, oldRow);
+            if (mutation) {
+              // Save the arguments to resolve or reject the promise later
+              setUpdatePromiseArguments({ resolve, reject, newRow, oldRow });
+            } else {
+              resolve(oldRow); // Nothing was changed
+            }
+          }),
+        [],
+    );
+
+    const handleNo = () => {
+        const { oldRow, resolve } = updatePromiseArguments;
+        resolve(oldRow); // Resolve with the old row to not update the internal state
+        setUpdatePromiseArguments(null);
+      };
+    
+      const handleYes = async () => {
+        const { newRow, oldRow, reject, resolve } = updatePromiseArguments;
+    
+        try {
+            // Make the HTTP request to save in the backend
+            const response = await modifyBrand(newRow);
+            showSnackBar('success', 'User successfully saved');
+            resolve(response);
+            setUpdatePromiseArguments(null);
+        } catch (error) {
+        showSnackBar('error', 'Failed to save user.');
+            reject(oldRow);
+            setUpdatePromiseArguments(null);
+        }
+      };
+
+    const renderConfirmDialog = () => {
+        if (!updatePromiseArguments) {
+            return null;
+        }
+
+        const { newRow, oldRow } = updatePromiseArguments;
+        const mutation = computeMutation(newRow, oldRow);
+
+        return (
+            <Dialog
+            maxWidth="xs"
+            open={!!updatePromiseArguments}
+            >
+            <DialogTitle>Are you sure?</DialogTitle>
+            <DialogContent dividers>
+                {`Pressing 'Yes' will change ${mutation}.`}
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleNo}>
+                No
+                </Button>
+                <Button onClick={handleYes}>Yes</Button>
+            </DialogActions>
+            </Dialog>
+        );
+    };
+
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
@@ -244,9 +470,14 @@ export default function BrandTable() {
                      />
 
             }
+            {renderConfirmDialog()}
             <DataGrid
                 autoHeight
                 editMode="row" 
+                rowModesModel={rowModesModel}
+                onRowModesModelChange={handleRowModesModelChange}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={processRowUpdate}
                 rows={transformedBrands}
                 rowCount={totalElements}
                 columns={columns}
@@ -275,6 +506,7 @@ export default function BrandTable() {
                         <React.Fragment>
                             <GridToolbarContainer>
                                 <GridToolbar {...props} />
+                                <EditToolbar/>
                                 <Box>
                                     <ButtonGroup sx={{width:'100%'}}>
                                         <Button
@@ -305,6 +537,8 @@ export default function BrandTable() {
                 slotProps={{
                     toolbar: {
                         showQuickFilter: true,
+                        setBrands, 
+                        setRowModesModel
                     },
                 }}
                 sx={{ '--DataGrid-overlayHeight': '300px' }}
