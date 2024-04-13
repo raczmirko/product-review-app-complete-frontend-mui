@@ -14,7 +14,7 @@ export default function AlertSnackBar({ alertType, alertText, isOpen, setIsOpen 
 
   return (
     <div>
-      <Snackbar open={isOpen} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={isOpen} autoHideDuration={10000} onClose={handleClose}>
         <Alert
           onClose={handleClose}
           severity={alertType}
