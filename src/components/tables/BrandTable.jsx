@@ -214,11 +214,16 @@ export default function BrandTable() {
     };
 
     const handleSortChange = (sortModel) => {
-        setSortModel(sortModel);
         if(sortModel[0]){
             setOrderByColumn(sortModel[0].field);
             setOrderByDirection(sortModel[0].sort);
-        }       
+        }
+        else {
+            // Setting the order to default when sorting is removed
+            setOrderByColumn('name');
+            setOrderByDirection('asc');
+        }    
+        setSortModel(sortModel);  
     };
 
     const handlePaginationChange = (paginationModel) => {
