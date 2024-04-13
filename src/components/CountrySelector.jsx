@@ -39,7 +39,6 @@ const CountrySelector = ({ selectedCountry, setSelectedCountry }) => {
         <FormControl fullWidth>
             <InputLabel id="country-select-label">Country</InputLabel>
             <Select
-            sx={{bgcolor:'white'}}
             required
             labelId="country-select-label"
             variant='filled'
