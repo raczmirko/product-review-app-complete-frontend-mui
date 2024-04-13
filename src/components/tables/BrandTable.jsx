@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import Button from '@mui/material/Button';
+import { DataGrid, GridToolbar, GridToolbarContainer } from '@mui/x-data-grid';
 import AlertSnackBar from '../AlertSnackBar';
+import CreateBrandModal from '../modals/CreateBrandModal';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -39,12 +42,16 @@ export default function BrandTable() {
     const [orderByColumn, setOrderByColumn] = useState('name');
     const [orderByDirection, setOrderByDirection] = useState('asc');
 
+    const [modalActive, setModalActive] = useState(false);
+
     const [paginationModel, setPaginationModel] = React.useState({
         page: 0,
         pageSize: 10,
       });
     const [filterModel, setFilterModel] = React.useState({ items: [] });
     const [sortModel, setSortModel] = React.useState([]); 
+
+    const [quickFilterValues, setQuickFilterValues] = useState('');
     
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarText, setSnackBarText] = useState('');
@@ -56,12 +63,20 @@ export default function BrandTable() {
         setSnackBarText(text);
     }
 
+    useEffect(() => {
+        searchBrands();
+    }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
+
     const transformedBrands = brands.map(brand => ({
         id: brand.id,
         name: brand.name,
         countryOfOrigin: brand.countryOfOrigin.name,
         description: brand.description
     }));
+
+    const toggleShowModal = () => {
+        setModalActive(!modalActive);
+    }
 
     const getNotificationTextByStatusCode = (code) => {
         let text = code + ": An error occurred, please try again later!";
@@ -153,6 +168,7 @@ export default function BrandTable() {
         let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
         if (searchValue) queryParams += `&searchText=${searchValue}`;
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
+        if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
         try {
             const response = await fetch(`http://localhost:8080/brand/search${queryParams}`, {
@@ -177,10 +193,24 @@ export default function BrandTable() {
     };
 
     const handleFilterChange = (filterModel) => {
+        console.log(filterModel)
         setFilterModel(filterModel);
-        if(filterModel.items[0]?.value){setSearchValue(filterModel.items[0].value)};
-        if(filterModel.items[0]?.field){setSearchColumn(filterModel.items[0].field)};
-        if(filterModel.items[0]?.operator){setSearchOperator(filterModel.items[0].operator)};
+        if(filterModel.items[0]?.value) {
+            setSearchValue(filterModel.items[0].value);
+        } 
+        else {
+            // If filterModel's value doesn't exist (thus not filtering) set the filter to an empty string
+            // To trigger the table refresh mechanism and display all records
+            setSearchValue('');
+        }
+        if(filterModel.items[0]?.field){
+            setSearchColumn(filterModel.items[0].field);
+        }
+        else {
+            setSearchColumn('');
+        }
+        if(filterModel.items[0]?.operator){setSearchOperator(filterModel.items[0].operator);}
+        if(filterModel.quickFilterValues){setQuickFilterValues(filterModel.quickFilterValues);}
     };
 
     const handleSortChange = (sortModel) => {
@@ -197,13 +227,18 @@ export default function BrandTable() {
         setPageNumber(paginationModel.page + 1);
     };
 
-    useEffect(() => {
-        searchBrands();
-    }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection]);
-
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
+            {modalActive &&
+                
+                    <CreateBrandModal
+                        entityToAdd="brand"
+                        closeFunction={toggleShowModal}
+                        createBrandFunction={createBrand}
+                     />
+
+            }
             <DataGrid
                 autoHeight
                 editMode="row" 
@@ -230,8 +265,46 @@ export default function BrandTable() {
                 }}
                 checkboxSelection
                 disableRowSelectionOnClick
+                slots={{
+                    toolbar: (props) => (
+                        <React.Fragment>
+                            <GridToolbarContainer>
+                                <GridToolbar {...props} />
+                                <Box>
+                                    <ButtonGroup sx={{width:'100%'}}>
+                                        <Button
+                                            variant="contained"
+                                            color="success"
+                                            sx={{ color: 'white' }}
+                                            onClick={() => {
+                                                setModalActive(true);
+                                            }}
+                                        >
+                                            Create brand
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="error"
+                                            onClick={() => {
+                                                
+                                            }}
+                                        >
+                                            Delete brand
+                                        </Button>
+                                    </ButtonGroup>
+                                </Box>
+                            </GridToolbarContainer>
+                        </React.Fragment>
+                    )
+                }}
+                slotProps={{
+                    toolbar: {
+                        showQuickFilter: true,
+                    },
+                }}
                 sx={{ '--DataGrid-overlayHeight': '300px' }}
             />
         </Box>
+        
     );
 }
