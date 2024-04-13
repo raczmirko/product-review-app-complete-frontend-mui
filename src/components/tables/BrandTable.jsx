@@ -188,9 +188,9 @@ export default function BrandTable() {
 
     const handleFilterChange = (filterModel) => {
         setFilterModel(filterModel);
-        if(filterModel.items[0].value){setSearchValue(filterModel.items[0].value)};
-        if(filterModel.items[0].field){setSearchColumn(filterModel.items[0].field)};
-        if(filterModel.items[0].operator){setSearchOperator(filterModel.items[0].operator)};
+        if(filterModel.items[0]?.value){setSearchValue(filterModel.items[0].value)};
+        if(filterModel.items[0]?.field){setSearchColumn(filterModel.items[0].field)};
+        if(filterModel.items[0]?.operator){setSearchOperator(filterModel.items[0].operator)};
     };
 
     const handleSortChange = (sortModel) => {
