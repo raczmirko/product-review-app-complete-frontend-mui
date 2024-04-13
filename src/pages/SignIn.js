@@ -42,17 +42,11 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
 
   React.useEffect(() => {
     if(!isLoggedIn){checkIfUsernameIsRemembered();}
+  }, [isLoggedIn]);
 
+  React.useEffect(() => {
     sessionStorage.setItem('rememberMe', rememberMe);
-    
-    const rememberMeValue = sessionStorage.getItem('rememberMe');
-    if (rememberMeValue === 'true') {
-      setRememberMe(true);
-    } else {
-      setRememberMe(false);
-    }
-
-  }, [isLoggedIn, rememberMe]);
+  }, [rememberMe]);
 
   if (isLoggedIn) {
     return <Navigate to="/" />;
@@ -66,6 +60,10 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
     const storedUsername = localStorage.getItem('username');
     if(storedUsername) {
       setUsername(storedUsername);
+      setRememberMe(true);
+    }
+    else {
+      setRememberMe(false);
     }
     setIsUsernameLoaded(true);
   }
