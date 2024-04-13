@@ -8,7 +8,8 @@ const PageHeader = ({ text, color, textColor }) => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
+    fontSize: '28px'
   };
 
   return (
