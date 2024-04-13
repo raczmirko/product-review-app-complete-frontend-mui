@@ -15,7 +15,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AlertSnackBar from '../components/AlertSnackBar';
-import FormControl from '@mui/material/FormControl';
 
 function Copyright(props) {  
   return (
@@ -33,39 +32,71 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignInSide({ onLogin, isLoggedIn }) {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackBarText, setSnackBarText] = useState('');
-    const [snackBarStatus, setSnackBarStatus] = useState('info');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState();
+  const [isUsernameLoaded, setIsUsernameLoaded] = useState(false);
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [snackBarText, setSnackBarText] = useState('');
+  const [snackBarStatus, setSnackBarStatus] = useState('info');
 
-    const handleSubmit = (event) => {
+  React.useEffect(() => {
+    if(!isLoggedIn){checkIfUsernameIsRemembered();}
+
+    sessionStorage.setItem('rememberMe', rememberMe);
+    
+    const rememberMeValue = sessionStorage.getItem('rememberMe');
+    if (rememberMeValue === 'true') {
+      setRememberMe(true);
+    } else {
+      setRememberMe(false);
+    }
+
+  }, [isLoggedIn, rememberMe]);
+
+  if (isLoggedIn) {
+    return <Navigate to="/" />;
+  }
+
+  function toggleRememberMe () {
+    setRememberMe(!rememberMe);
+  }
+
+  function checkIfUsernameIsRemembered () {
+    const storedUsername = localStorage.getItem('username');
+    if(storedUsername) {
+      setUsername(storedUsername);
+    }
+    setIsUsernameLoaded(true);
+  }
+
+  function showSnackBar (status, text) {
+    setSnackBarOpen(true);
+    setSnackBarStatus(status);
+    setSnackBarText(text);
+  }
+
+  function alertTextByStatusCode (code) {
+    let text = code + ": An error occurred, please try again later!";
+    if(code === 400) {
+        text = code + ": Bad request.";
+    }
+    if(code === 401) {
+        text = code + ": You provided an incorrect password.";
+    }
+    if(code === 404) {
+        text = code + ": This user does not exist.";
+    }
+    return text;
+  }
+
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     const credentials = {
         username: username,
         password: password
-    };
-
-    function showSnackBar (status, text) {
-        setSnackBarOpen(true);
-        setSnackBarStatus(status);
-        setSnackBarText(text);
-    }
-
-    function alertTextByStatusCode (code) {
-        let text = code + ": An error occurred, please try again later!";
-        if(code === 400) {
-            text = code + ": Bad request.";
-        }
-        if(code === 401) {
-            text = code + ": You provided an incorrect password.";
-        }
-        if(code === 404) {
-            text = code + ": This user does not exist.";
-        }
-        return text;
-    }
+    };    
 
     fetch('http://localhost:8080/authenticate', {
         method: 'POST',
@@ -99,11 +130,7 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
             console.error('Error during login:', error);
         }
     });
-    };
-
-    if (isLoggedIn) {
-        return <Navigate to="/" />;
-    }
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -141,49 +168,56 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
               Sign in
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-                autoFocus
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
-              <Grid container>
-                
-                <Grid item>
-                  <Link href="/register" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
-              <Copyright sx={{ mt: 5 }} />
+              {isUsernameLoaded && (
+                <>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username"
+                    name="username"
+                    autoComplete="username"
+                    autoFocus={username === ""}
+                    onChange={(e) => setUsername(e.target.value)}
+                    value={username}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoFocus={username !== ""}
+                    autoComplete="current-password"
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <FormControlLabel
+                    control={<Checkbox checked={rememberMe} color="primary" />}
+                    label="Remember username"
+                    onChange={(e) => toggleRememberMe()}
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Sign In
+                  </Button>
+                  <Grid container>
+                    
+                    <Grid item>
+                      <Link href="/register" variant="body2">
+                        {"Don't have an account? Sign Up"}
+                      </Link>
+                    </Grid>
+                  </Grid>
+                  <Copyright sx={{ mt: 5 }} />
+                </>
+              )}
             </Box>
           </Box>
         </Grid>

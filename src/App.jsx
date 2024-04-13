@@ -71,10 +71,12 @@ const App = () => {
 
     const logOut = () => {
         localStorage.removeItem('token');
-        localStorage.removeItem('username');
+        const sessionRememberMe = sessionStorage.getItem('rememberMe');
+        if(sessionRememberMe === null || sessionRememberMe === 'false'){
+            localStorage.removeItem('username');}
         localStorage.removeItem('sessionExpiryTime');
         setIsLoggedIn(false);
-        showSnackBar('success', 'You have been logged out.');
+        showSnackBar('info', 'You have been logged out.');
     }
 
     return (
