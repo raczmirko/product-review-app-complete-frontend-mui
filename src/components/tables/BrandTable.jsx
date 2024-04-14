@@ -42,12 +42,12 @@ function EditToolbar(props) {
     );
 }
 
-function computeMutation(newRow, oldRow) {
+function getModifiedRowDifference(newRow, oldRow) {
     if (newRow.name !== oldRow.name) {
         return `Name from '${oldRow.name}' to '${newRow.name}'`;
     }
     if (newRow.countryOfOrigin !== oldRow.countryOfOrigin) {
-        return `Country from '${oldRow.countryOfOrigin || ''}' to '${newRow.countryOfOrigin || ''}'`;
+        return `Country from '${oldRow.countryOfOrigin.name || ''}' to '${newRow.countryOfOrigin.name || ''}'`;
     }
     if (newRow.description !== oldRow.description) {
         return `Description from '${oldRow.description || ''}' to '${newRow.description || ''}'`;
@@ -95,13 +95,6 @@ export default function BrandTable() {
     useEffect(() => {
         searchBrands();
     }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
-
-    const transformedBrands = brands.map(brand => ({
-        id: brand.id,
-        name: brand.name,
-        countryOfOrigin: brand.countryOfOrigin.name,
-        description: brand.description
-    }));
 
     const toggleShowModal = () => {
         setModalActive(!modalActive);
@@ -299,12 +292,10 @@ export default function BrandTable() {
     
     const handleEditClick = (id) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-        console.log("EDITING" + id)
     };
     
     const handleSaveClick = (id) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-        console.log("SAVING" + id)
     };
     
     const handleDeleteClick = (id) => () => {
@@ -330,75 +321,68 @@ export default function BrandTable() {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
+        { field: 'name', headerName: 'Name', width: 150, editable: true },
         {
-          field: 'name',
-          headerName: 'Name',
-          width: 150,
-          editable: true,
+            field: 'countryOfOriginName', // Change the field name
+            headerName: 'Nationality',
+            width: 150,
+            editable: true,
+            valueGetter: (value, row) => {
+                return row.countryOfOrigin.name;
+              }
         },
+        { field: 'description', headerName: 'Description', width: 500, editable: true },
         {
-          field: 'countryOfOrigin',
-          headerName: 'Nationality',
-          width: 150,
-          editable: true,
-        },
-        {
-          field: 'description',
-          headerName: 'Description',
-          width: 500,
-          editable: true,
-        },
-        {
-          field: 'actions',
-          type: 'actions',
-          headerName: 'Actions',
-          width: 100,
-          cellClassName: 'actions',
-          getActions: ({ id }) => {
-            const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-      
-            if (isInEditMode) {
-              return [
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Actions',
+            width: 100,
+            cellClassName: 'actions',
+            getActions: ({ id }) => {
+                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+        
+                if (isInEditMode) {
+                return [
+                    <GridActionsCellItem
+                    icon={<SaveIcon />}
+                    label="Save"
+                    sx={{
+                        color: 'primary.main',
+                    }}
+                    onClick={handleSaveClick(id)}
+                    />,
+                    <GridActionsCellItem
+                    icon={<CancelIcon />}
+                    label="Cancel"
+                    className="textPrimary"
+                    onClick={handleCancelClick(id)}
+                    color="inherit"
+                    />,
+                ];
+                }
+        
+                return [
                 <GridActionsCellItem
-                  icon={<SaveIcon />}
-                  label="Save"
-                  sx={{
-                    color: 'primary.main',
-                  }}
-                  onClick={handleSaveClick(id)}
+                    icon={<EditIcon />}
+                    label="Edit"
+                    className="textPrimary"
+                    onClick={handleEditClick(id)}
+                    color="inherit"
                 />,
                 <GridActionsCellItem
-                  icon={<CancelIcon />}
-                  label="Cancel"
-                  className="textPrimary"
-                  onClick={handleCancelClick(id)}
-                  color="inherit"
+                    icon={<DeleteIcon />}
+                    label="Delete"
+                    onClick={handleDeleteClick(id)}
+                    color="inherit"
                 />,
-              ];
+                ];
             }
-      
-            return [
-              <GridActionsCellItem
-                icon={<EditIcon />}
-                label="Edit"
-                className="textPrimary"
-                onClick={handleEditClick(id)}
-                color="inherit"
-              />,
-              <GridActionsCellItem
-                icon={<DeleteIcon />}
-                label="Delete"
-                onClick={handleDeleteClick(id)}
-                color="inherit"
-              />,
-            ];
-          }
     }];
 
     const processRowUpdate = React.useCallback(
         (newRow, oldRow) =>
           new Promise((resolve, reject) => {
-            const mutation = computeMutation(newRow, oldRow);
+            const mutation = getModifiedRowDifference(newRow, oldRow);
             if (mutation) {
               // Save the arguments to resolve or reject the promise later
               setUpdatePromiseArguments({ resolve, reject, newRow, oldRow });
@@ -415,9 +399,9 @@ export default function BrandTable() {
         setUpdatePromiseArguments(null);
       };
     
-      const handleYes = async () => {
+    const handleYes = async () => {
         const { newRow, oldRow, reject, resolve } = updatePromiseArguments;
-    
+
         try {
             // Make the HTTP request to save in the backend
             const response = await modifyBrand(newRow);
@@ -429,7 +413,7 @@ export default function BrandTable() {
             reject(oldRow);
             setUpdatePromiseArguments(null);
         }
-      };
+    };
 
     const renderConfirmDialog = () => {
         if (!updatePromiseArguments) {
@@ -437,7 +421,7 @@ export default function BrandTable() {
         }
 
         const { newRow, oldRow } = updatePromiseArguments;
-        const mutation = computeMutation(newRow, oldRow);
+        const mutation = getModifiedRowDifference(newRow, oldRow);
 
         return (
             <Dialog
@@ -478,7 +462,7 @@ export default function BrandTable() {
                 onRowModesModelChange={handleRowModesModelChange}
                 onRowEditStop={handleRowEditStop}
                 processRowUpdate={processRowUpdate}
-                rows={transformedBrands}
+                rows={brands}
                 rowCount={totalElements}
                 columns={columns}
                 filterMode="server"
@@ -526,7 +510,7 @@ export default function BrandTable() {
                                                 
                                             }}
                                         >
-                                            Delete brand
+                                            Delete selected
                                         </Button>
                                     </ButtonGroup>
                                 </Box>
@@ -536,9 +520,7 @@ export default function BrandTable() {
                 }}
                 slotProps={{
                     toolbar: {
-                        showQuickFilter: true,
-                        setBrands, 
-                        setRowModesModel
+                        showQuickFilter: true
                     },
                 }}
                 sx={{ '--DataGrid-overlayHeight': '300px' }}
