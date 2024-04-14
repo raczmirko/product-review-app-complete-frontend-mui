@@ -231,7 +231,6 @@ export default function BrandTable() {
     //  --- Pagination, filtering and sorting-related methods --- //
 
     const handleFilterChange = (filterModel) => {
-        console.log(filterModel)
         setFilterModel(filterModel);
         if(filterModel.items[0]?.value) {
             setSearchValue(filterModel.items[0].value);
@@ -341,7 +340,7 @@ export default function BrandTable() {
         }
     };
 
-    const renderConfirUpdatemDialog = () => {
+    const renderConfirUpdateDialog = () => {
         if (!updatePromiseArguments) {
             return null;
         }
@@ -437,7 +436,7 @@ export default function BrandTable() {
                      />
 
             }
-            {renderConfirUpdatemDialog()}
+            {renderConfirUpdateDialog()}
             <ConfirmationDialog 
                 dialogTitle={"Delete brand?"}
                 dialogDescription={"This cannot be undone."}
@@ -475,12 +474,6 @@ export default function BrandTable() {
                 }}
                 checkboxSelection
                 disableRowSelectionOnClick
-                onKeyDown={(event) => {
-                    // Check if the Enter key is pressed while in edit mode
-                    if (event.key === 'Enter' && event.defaultMuiPrevented) {
-                        event.stopPropagation(); // Prevent the default behavior of the Enter key press event
-                    }
-                }}
                 slots={{
                     toolbar: (props) => (
                         <React.Fragment>
