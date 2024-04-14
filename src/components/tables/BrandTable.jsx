@@ -96,6 +96,8 @@ export default function BrandTable() {
         return text;
     }
 
+    // --- CRUD API calls --- //
+
     const deleteBrand = async (id) => {
         const token = localStorage.getItem('token');
         const headers = {
@@ -221,6 +223,8 @@ export default function BrandTable() {
         }
     };
 
+    //  --- Pagination, filtering and sorting-related methods --- //
+
     const handleFilterChange = (filterModel) => {
         console.log(filterModel)
         setFilterModel(filterModel);
@@ -261,19 +265,23 @@ export default function BrandTable() {
         setPageNumber(paginationModel.page + 1);
     };
 
-    // Edit-related functionality
+    // --- Edit-related functionality --- //
 
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-            event.defaultMuiPrevented = true;
+            setRowModesModel((prevRowModesModel) => ({
+                ...prevRowModesModel,
+                [params.id]: { mode: GridRowModes.View },
+            }));
         }
     };
     
-    const handleEditClick = (id) => () => {
+    // Actions row buttons and their handlers
+    const setRowModeToEdit = (id) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     };
     
-    const handleSaveClick = (id) => () => {
+    const setRowModeToView = (id) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     };
     
@@ -283,80 +291,13 @@ export default function BrandTable() {
     };
     
     const handleCancelClick = (id) => () => {
-        setRowModesModel({
-          ...rowModesModel,
-          [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        setRowModesModel({...rowModesModel, [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
-    
-        const editedRow = brands.find((row) => row.id === id);
-        if (editedRow.isNew) {
-          setBrands(brands.filter((brand) => brand.id !== id));
-        }
     };
     
     const handleRowModesModelChange = (newRowModesModel) => {
         setRowModesModel(newRowModesModel);
     };
-
-    const columns = [
-        { field: 'id', headerName: 'ID', width: 90 },
-        { field: 'name', headerName: 'Name', width: 150, editable: true },
-        {
-            field: 'countryOfOriginName', // Change the field name
-            headerName: 'Nationality',
-            width: 150,
-            editable: true,
-            valueGetter: (value, row) => {
-                return row.countryOfOrigin.name;
-              }
-        },
-        { field: 'description', headerName: 'Description', width: 500, editable: true },
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Actions',
-            width: 100,
-            cellClassName: 'actions',
-            getActions: ({ id }) => {
-                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-        
-                if (isInEditMode) {
-                return [
-                    <GridActionsCellItem
-                    icon={<SaveIcon />}
-                    label="Save"
-                    sx={{
-                        color: 'primary.main',
-                    }}
-                    onClick={handleSaveClick(id)}
-                    />,
-                    <GridActionsCellItem
-                    icon={<CancelIcon />}
-                    label="Cancel"
-                    className="textPrimary"
-                    onClick={handleCancelClick(id)}
-                    color="inherit"
-                    />,
-                ];
-                }
-        
-                return [
-                <GridActionsCellItem
-                    icon={<EditIcon />}
-                    label="Edit"
-                    className="textPrimary"
-                    onClick={handleEditClick(id)}
-                    color="inherit"
-                />,
-                <GridActionsCellItem
-                    icon={<DeleteIcon />}
-                    label="Delete"
-                    onClick={handleDeleteClick(id)}
-                    color="inherit"
-                />,
-                ];
-            }
-    }];
 
     const processRowUpdate = React.useCallback(
         (newRow, oldRow) =>
@@ -366,7 +307,7 @@ export default function BrandTable() {
               // Save the arguments to resolve or reject the promise later
               setUpdatePromiseArguments({ resolve, reject, newRow, oldRow });
             } else {
-              resolve(oldRow); // Nothing was changed
+              resolve(oldRow); // Nothing was changed, resolve promise with the old row data
             }
           }),
         [],
@@ -376,7 +317,7 @@ export default function BrandTable() {
         const { oldRow, resolve } = updatePromiseArguments;
         resolve(oldRow); // Resolve with the old row to not update the internal state
         setUpdatePromiseArguments(null);
-      };
+    };
     
     const handleConfirmModification = async () => {
         const { newRow, oldRow, reject, resolve } = updatePromiseArguments;
@@ -384,11 +325,12 @@ export default function BrandTable() {
         try {
             // Make the HTTP request to save in the backend
             const response = await modifyBrand(newRow);
-            showSnackBar('success', 'User successfully saved');
-            resolve(response);
+            //resolve(response);
+            showSnackBar('success', 'Changes successfully saved');
             setUpdatePromiseArguments(null);
+            searchBrands();
         } catch (error) {
-        showSnackBar('error', 'Failed to save user.');
+        showSnackBar('error', 'Failed to save changes.');
             reject(oldRow);
             setUpdatePromiseArguments(null);
         }
@@ -418,6 +360,65 @@ export default function BrandTable() {
             </Dialog>
         );
     };
+
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 90 },
+        { field: 'name', headerName: 'Name', width: 150, editable: true },
+        {
+            field: 'countryOfOriginName', // Change the field name
+            headerName: 'Nationality',
+            width: 150,
+            editable: true,
+            valueGetter: (value, row) => {
+                return row.countryOfOrigin.name;
+              }
+        },
+        { field: 'description', headerName: 'Description', width: 500, editable: true },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Actions',
+            width: 100,
+            cellClassName: 'actions',
+            getActions: ({ id }) => {
+                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+                if (isInEditMode) {
+                return [
+                    <GridActionsCellItem
+                    icon={<SaveIcon />}
+                    label="Save"
+                    sx={{
+                        color: 'primary.main',
+                    }}
+                    onClick={setRowModeToView(id)}
+                    />,
+                    <GridActionsCellItem
+                    icon={<CancelIcon />}
+                    label="Cancel"
+                    className="textPrimary"
+                    onClick={handleCancelClick(id)}
+                    color="inherit"
+                    />,
+                ];
+                }
+        
+                return [
+                <GridActionsCellItem
+                    icon={<EditIcon />}
+                    label="Edit"
+                    className="textPrimary"
+                    onClick={setRowModeToEdit(id)}
+                    color="inherit"
+                />,
+                <GridActionsCellItem
+                    icon={<DeleteIcon />}
+                    label="Delete"
+                    onClick={handleDeleteClick(id)}
+                    color="inherit"
+                />,
+                ];
+            }
+    }];
 
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
