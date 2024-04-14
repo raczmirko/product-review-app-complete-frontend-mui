@@ -382,8 +382,8 @@ export default function BrandTable() {
     const processRowUpdate = React.useCallback(
         (newRow, oldRow) =>
           new Promise((resolve, reject) => {
-            const mutation = getModifiedRowDifference(newRow, oldRow);
-            if (mutation) {
+            const difference = getModifiedRowDifference(newRow, oldRow);
+            if (difference) {
               // Save the arguments to resolve or reject the promise later
               setUpdatePromiseArguments({ resolve, reject, newRow, oldRow });
             } else {
@@ -393,13 +393,13 @@ export default function BrandTable() {
         [],
     );
 
-    const handleNo = () => {
+    const handleCancelModification = () => {
         const { oldRow, resolve } = updatePromiseArguments;
         resolve(oldRow); // Resolve with the old row to not update the internal state
         setUpdatePromiseArguments(null);
       };
     
-    const handleYes = async () => {
+    const handleConfirmModification = async () => {
         const { newRow, oldRow, reject, resolve } = updatePromiseArguments;
 
         try {
@@ -433,10 +433,8 @@ export default function BrandTable() {
                 {`Pressing 'Yes' will change ${mutation}.`}
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleNo}>
-                No
-                </Button>
-                <Button onClick={handleYes}>Yes</Button>
+                <Button onClick={handleCancelModification}>No</Button>
+                <Button onClick={handleConfirmModification}>Yes</Button>
             </DialogActions>
             </Dialog>
         );
