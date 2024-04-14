@@ -10,6 +10,7 @@ import { DataGrid,
         GridRowEditStopReasons } from '@mui/x-data-grid';
 import AlertSnackBar from '../AlertSnackBar';
 import CreateBrandModal from '../modals/CreateBrandModal';
+import ConfirmationDialog from '../ConfirmationDialog';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -50,6 +51,9 @@ export default function BrandTable() {
     const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
 
     const [modalActive, setModalActive] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+    const [idToDelete, setIdToDelete] = useState();
 
     const [paginationModel, setPaginationModel] = React.useState({
         page: 0,
@@ -178,10 +182,11 @@ export default function BrandTable() {
                 showSnackBar('error', getNotificationTextByStatusCode(response.status));
                 throw new Error(errorMessage);
             }
-            const data = await response.json();
-            return data;
+            else {
+                showSnackBar('success', "Modification successful.")
+            }
         } catch (error) {
-            console.error('Error deleting brand:', error);
+            console.error('Error modifying brand:', error);
             return []; // Return an empty array if an error occurs
         }
     };
@@ -286,8 +291,8 @@ export default function BrandTable() {
     };
     
     const handleDeleteClick = (id) => () => {
-        deleteBrand(id);
-        searchBrands();
+        setIdToDelete(id);
+        setDeleteDialogOpen(true);
     };
     
     const handleCancelClick = (id) => () => {
@@ -325,7 +330,7 @@ export default function BrandTable() {
         try {
             // Make the HTTP request to save in the backend
             const response = await modifyBrand(newRow);
-            //resolve(response);
+            resolve(response);
             showSnackBar('success', 'Changes successfully saved');
             setUpdatePromiseArguments(null);
             searchBrands();
@@ -336,7 +341,7 @@ export default function BrandTable() {
         }
     };
 
-    const renderConfirmDialog = () => {
+    const renderConfirUpdatemDialog = () => {
         if (!updatePromiseArguments) {
             return null;
         }
@@ -365,13 +370,13 @@ export default function BrandTable() {
         { field: 'id', headerName: 'ID', width: 90 },
         { field: 'name', headerName: 'Name', width: 150, editable: true },
         {
-            field: 'countryOfOriginName', // Change the field name
+            field: 'countryOfOriginName',
             headerName: 'Nationality',
             width: 150,
             editable: true,
             valueGetter: (value, row) => {
                 return row.countryOfOrigin.name;
-              }
+            }
         },
         { field: 'description', headerName: 'Description', width: 500, editable: true },
         {
@@ -432,7 +437,14 @@ export default function BrandTable() {
                      />
 
             }
-            {renderConfirmDialog()}
+            {renderConfirUpdatemDialog()}
+            <ConfirmationDialog 
+                dialogTitle={"Delete brand?"}
+                dialogDescription={"This cannot be undone."}
+                isOpen={deleteDialogOpen}
+                setIsOpen={setDeleteDialogOpen}
+                functionToRunOnConfirm={() => deleteBrand(idToDelete)}
+            />
             <DataGrid
                 autoHeight
                 editMode="row" 
@@ -463,6 +475,12 @@ export default function BrandTable() {
                 }}
                 checkboxSelection
                 disableRowSelectionOnClick
+                onKeyDown={(event) => {
+                    // Check if the Enter key is pressed while in edit mode
+                    if (event.key === 'Enter' && event.defaultMuiPrevented) {
+                        event.stopPropagation(); // Prevent the default behavior of the Enter key press event
+                    }
+                }}
                 slots={{
                     toolbar: (props) => (
                         <React.Fragment>
