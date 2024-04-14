@@ -21,27 +21,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
-function EditToolbar(props) {
-    const { setBrands, setRowModesModel } = props;
-  
-    const handleClick = () => {
-        const id = 'new';
-        setBrands((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-        [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-      }));
-    };
-  
-    return (
-      <GridToolbarContainer>
-        <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-          Add record
-        </Button>
-      </GridToolbarContainer>
-    );
-}
-
 function getModifiedRowDifference(newRow, oldRow) {
     if (newRow.name !== oldRow.name) {
         return `Name from '${oldRow.name}' to '${newRow.name}'`;
@@ -488,7 +467,6 @@ export default function BrandTable() {
                         <React.Fragment>
                             <GridToolbarContainer>
                                 <GridToolbar {...props} />
-                                <EditToolbar/>
                                 <Box>
                                     <ButtonGroup sx={{width:'100%'}}>
                                         <Button
