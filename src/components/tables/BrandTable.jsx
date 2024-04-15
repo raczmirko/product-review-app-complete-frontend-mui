@@ -475,36 +475,7 @@ export default function BrandTable() {
                 checkboxSelection
                 disableRowSelectionOnClick
                 slots={{
-                    toolbar: (props) => (
-                        <React.Fragment>
-                            <GridToolbarContainer>
-                                <GridToolbar {...props} />
-                                <Box>
-                                    <ButtonGroup sx={{width:'100%'}}>
-                                        <Button
-                                            variant="contained"
-                                            color="success"
-                                            sx={{ color: 'white' }}
-                                            onClick={() => {
-                                                setModalActive(true);
-                                            }}
-                                        >
-                                            Create brand
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="error"
-                                            onClick={() => {
-                                                
-                                            }}
-                                        >
-                                            Delete selected
-                                        </Button>
-                                    </ButtonGroup>
-                                </Box>
-                            </GridToolbarContainer>
-                        </React.Fragment>
-                    )
+                    toolbar: GridToolbar,
                 }}
                 slotProps={{
                     toolbar: {
