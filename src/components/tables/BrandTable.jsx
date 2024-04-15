@@ -35,6 +35,21 @@ function getModifiedRowDifference(newRow, oldRow) {
     return null;
 }
 
+function EditToolbar(props) {
+    const { setModalActive, showQuickFilter } = props;
+    return (
+        <GridToolbarContainer>
+            <GridToolbar {...props} />
+            <Button color="primary" 
+                    startIcon={<AddIcon />} 
+                    onClick={() => setModalActive(true)}
+            >
+                Add record
+            </Button>
+        </GridToolbarContainer>
+    );
+}
+
 export default function BrandTable() {
 
     const [brands, setBrands] = useState([]);
@@ -475,11 +490,12 @@ export default function BrandTable() {
                 checkboxSelection
                 disableRowSelectionOnClick
                 slots={{
-                    toolbar: GridToolbar,
+                    toolbar: EditToolbar
                 }}
                 slotProps={{
                     toolbar: {
-                        showQuickFilter: true
+                        showQuickFilter: true,
+                        setModalActive
                     },
                 }}
                 sx={{ '--DataGrid-overlayHeight': '300px' }}
