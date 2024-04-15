@@ -36,7 +36,7 @@ function getModifiedRowDifference(newRow, oldRow) {
 }
 
 function EditToolbar(props) {
-    const { setModalActive, showQuickFilter } = props;
+    const { setModalActive, deleteBrands, rowSelectionModel } = props;
     return (
         <GridToolbarContainer>
             <GridToolbar {...props} />
@@ -45,6 +45,12 @@ function EditToolbar(props) {
                     onClick={() => setModalActive(true)}
             >
                 Add record
+            </Button>
+            <Button color="primary" 
+                    startIcon={<DeleteIcon />} 
+                    onClick={() => deleteBrands(rowSelectionModel)}
+            >
+                Delete selected
             </Button>
         </GridToolbarContainer>
     );
@@ -77,6 +83,7 @@ export default function BrandTable() {
     const [filterModel, setFilterModel] = React.useState({ items: [] });
     const [sortModel, setSortModel] = React.useState([]); 
     const [rowModesModel, setRowModesModel] = React.useState({});
+    const [rowSelectionModel, setRowSelectionModel] = React.useState({});
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
     
@@ -131,14 +138,40 @@ export default function BrandTable() {
             });
             const errorMessage = getNotificationTextByStatusCode(response.status);
             if (!response.ok) {
-                //setNotification({ type: "error", title:"error", text: "Failed to delete brand with an error code " + errorMessage});
+                showSnackBar("error", errorMessage);
                 throw new Error(errorMessage);
             }
+            showSnackBar("success", "Successful deletion.");
             searchBrands();
-            //setNotification({ type: "success", title:"success", text: "Brand successfully deleted."});
             return;
         } catch (error) {
-            //setNotification({ type: "error", title:"error", text: error});
+            showSnackBar("error", error);
+            return []; // Return an empty array if an error occurs
+        }
+    };
+
+    const deleteBrands = async (ids) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+
+        try {
+            const response = await fetch(`http://localhost:8080/brand/multi-delete/${ids}`, {
+                method: 'POST',
+                headers,
+            });
+            const errorMessage = getNotificationTextByStatusCode(response.status);
+            if (!response.ok) {
+                showSnackBar("error", errorMessage);
+                throw new Error(errorMessage);
+            }
+            showSnackBar("success", "All records have been successfully deleted.");
+            searchBrands();
+            return;
+        } catch (error) {
+            showSnackBar("error", error);
             return []; // Return an empty array if an error occurs
         }
     };
@@ -283,6 +316,10 @@ export default function BrandTable() {
         setPageSize(paginationModel.pageSize);
         setPageNumber(paginationModel.page + 1);
     };
+
+    const handleRowSelectionModelChange = (rowSelectionModel) => {
+        setRowSelectionModel(rowSelectionModel);
+    }
 
     // --- Edit-related functionality --- //
 
@@ -463,6 +500,7 @@ export default function BrandTable() {
                 autoHeight
                 editMode="row" 
                 rowModesModel={rowModesModel}
+                onRowSelectionModelChange={handleRowSelectionModelChange}
                 onRowModesModelChange={handleRowModesModelChange}
                 onRowEditStop={handleRowEditStop}
                 processRowUpdate={processRowUpdate}
@@ -495,7 +533,9 @@ export default function BrandTable() {
                 slotProps={{
                     toolbar: {
                         showQuickFilter: true,
-                        setModalActive
+                        setModalActive,
+                        deleteBrands,
+                        rowSelectionModel
                     },
                 }}
                 sx={{ '--DataGrid-overlayHeight': '300px' }}
