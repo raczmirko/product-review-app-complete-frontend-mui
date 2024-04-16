@@ -36,7 +36,7 @@ function getModifiedRowDifference(newRow, oldRow) {
 }
 
 function EditToolbar(props) {
-    const { setModalActive, deleteBrands, rowSelectionModel } = props;
+    const { setModalActive, deleteRecords, rowSelectionModel } = props;
     return (
         <GridToolbarContainer>
             <GridToolbar {...props} />
@@ -48,7 +48,7 @@ function EditToolbar(props) {
             </Button>
             <Button color="primary" 
                     startIcon={<DeleteIcon />} 
-                    onClick={() => deleteBrands(rowSelectionModel)}
+                    onClick={() => deleteRecords(rowSelectionModel)}
             >
                 Delete selected
             </Button>
@@ -98,7 +98,7 @@ export default function BrandTable() {
     }
 
     useEffect(() => {
-        searchBrands();
+        searchEntities();
     }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
 
     const toggleShowModal = () => {
@@ -124,7 +124,7 @@ export default function BrandTable() {
 
     // --- CRUD API calls --- //
 
-    const deleteBrand = async (id) => {
+    const deleteEntity = async (id) => {
         const token = localStorage.getItem('token');
         const headers = {
             'Authorization': `Bearer ${token}`,
@@ -142,7 +142,7 @@ export default function BrandTable() {
                 throw new Error(errorMessage);
             }
             showSnackBar("success", "Successful deletion.");
-            searchBrands();
+            searchEntities();
             return;
         } catch (error) {
             showSnackBar("error", error);
@@ -150,7 +150,12 @@ export default function BrandTable() {
         }
     };
 
-    const deleteBrands = async (ids) => {
+    const deleteEntities = async (ids) => {
+        if (rowSelectionModel.length === 0) {
+            showSnackBar("error", "Nothin is selected!");
+            return;
+        }
+
         const token = localStorage.getItem('token');
         const headers = {
             'Authorization': `Bearer ${token}`,
@@ -168,7 +173,7 @@ export default function BrandTable() {
                 throw new Error(errorMessage);
             }
             showSnackBar("success", "All records have been successfully deleted.");
-            searchBrands();
+            searchEntities();
             return;
         } catch (error) {
             showSnackBar("error", error);
@@ -176,7 +181,7 @@ export default function BrandTable() {
         }
     };
 
-    const createBrand = async (name, country, description) => {
+    const createEntity = async (name, country, description) => {
             const token = localStorage.getItem('token');
             const headers = {
                 'Authorization': `Bearer ${token}`,
@@ -199,7 +204,7 @@ export default function BrandTable() {
                     //setNotification({ type: "error", title:"error", text: "Failed to create brand with an error code " + errorMessage});
                     throw new Error(errorMessage);
                 }
-                searchBrands();
+                searchEntities();
                 //setNotification({ type: "success", title:"success", text: "Brand successfully created."});
                 return;
             } catch (error) {
@@ -208,7 +213,7 @@ export default function BrandTable() {
             }
     };
 
-    const modifyBrand = async (newBrand) => {
+    const modifyEntity = async (newBrand) => {
         const token = localStorage.getItem('token');
         const headers = {
             'Authorization': `Bearer ${token}`,
@@ -239,7 +244,7 @@ export default function BrandTable() {
         }
     };
 
-    const searchBrands = async () => {
+    const searchEntities = async () => {
         if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('name')};
         if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('asc')};
 
@@ -380,11 +385,11 @@ export default function BrandTable() {
 
         try {
             // Make the HTTP request to save in the backend
-            const response = await modifyBrand(newRow);
+            const response = await modifyEntity(newRow);
             resolve(response);
             showSnackBar('success', 'Changes successfully saved');
             setUpdatePromiseArguments(null);
-            searchBrands();
+            searchEntities();
         } catch (error) {
         showSnackBar('error', 'Failed to save changes.');
             reject(oldRow);
@@ -484,7 +489,7 @@ export default function BrandTable() {
                     <CreateBrandModal
                         entityToAdd="brand"
                         closeFunction={toggleShowModal}
-                        createBrandFunction={createBrand}
+                        createBrandFunction={createEntity}
                      />
 
             }
@@ -494,7 +499,7 @@ export default function BrandTable() {
                 dialogDescription={"This cannot be undone."}
                 isOpen={deleteDialogOpen}
                 setIsOpen={setDeleteDialogOpen}
-                functionToRunOnConfirm={() => deleteBrand(idToDelete)}
+                functionToRunOnConfirm={() => deleteEntity(idToDelete)}
             />
             <DataGrid
                 autoHeight
@@ -534,7 +539,7 @@ export default function BrandTable() {
                     toolbar: {
                         showQuickFilter: true,
                         setModalActive,
-                        deleteBrands,
+                        deleteRecords: deleteEntities,
                         rowSelectionModel
                     },
                 }}
