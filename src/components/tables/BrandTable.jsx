@@ -151,8 +151,8 @@ export default function BrandTable() {
     };
 
     const deleteEntities = async (ids) => {
-        if (rowSelectionModel.length === 0) {
-            showSnackBar("error", "Nothin is selected!");
+        if (rowSelectionModel === undefined || rowSelectionModel.length === 0) {
+            showSnackBar("error", "No records are selected!");
             return;
         }
 
