@@ -370,6 +370,7 @@ export default function BrandTable() {
     const processRowUpdate = React.useCallback(
         (newRow, oldRow) =>
           new Promise((resolve, reject) => {
+            console.log(newRow)
             const difference = getModifiedRowDifference(newRow, oldRow);
             if (difference) {
               // Save the arguments to resolve or reject the promise later
@@ -435,15 +436,16 @@ export default function BrandTable() {
         const [selectedCountry, setSelectedCountry] = React.useState(value);
 
         const handleChange = (event) => {
-            let newCountry = event.target.value;
+            let newCountryName = event.target.value;
+            let newCountry = options.find(option => option.name === newCountryName);
             setSelectedCountry(newCountry);
-            apiRef.current.setEditCellValue({ id, field, value: options.find(option => option.name === newCountry) });
+            apiRef.current.setEditCellValue({ id, field, value: newCountry });
             apiRef.current.stopCellEditMode({ id, field });
         };        
       
         return (
           <Select
-            value={selectedCountry}
+            value={selectedCountry.name}
             onChange={handleChange}
             size="small"
             sx={{ height: 1 }}
@@ -474,8 +476,9 @@ export default function BrandTable() {
             editable: true,
             renderEditCell: (params) => renderSelectEditInputCell({ ...params, options: countries }),
             valueGetter: (value, row) => {
-                return row.countryOfOrigin.name;
-            }
+                return row.countryOfOrigin;
+            },
+            valueFormatter: (value, row) => row.countryOfOrigin.name
         },
         { field: 'description', headerName: 'Description', width: 500, editable: true },
         {
