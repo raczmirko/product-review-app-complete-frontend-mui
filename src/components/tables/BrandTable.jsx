@@ -11,7 +11,6 @@ import { DataGrid,
 import AlertSnackBar from '../AlertSnackBar';
 import CreateBrandModal from '../modals/CreateBrandModal';
 import ConfirmationDialog from '../ConfirmationDialog';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -108,7 +107,7 @@ export default function BrandTable() {
     const getNotificationTextByStatusCode = (code) => {
         let text = code + ": An error occurred, please try again later!";
         if(code === 400) {
-            text = code + ": Bad request.";
+            text = code + ": A brand with this name might already exist.";
         }
         if(code === 401) {
             text = code + ": Authentication failed. Log in again!";
@@ -146,7 +145,7 @@ export default function BrandTable() {
             return;
         } catch (error) {
             showSnackBar("error", error);
-            return []; // Return an empty array if an error occurs
+            return [];
         }
     };
 
@@ -177,7 +176,7 @@ export default function BrandTable() {
             return;
         } catch (error) {
             showSnackBar("error", error);
-            return []; // Return an empty array if an error occurs
+            return [];
         }
     };
 
@@ -201,15 +200,15 @@ export default function BrandTable() {
                 });
                 const errorMessage = getNotificationTextByStatusCode(response.status);
                 if (!response.ok) {
-                    //setNotification({ type: "error", title:"error", text: "Failed to create brand with an error code " + errorMessage});
+                    showSnackBar('error', errorMessage);
                     throw new Error(errorMessage);
                 }
                 searchEntities();
-                //setNotification({ type: "success", title:"success", text: "Brand successfully created."});
+                showSnackBar('success', 'Record successfully.');
                 return;
             } catch (error) {
-                //setNotification({ type: "error", title:"error", text: error});
-                return []; // Return an empty array if an error occurs
+                console.error(error, 'Brand may already exist.');
+                return [];
             }
     };
 
@@ -231,16 +230,15 @@ export default function BrandTable() {
             });
 
             if (!response.ok) {
-                const errorMessage = 'Failed to update brand.';
                 showSnackBar('error', getNotificationTextByStatusCode(response.status));
-                throw new Error(errorMessage);
+                throw new Error('Failed to update brand.');
             }
             else {
                 showSnackBar('success', "Modification successful.")
             }
         } catch (error) {
             console.error('Error modifying brand:', error);
-            return []; // Return an empty array if an error occurs
+            return [];
         }
     };
 
@@ -484,15 +482,13 @@ export default function BrandTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            {modalActive &&
-                
-                    <CreateBrandModal
-                        entityToAdd="brand"
-                        closeFunction={toggleShowModal}
-                        createBrandFunction={createEntity}
-                     />
-
-            }
+            <CreateBrandModal
+                isOpen={modalActive}
+                setIsOpen={setModalActive}
+                entityToAdd="brand"
+                closeFunction={toggleShowModal}
+                createBrandFunction={createEntity}
+            />
             {renderConfirUpdateDialog()}
             <ConfirmationDialog 
                 dialogTitle={"Delete brand?"}
