@@ -1,32 +1,17 @@
 import { useEffect, useState } from 'react';
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
-// Function to fetch the list of countries from the API
-const fetchCountries = async () => {
-    try {
-        const response = await fetch('http://localhost:8080/country/all');
-        if (!response.ok) {
-            throw new Error('Failed to fetch countries');
-        }
-        const data = await response.json();
-        return data; // Return the array of countries
-    } catch (error) {
-        console.error('Error fetching countries:', error);
-        return []; // Return an empty array if an error occurs
-    }
-};
+import CountryService from '../services/CountryService';
 
 const CountrySelector = ({ selectedCountry, setSelectedCountry }) => {
     const [countries, setCountries] = useState([]);
 
     useEffect(() => {
         // Fetch countries when the component mounts
-        fetchCountries()
+        CountryService.fetchCountries()
             .then(data => setCountries(data))
             .catch(error => console.error('Error:', error));
     }, []);
