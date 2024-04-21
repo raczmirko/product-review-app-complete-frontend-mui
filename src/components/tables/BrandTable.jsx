@@ -384,12 +384,11 @@ export default function BrandTable() {
         try {
             // Make the HTTP request to save in the backend
             const response = await modifyEntity(newRow);
-            resolve(response);
             showSnackBar('success', 'Changes successfully saved');
             setUpdatePromiseArguments(null);
             searchEntities();
         } catch (error) {
-        showSnackBar('error', 'Failed to save changes.');
+            showSnackBar('error', 'Failed to save changes.');
             reject(oldRow);
             setUpdatePromiseArguments(null);
         }
