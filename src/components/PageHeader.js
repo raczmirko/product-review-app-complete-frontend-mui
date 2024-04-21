@@ -4,6 +4,7 @@ const PageHeader = ({ text, color, textColor }) => {
   const headerStyle = {
     backgroundColor: color,
     color: textColor,
+    textTransform: 'uppercase',
     height: '100px',
     display: 'flex',
     alignItems: 'center',
