@@ -393,6 +393,7 @@ export default function BrandTable() {
         try {
             // Make the HTTP request to save in the backend
             const response = await modifyEntity(newRow);
+            resolve(newRow);
             showSnackBar('success', 'Changes successfully saved');
             setUpdatePromiseArguments(null);
             searchEntities();
@@ -432,11 +433,10 @@ export default function BrandTable() {
         const { id, value, field, options } = props;
         const apiRef = useGridApiContext();
         const [selectedCountry, setSelectedCountry] = React.useState(value);
-      
+
         const handleChange = (event) => {
             let newCountry = event.target.value;
             setSelectedCountry(newCountry);
-            console.log(newCountry)
             apiRef.current.setEditCellValue({ id, field, value: options.find(option => option.name === newCountry) });
             apiRef.current.stopCellEditMode({ id, field });
         };        
