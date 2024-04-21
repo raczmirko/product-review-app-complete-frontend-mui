@@ -5,20 +5,18 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { SendTimeExtension } from '@mui/icons-material';
 
-const CreateBrandModal = ({ closeFunction, createBrandFunction }) => {
+const CreateBrandModal = ({ closeFunction, createBrandFunction, isOpen, setIsOpen }) => {
     const [name, setName] = useState('');
     const [country, setCountry] = useState('');
     const [description, setDescription] = useState('');
-    const [open, setOpen] = useState(true);
 
     const handleCountrySelect = (country) => {
         setCountry(country)
     }
 
     const handleClose = () => {
-        setOpen(false);
+        setIsOpen(false);
         closeFunction();
     }
 
@@ -30,7 +28,7 @@ const CreateBrandModal = ({ closeFunction, createBrandFunction }) => {
 
     return (
         <Modal
-            open={open}
+            open={isOpen}
             onClose={handleClose}
             aria-labelledby="create-brand-modal"
             aria-describedby="modal-to-create-brand"
@@ -61,7 +59,7 @@ const CreateBrandModal = ({ closeFunction, createBrandFunction }) => {
                         inputProps={{ maxLength: 100 }}
                         sx={{ mb: 2 }}
                     />
-                    <CountrySelector selectedCountry={country} setSelectedCountry={setCountry}/>
+                    <CountrySelector selectedCountry={country} setSelectedCountry={setCountry} required/>
                     <TextField
                         label="Description"
                         value={description}
