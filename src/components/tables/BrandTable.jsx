@@ -7,7 +7,8 @@ import { DataGrid,
         GridToolbarContainer,
         GridRowModes,
         GridActionsCellItem,
-        GridRowEditStopReasons } from '@mui/x-data-grid';
+        GridRowEditStopReasons,
+        useGridApiContext } from '@mui/x-data-grid';
 import AlertSnackBar from '../AlertSnackBar';
 import CreateBrandModal from '../modals/CreateBrandModal';
 import ConfirmationDialog from '../ConfirmationDialog';
@@ -20,6 +21,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import CountryService from '../../services/CountryService';
+import Select from '@mui/material/Select';
 
 function getModifiedRowDifference(newRow, oldRow) {
     if (newRow.name !== oldRow.name) {
@@ -90,11 +93,20 @@ export default function BrandTable() {
     const [snackBarText, setSnackBarText] = useState('');
     const [snackBarStatus, setSnackBarStatus] = useState('info');
 
+    const [countries, setCountries] = useState([]);
+
     function showSnackBar (status, text) {
         setSnackBarOpen(true);
         setSnackBarStatus(status);
         setSnackBarText(text);
     }
+
+    useEffect(() => {
+        // Fetch countries when the component mounts
+        CountryService.fetchCountries()
+            .then(data => setCountries(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
 
     useEffect(() => {
         searchEntities();
@@ -218,9 +230,6 @@ export default function BrandTable() {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         };
-
-        // Setting the countryOfOrigin property to undefined otherwise the DTO mapping will fail
-        newBrand.countryOfOrigin = undefined;
 
         try {
             const response = await fetch(`http://localhost:8080/brand/${newBrand.id}/modify`, {
@@ -419,14 +428,51 @@ export default function BrandTable() {
         );
     };
 
+    function SelectEditInputCell(props) {
+        const { id, value, field, options } = props;
+        const apiRef = useGridApiContext();
+        const [selectedCountry, setSelectedCountry] = React.useState(value);
+      
+        const handleChange = (event) => {
+            let newCountry = event.target.value;
+            setSelectedCountry(newCountry);
+            console.log(newCountry)
+            apiRef.current.setEditCellValue({ id, field, value: options.find(option => option.name === newCountry) });
+            apiRef.current.stopCellEditMode({ id, field });
+        };        
+      
+        return (
+          <Select
+            value={selectedCountry}
+            onChange={handleChange}
+            size="small"
+            sx={{ height: 1 }}
+            native
+            autoFocus
+          >
+            {/* Populate options from the countries data */}
+            {options.map(option => (
+              <option key={option.countryCode} value={option.name}>
+                {option.name}
+              </option>
+            ))}
+          </Select>
+        );
+      }
+      
+      const renderSelectEditInputCell = (params) => {
+        return <SelectEditInputCell {...params} />;
+      };
+
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
         { field: 'name', headerName: 'Name', width: 150, editable: true },
         {
-            field: 'countryOfOriginName',
+            field: 'countryOfOrigin',
             headerName: 'Nationality',
             width: 150,
             editable: true,
+            renderEditCell: (params) => renderSelectEditInputCell({ ...params, options: countries }),
             valueGetter: (value, row) => {
                 return row.countryOfOrigin.name;
             }
