@@ -283,7 +283,7 @@ export default function BrandTable() {
             setTotalElements(data.totalElements)
             return;
         } catch (error) {
-            console.error('Error deleting brand:', error);
+            console.error('Error searching brands:', error);
             return []; // Return an empty array if an error occurs
         }
     };
