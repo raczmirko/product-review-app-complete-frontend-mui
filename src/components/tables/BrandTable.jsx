@@ -479,7 +479,7 @@ export default function BrandTable() {
             },
             valueFormatter: (value, row) => row.countryOfOrigin.name
         },
-        { field: 'description', headerName: 'Description', width: 500, editable: true },
+        { field: 'description', headerName: 'Description', flex:1, editable: true },
         {
             field: 'actions',
             type: 'actions',
