@@ -370,7 +370,6 @@ export default function BrandTable() {
     const processRowUpdate = React.useCallback(
         (newRow, oldRow) =>
           new Promise((resolve, reject) => {
-            console.log(newRow)
             const difference = getModifiedRowDifference(newRow, oldRow);
             if (difference) {
               // Save the arguments to resolve or reject the promise later
