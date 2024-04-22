@@ -8,6 +8,7 @@ import SignInSide from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Home from './pages/Home';
 import Brands from './pages/Brands';
+import Countries from './pages/Countries';
 import AlertSnackBar from './components/AlertSnackBar';
 import ParticleBackground from './components/ParticleBackground';
 import Container from '@mui/material/Container';
@@ -107,6 +108,11 @@ const App = () => {
                     <Route path="/brands" element={
                         <div>
                             <Brands />
+                        </div>
+                    } />
+                    <Route path="/countries" element={
+                        <div>
+                            <Countries />
                         </div>
                     } />
                 </Routes>
