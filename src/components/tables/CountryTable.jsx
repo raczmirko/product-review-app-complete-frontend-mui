@@ -35,19 +35,19 @@ function getModifiedRowDifference(newRow, oldRow) {
 }
 
 function EditToolbar(props) {
-    const { setModalActive, deleteRecords, rowSelectionModel } = props;
+    const { setmodalactive, deleterecords, rowselectionmodel, showQuickFilter } = props;
     return (
         <GridToolbarContainer>
-            <GridToolbar {...props} />
+            <GridToolbar showQuickFilter />
             <Button color="primary" 
                     startIcon={<AddIcon />} 
-                    onClick={() => setModalActive(true)}
+                    onClick={() => setmodalactive(true)}
             >
                 Add record
             </Button>
             <Button color="primary" 
                     startIcon={<DeleteIcon />} 
-                    onClick={() => deleteRecords(rowSelectionModel)}
+                    onClick={() => deleterecords(rowselectionmodel)}
             >
                 Delete selected
             </Button>
@@ -521,9 +521,9 @@ export default function CountriesTable() {
                 slotProps={{
                     toolbar: {
                         showQuickFilter: true,
-                        setModalActive,
-                        deleteRecords: deleteEntities,
-                        rowSelectionModel
+                        setmodalactive: setModalActive,
+                        deleterecords: deleteEntities,
+                        rowselectionmodel: rowSelectionModel
                     },
                 }}
                 sx={{ '--DataGrid-overlayHeight': '300px' }}
