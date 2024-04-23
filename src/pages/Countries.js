@@ -6,7 +6,7 @@ import CountryTable from '../components/tables/CountryTable';
 const Countries = () => {
 
     return (
-        <Container container component="main" sx={{ marginTop:'20px' , padding:'10px', justifyContent: 'center'}}>
+        <Container component="main" sx={{ marginTop:'20px' , padding:'10px', justifyContent: 'center'}}>
             <Container sx={{position: 'absolute', zIndex:-1}}>
                 <ParticleBackground />
             </Container>
