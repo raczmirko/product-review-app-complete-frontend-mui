@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-const CreateBrandModal = ({ closeFunction, createBrandFunction, isOpen, setIsOpen }) => {
+const CreateBrandModal = ({ closeFunction, createEntityFunction, isOpen, setIsOpen }) => {
     const [name, setName] = useState('');
     const [country, setCountry] = useState('');
     const [description, setDescription] = useState('');
@@ -22,7 +22,7 @@ const CreateBrandModal = ({ closeFunction, createBrandFunction, isOpen, setIsOpe
 
     const handleCreate = (e) => {
         e.preventDefault();
-        createBrandFunction(name, country, description);
+        createEntityFunction(name, country, description);
         handleClose();
     }
 
