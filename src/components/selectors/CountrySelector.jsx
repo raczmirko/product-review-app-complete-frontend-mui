@@ -4,7 +4,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import CountryService from '../services/CountryService';
+import CountryService from '../../services/CountryService';
 
 const CountrySelector = ({ selectedCountry, setSelectedCountry }) => {
     const [countries, setCountries] = useState([]);
