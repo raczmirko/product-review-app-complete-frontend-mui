@@ -10,7 +10,7 @@ import { DataGrid,
         GridRowEditStopReasons,
         useGridApiContext } from '@mui/x-data-grid';
 import AlertSnackBar from '../AlertSnackBar';
-import CreateBrandModal from '../modals/CreateBrandModal';
+import CreateCountryModal from '../modals/CreateCountryModal';
 import ConfirmationDialog from '../ConfirmationDialog';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -469,12 +469,12 @@ export default function CountriesTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            <CreateBrandModal
+            <CreateCountryModal
                 isOpen={modalActive}
                 setIsOpen={setModalActive}
                 entityToAdd="country"
                 closeFunction={toggleShowModal}
-                createBrandFunction={createEntity}
+                createEntityFunction={createEntity}
             />
             {renderConfirUpdateDialog()}
             <ConfirmationDialog 
