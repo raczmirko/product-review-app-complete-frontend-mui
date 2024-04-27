@@ -69,10 +69,9 @@ const CreateCategoryModal = ({ closeFunction, createEntityFunction, isOpen, setI
                         onChange={(e) => setDescription(e.target.value)}
                         variant="outlined"
                         fullWidth
-                        required
                         multiline
                         rows={4}
-                        inputProps={{ maxLength: 100 }}
+                        inputProps={{ maxLength: 1000 }}
                         sx={{ mt: 2, mb: 2 }}
                     />
                     <Box sx={{ textAlign: 'right' }}>
