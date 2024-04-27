@@ -23,6 +23,9 @@ const CreateBrandModal = ({ closeFunction, createEntityFunction, isOpen, setIsOp
     const handleCreate = (e) => {
         e.preventDefault();
         createEntityFunction(name, country, description);
+        setName(undefined);
+        setCountry(undefined);
+        setDescription(undefined);
         handleClose();
     }
 

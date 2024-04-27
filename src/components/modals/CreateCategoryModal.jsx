@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
+import CategorySelector from "../selectors/CategorySelector";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-const CreateCountryModal = ({ closeFunction, createEntityFunction, isOpen, setIsOpen }) => {
+const CreateCategoryModal = ({ closeFunction, createEntityFunction, isOpen, setIsOpen }) => {
     const [name, setName] = useState('');
-    const [countryCode, setCountryCode] = useState('');
+    const [parentCategory, setParentCategory] = useState('');
+    const [description, setDescription] = useState('');
+
+    const handleCategorySelect = (category) => {
+        setParentCategory(category)
+    }
 
     const handleClose = () => {
         setIsOpen(false);
@@ -16,9 +22,10 @@ const CreateCountryModal = ({ closeFunction, createEntityFunction, isOpen, setIs
 
     const handleCreate = (e) => {
         e.preventDefault();
-        createEntityFunction(countryCode, name);
-        setCountryCode(undefined);
+        createEntityFunction(name, parentCategory, description);
         setName(undefined);
+        setParentCategory(undefined);
+        setDescription(undefined);
         handleClose();
     }
 
@@ -26,8 +33,8 @@ const CreateCountryModal = ({ closeFunction, createEntityFunction, isOpen, setIs
         <Modal
             open={isOpen}
             onClose={handleClose}
-            aria-labelledby="create-country-modal"
-            aria-describedby="modal-to-create-country"
+            aria-labelledby="create-category-modal"
+            aria-describedby="modal-to-create-category"
         >
             <Box
                 sx={{
@@ -42,19 +49,8 @@ const CreateCountryModal = ({ closeFunction, createEntityFunction, isOpen, setIs
                     outline: '1px solid #81be83'
                 }}
             >
-                <Typography variant="h5" component="div" gutterBottom>New country</Typography>
+                <Typography variant="h5" component="div" gutterBottom>New category</Typography>
                 <form onSubmit={handleCreate}>
-                    <TextField
-                        label="Country Code"
-                        value={countryCode}
-                        onChange={(e) => setCountryCode(e.target.value)}
-                        variant="outlined"
-                        fullWidth
-                        required
-                        rows={4}
-                        inputProps={{ maxLength: 3 }}
-                        sx={{ mt: 2, mb: 2 }}
-                    />
                     <TextField
                         label="Name"
                         value={name}
@@ -66,6 +62,19 @@ const CreateCountryModal = ({ closeFunction, createEntityFunction, isOpen, setIs
                         inputProps={{ maxLength: 100 }}
                         sx={{ mb: 2 }}
                     />
+                    <CategorySelector selectedCategory={parentCategory} setSelectedCategory={setParentCategory}/>
+                    <TextField
+                        label="Description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        variant="outlined"
+                        fullWidth
+                        required
+                        multiline
+                        rows={4}
+                        inputProps={{ maxLength: 100 }}
+                        sx={{ mt: 2, mb: 2 }}
+                    />
                     <Box sx={{ textAlign: 'right' }}>
                         <Button type="submit" variant="contained" color="primary" sx={{ mr: 1 }}>Create</Button>
                         <Button variant="contained" color="secondary" onClick={handleClose}>Cancel</Button>
@@ -76,4 +85,4 @@ const CreateCountryModal = ({ closeFunction, createEntityFunction, isOpen, setIs
     );
 };
 
-export default CreateCountryModal;
+export default CreateCategoryModal;
