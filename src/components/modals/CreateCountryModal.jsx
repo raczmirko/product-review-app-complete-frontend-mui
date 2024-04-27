@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
-import CountrySelector from "../CountrySelector";
+import CountrySelector from "../selectors/CountrySelector";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';

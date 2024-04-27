@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AlertSnackBar from '../components/AlertSnackBar';
-import CountrySelector from '../components/CountrySelector';
+import CountrySelector from '../components/selectors/CountrySelector';
 
 function Copyright(props) {
   return (
