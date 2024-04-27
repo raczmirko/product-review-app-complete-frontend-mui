@@ -12,6 +12,7 @@ import Countries from './pages/Countries';
 import AlertSnackBar from './components/AlertSnackBar';
 import ParticleBackground from './components/ParticleBackground';
 import Container from '@mui/material/Container';
+import Categories from './pages/Categories';
 
 const darkTheme = createTheme({
     palette: {
@@ -113,6 +114,11 @@ const App = () => {
                     <Route path="/countries" element={
                         <div>
                             <Countries />
+                        </div>
+                    } />
+                    <Route path="/categories" element={
+                        <div>
+                            <Categories />
                         </div>
                     } />
                 </Routes>
