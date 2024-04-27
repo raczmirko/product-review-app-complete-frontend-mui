@@ -534,7 +534,7 @@ export default function BrandTable() {
                 setIsOpen={setModalActive}
                 entityToAdd="brand"
                 closeFunction={toggleShowModal}
-                createBrandFunction={createEntity}
+                createEntityFunction={createEntity}
             />
             {renderConfirUpdateDialog()}
             <ConfirmationDialog 
