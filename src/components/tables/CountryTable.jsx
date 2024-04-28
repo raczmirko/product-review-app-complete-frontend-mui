@@ -144,8 +144,7 @@ export default function CountriesTable() {
             searchEntities();
             return;
         } catch (error) {
-            showSnackBar("error", error);
-            return [];
+            console.error(error);
         }
     };
 
@@ -175,8 +174,7 @@ export default function CountriesTable() {
             searchEntities();
             return;
         } catch (error) {
-            showSnackBar("error", error);
-            return [];
+            console.log(error);
         }
     };
 
@@ -207,7 +205,6 @@ export default function CountriesTable() {
                 return;
             } catch (error) {
                 console.error(error, 'Country may already exist.');
-                return [];
             }
     };
 
@@ -234,7 +231,6 @@ export default function CountriesTable() {
             }
         } catch (error) {
             console.error('Error modifying country:', error);
-            return [];
         }
     };
 
@@ -272,7 +268,6 @@ export default function CountriesTable() {
             return;
         } catch (error) {
             console.error('Error searching countries:', error);
-            return []; // Return an empty array if an error occurs
         }
     };
 

@@ -156,8 +156,7 @@ export default function BrandTable() {
             searchEntities();
             return;
         } catch (error) {
-            showSnackBar("error", error);
-            return [];
+            console.error(error);
         }
     };
 
@@ -187,8 +186,7 @@ export default function BrandTable() {
             searchEntities();
             return;
         } catch (error) {
-            showSnackBar("error", error);
-            return [];
+            console.error(error);
         }
     };
 
@@ -220,7 +218,6 @@ export default function BrandTable() {
                 return;
             } catch (error) {
                 console.error(error, 'Brand may already exist.');
-                return [];
             }
     };
 
@@ -247,7 +244,6 @@ export default function BrandTable() {
             }
         } catch (error) {
             console.error('Error modifying brand:', error);
-            return [];
         }
     };
 
