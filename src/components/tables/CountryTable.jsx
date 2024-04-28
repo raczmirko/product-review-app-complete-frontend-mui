@@ -140,9 +140,10 @@ export default function CountriesTable() {
                 showSnackBar("error", errorMessage);
                 throw new Error(errorMessage);
             }
-            showSnackBar("success", "Successful deletion.");
+            else {
+                showSnackBar("success", "Successful deletion.");
+            }
             searchEntities();
-            return;
         } catch (error) {
             console.error(error);
         }
@@ -170,9 +171,10 @@ export default function CountriesTable() {
                 showSnackBar("error", errorMessage);
                 throw new Error(errorMessage);
             }
-            showSnackBar("success", "All records have been successfully deleted.");
+            else {
+                showSnackBar("success", "All records have been successfully deleted.");
+            }
             searchEntities();
-            return;
         } catch (error) {
             console.log(error);
         }
@@ -200,9 +202,10 @@ export default function CountriesTable() {
                     showSnackBar('error', errorMessage);
                     throw new Error(errorMessage);
                 }
+                else {
+                    showSnackBar('success', 'Record successfully.');
+                }
                 searchEntities();
-                showSnackBar('success', 'Record successfully.');
-                return;
             } catch (error) {
                 console.error(error, 'Country may already exist.');
             }
