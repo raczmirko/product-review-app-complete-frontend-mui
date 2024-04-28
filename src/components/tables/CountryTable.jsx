@@ -29,7 +29,7 @@ function getModifiedRowDifference(newRow, oldRow) {
         return `Name from '${oldRow.name}' to '${newRow.name}'`;
     }
     if (newRow.countryOfOrigin !== oldRow.countryOfOrigin) {
-        return `Country code from '${oldRow.countryOfOrigin.name || ''}' to '${newRow.countryOfOrigin.name || ''}'`;
+        return `Country code from '${oldRow.countryOfOrigin.name || 'none'}' to '${newRow.countryOfOrigin.name || 'none'}'`;
     }
     return null;
 }

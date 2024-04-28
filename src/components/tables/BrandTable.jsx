@@ -29,10 +29,10 @@ function getModifiedRowDifference(newRow, oldRow) {
         return `Name from '${oldRow.name}' to '${newRow.name}'`;
     }
     if (newRow.countryOfOrigin !== oldRow.countryOfOrigin) {
-        return `Country from '${oldRow.countryOfOrigin.name || ''}' to '${newRow.countryOfOrigin.name || ''}'`;
+        return `Country from '${oldRow.countryOfOrigin.name || 'none'}' to '${newRow.countryOfOrigin.name || 'none'}'`;
     }
     if (newRow.description !== oldRow.description) {
-        return `Description from '${oldRow.description || ''}' to '${newRow.description || ''}'`;
+        return `Description from '${oldRow.description || 'none'}' to '${newRow.description || 'none'}'`;
     }
     return null;
 }
