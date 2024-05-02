@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useRef } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -9,9 +10,10 @@ import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 
 function PaperComponent(props) {
+    const nodeRef = React.useRef(null);
     return (
-        <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
-            <Paper {...props} />
+        <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'} nodeRef={nodeRef}>
+            <Paper {...props} ref={nodeRef}/>
         </Draggable>
     );
 }
