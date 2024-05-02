@@ -29,10 +29,10 @@ function getModifiedRowDifference(newRow, oldRow) {
         return `Name from '${oldRow.name}' to '${newRow.name}'`;
     }
     if (newRow.parentCategory !== oldRow.parentCategory) {
-        return `Parent category from '${oldRow.parentCategory.name || ''}' to '${newRow.parentCategory.name || ''}'`;
+        return `Parent category from '${oldRow.parentCategory ? oldRow.parentCategory.name : 'none'}' to '${newRow.parentCategory ? newRow.parentCategory.name : 'none'}'`;
     }
     if (newRow.description !== oldRow.description) {
-        return `Description from '${oldRow.description || ''}' to '${newRow.description || ''}'`;
+        return `Description from '${oldRow.description || 'none'}' to '${newRow.description || 'none'}'`;
     }
     return null;
 }
@@ -147,15 +147,17 @@ export default function CategoryTable() {
             });
             const errorMessage = getNotificationTextByStatusCode(response.status);
             if (!response.ok) {
+                const errorMessage = await response.text();
                 showSnackBar("error", errorMessage);
                 throw new Error(errorMessage);
             }
-            showSnackBar("success", "Successful deletion.");
+            else {
+                showSnackBar("success", "Successful deletion.");
+            }
             searchEntities();
             return;
         } catch (error) {
-            showSnackBar("error", error);
-            return [];
+            console.error(error);
         }
     };
 
@@ -176,50 +178,49 @@ export default function CategoryTable() {
                 method: 'POST',
                 headers,
             });
-            const errorMessage = getNotificationTextByStatusCode(response.status);
             if (!response.ok) {
+                const errorMessage = await response.text();
                 showSnackBar("error", errorMessage);
-                throw new Error(errorMessage);
             }
-            showSnackBar("success", "All records have been successfully deleted.");
+            else {
+                showSnackBar("success", "All records have been successfully deleted.");
+            }
             searchEntities();
-            return;
         } catch (error) {
-            showSnackBar("error", error);
-            return [];
+            throw new Error(error);
         }
     };
 
     const createEntity = async (name, parentCategory, description) => {
-            const token = localStorage.getItem('token');
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            };
-            const params = {
-                name: name,
-                parentCategory: parentCategory ? parentCategory : undefined,
-                description: description
-            };
+        const token = localStorage.getItem('token');
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+        const params = {
+            name: name,
+            parentCategory: parentCategory ? parentCategory : undefined,
+            description: description
+        };
 
-            try {
-                const response = await fetch(`http://localhost:8080/category/create`, {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify(params)
-                });
-                const errorMessage = getNotificationTextByStatusCode(response.status);
-                if (!response.ok) {
-                    showSnackBar('error', errorMessage);
-                    throw new Error(errorMessage);
-                }
-                searchEntities();
-                showSnackBar('success', 'Record successfully.');
-                return;
-            } catch (error) {
-                console.error(error, 'Category may already exist.');
-                return [];
+        try {
+            const response = await fetch(`http://localhost:8080/category/create`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(params)
+            });
+            const errorMessage = getNotificationTextByStatusCode(response.status);
+            if (!response.ok) {
+                showSnackBar('error', errorMessage);
+                throw new Error(errorMessage);
             }
+            else {
+                showSnackBar('success', 'Record successfully.');
+            }
+            searchEntities();
+        } catch (error) {
+            console.error(error, 'Category may already exist.');
+        }
     };
 
     const modifyEntity = async (newCategory) => {
@@ -245,7 +246,6 @@ export default function CategoryTable() {
             }
         } catch (error) {
             console.error('Error modifying category:', error);
-            return [];
         }
     };
 
@@ -282,7 +282,6 @@ export default function CategoryTable() {
             return;
         } catch (error) {
             console.error('Error searching categorys:', error);
-            return []; // Return an empty array if an error occurs
         }
     };
 
@@ -392,11 +391,9 @@ export default function CategoryTable() {
             // Make the HTTP request to save in the backend
             const response = await modifyEntity(newRow);
             resolve(newRow);
-            showSnackBar('success', 'Changes successfully saved');
             setUpdatePromiseArguments(null);
             searchEntities();
         } catch (error) {
-            showSnackBar('error', 'Failed to save changes.');
             reject(oldRow);
             setUpdatePromiseArguments(null);
         }
@@ -434,15 +431,22 @@ export default function CategoryTable() {
 
         const handleChange = (event) => {
             let newCategoryName = event.target.value;
-            let newCategory = options.find(option => option.name === newCategoryName);
-            setSelectedCategory(newCategory);
+            let newCategory;
+            if(newCategoryName === 'none') {
+                newCategory = undefined;
+                setSelectedCategory(undefined);
+            }
+            else {
+                newCategory = options.find(option => option.name === newCategoryName);
+                setSelectedCategory(newCategory);
+            }
             apiRef.current.setEditCellValue({ id, field, value: newCategory });
             apiRef.current.stopCellEditMode({ id, field });
         };        
       
         return (
           <Select
-            value={selectedCategory? selectedCategory.name : ''}
+            value={selectedCategory ? selectedCategory.name : 'none'}
             onChange={handleChange}
             size="small"
             sx={{ height: 1 }}
@@ -450,6 +454,7 @@ export default function CategoryTable() {
             autoFocus
           >
             {/* Populate options from the categories data */}
+            <option value='none'>None</option>
             {options.map(option => (
               <option key={option.id} value={option.name}>
                 {option.name}
@@ -457,11 +462,11 @@ export default function CategoryTable() {
             ))}
           </Select>
         );
-      }
+    }
       
-      const renderSelectEditInputCell = (params) => {
-        return <SelectEditInputCell {...params} />;
-      };
+    const renderSelectEditInputCell = (params) => {
+    return <SelectEditInputCell {...params} />;
+    };
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
@@ -524,6 +529,11 @@ export default function CategoryTable() {
             }
     }];
 
+    const handleProcessRowUpdateError = (error) => {
+        console.error('Error updating row:', error);
+        showSnackBar('error', error.message)
+    };
+
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
@@ -550,6 +560,7 @@ export default function CategoryTable() {
                 onRowModesModelChange={handleRowModesModelChange}
                 onRowEditStop={handleRowEditStop}
                 processRowUpdate={processRowUpdate}
+                onProcessRowUpdateError={handleProcessRowUpdateError}
                 rows={categories}
                 rowCount={totalElements}
                 columns={columns}
