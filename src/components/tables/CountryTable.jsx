@@ -135,8 +135,8 @@ export default function CountriesTable() {
                 method: 'POST',
                 headers,
             });
-            const errorMessage = getNotificationTextByStatusCode(response.status);
             if (!response.ok) {
+                const errorMessage = await response.text();
                 showSnackBar("error", errorMessage);
                 throw new Error(errorMessage);
             }
@@ -166,8 +166,8 @@ export default function CountriesTable() {
                 method: 'POST',
                 headers,
             });
-            const errorMessage = getNotificationTextByStatusCode(response.status);
             if (!response.ok) {
+                const errorMessage = await response.text();
                 showSnackBar("error", errorMessage);
                 throw new Error(errorMessage);
             }
