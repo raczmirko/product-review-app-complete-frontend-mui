@@ -11,6 +11,7 @@ import { DataGrid,
         useGridApiContext } from '@mui/x-data-grid';
 import AlertSnackBar from '../AlertSnackBar';
 import CreateCategoryModal from '../modals/CreateCategoryModal';
+import ShowCategoryTreeModal from '../modals/ShowCategoryTreeModal';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CategoryService from '../../services/CategoryService';
 import AddIcon from '@mui/icons-material/Add';
@@ -18,6 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -73,10 +75,12 @@ export default function CategoryTable() {
 
     const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
 
-    const [modalActive, setModalActive] = useState(false);
+    const [creationModalActive, setCreationModalActive] = useState(false);
+    const [treeModalActive, setTreeModalActive] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     const [idToDelete, setIdToDelete] = useState();
+    const [categoryTreeId, setCategoryTreeId] = useState();
 
     const [paginationModel, setPaginationModel] = React.useState({
         page: 0,
@@ -110,8 +114,12 @@ export default function CategoryTable() {
         searchEntities();
     }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
 
-    const toggleShowModal = () => {
-        setModalActive(!modalActive);
+    const toggleShowCreationModal = () => {
+        setCreationModalActive(!creationModalActive);
+    }
+
+    const toggleShowTreeModal = () => {
+        setTreeModalActive(!treeModalActive);
     }
 
     const getNotificationTextByStatusCode = (code) => {
@@ -354,6 +362,11 @@ export default function CategoryTable() {
         setIdToDelete(id);
         setDeleteDialogOpen(true);
     };
+
+    const handleShowTreeModalClick = (id) => () => {
+        setCategoryTreeId(id);
+        setTreeModalActive(true);
+    }
     
     const handleCancelClick = (id) => () => {
         setRowModesModel({...rowModesModel, [id]: { mode: GridRowModes.View, ignoreModifications: true },
@@ -487,7 +500,7 @@ export default function CategoryTable() {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            width: 100,
+            width: 130,
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -520,6 +533,13 @@ export default function CategoryTable() {
                     color="inherit"
                 />,
                 <GridActionsCellItem
+                    icon={<AccountTreeIcon />}
+                    label="Edit"
+                    className="textPrimary"
+                    onClick={handleShowTreeModalClick(id)}
+                    color="inherit"
+                />,
+                <GridActionsCellItem
                     icon={<DeleteIcon />}
                     label="Delete"
                     onClick={handleDeleteClick(id)}
@@ -538,11 +558,17 @@ export default function CategoryTable() {
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             <CreateCategoryModal
-                isOpen={modalActive}
-                setIsOpen={setModalActive}
+                isOpen={creationModalActive}
+                setIsOpen={setCreationModalActive}
                 entityToAdd="category"
-                closeFunction={toggleShowModal}
+                closeFunction={toggleShowCreationModal}
                 createEntityFunction={createEntity}
+            />
+            <ShowCategoryTreeModal
+                isOpen={treeModalActive}
+                setIsOpen={setTreeModalActive}
+                closeFunction={toggleShowTreeModal}
+                categoryTreeId={categoryTreeId}
             />
             {renderConfirUpdateDialog()}
             <ConfirmationDialog 
@@ -590,7 +616,7 @@ export default function CategoryTable() {
                 slotProps={{
                     toolbar: {
                         showQuickFilter: true,
-                        setmodalactive: setModalActive,
+                        setmodalactive: setCreationModalActive,
                         deleterecords: deleteEntities,
                         rowselectionmodel: rowSelectionModel
                     },
