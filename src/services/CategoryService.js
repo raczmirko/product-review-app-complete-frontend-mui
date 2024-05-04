@@ -30,7 +30,6 @@ class CategoryService {
                 throw new Error('Failed to fetch category tree');
             }
             const data = await response.json();
-            console.log(data);
             return data;
         } catch (error) {
             console.error('Error fetching category tree:', error);
