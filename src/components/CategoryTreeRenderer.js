@@ -15,31 +15,31 @@ const renderCategoryTree = (categoryTree) => {
     const selectedItemIDs = [];
     const expandedItemIDs = [];
     if (parentParentCategory) {
-        expandedItemIDs.push(parentParentCategory.id);
+        expandedItemIDs.push(String(parentParentCategory.id));
     }
     if (currentParentCategory) {
-        expandedItemIDs.push(currentParentCategory.id);
+        expandedItemIDs.push(String(currentParentCategory.id));
     }
-    expandedItemIDs.push(currentCategory.id);
-    selectedItemIDs.push(currentCategory.id);
+    expandedItemIDs.push(String(currentCategory.id));
+    selectedItemIDs.push(String(currentCategory.id));
 
     return (
         <>
             <SimpleTreeView defaultExpandedItems={expandedItemIDs} defaultSelectedItems={selectedItemIDs}>
                 {/* Render from parentParentCategory if exists */}
                 {parentParentCategory && (
-                    <TreeItem itemId={parentParentCategory.id} label={parentParentCategory.name}>
+                    <TreeItem itemId={String(parentParentCategory.id)} label={parentParentCategory.name}>
                         {/* Render currentParentCategory */}
                         {currentParentCategory && (
-                            <TreeItem itemId={currentParentCategory.id} label={currentParentCategory.name}>
+                            <TreeItem itemId={String(currentParentCategory.id)} label={currentParentCategory.name}>
                                 {/* Render currentCategory */}
-                                <TreeItem itemId={currentCategory.id} label={currentCategory.name}>
+                                <TreeItem itemId={String(currentCategory.id)} label={currentCategory.name}>
                                     {/* Render currentSubcategories */}
                                     {currentSubcategories.map(subcategory => (
-                                        <TreeItem itemId={subcategory.id} label={subcategory.name}>
+                                        <TreeItem itemId={String(subcategory.id)} key={subcategory.id} label={subcategory.name}>
                                             {/* Render subSubcategories */}
                                             {subSubcategories[subcategory.id] && subSubcategories[subcategory.id].map(subSubcategory => (
-                                                <TreeItem itemId={subSubcategory.id} label={subSubcategory.name} />
+                                                <TreeItem itemId={String(subSubcategory.id)} key={subSubcategory.id} label={subSubcategory.name} />
                                             ))}
                                         </TreeItem>
                                     ))}
@@ -50,15 +50,15 @@ const renderCategoryTree = (categoryTree) => {
                 )}
                 {/* Render from currentParentCategory if exists */}
                 {!parentParentCategory && currentParentCategory && (
-                    <TreeItem itemId={currentParentCategory.id} label={currentParentCategory.name}>
+                    <TreeItem itemId={String(currentParentCategory.id)} label={currentParentCategory.name}>
                         {/* Render currentCategory */}
-                        <TreeItem itemId={currentCategory.id} label={currentCategory.name}>
+                        <TreeItem itemId={String(currentCategory.id)} label={currentCategory.name}>
                             {/* Render currentSubcategories */}
                             {currentSubcategories.map(subcategory => (
-                                <TreeItem itemId={subcategory.id} label={subcategory.name}>
+                                <TreeItem itemId={String(subcategory.id)} key={subcategory.id} label={subcategory.name}>
                                     {/* Render subSubcategories */}
                                     {subSubcategories[subcategory.id] && subSubcategories[subcategory.id].map(subSubcategory => (
-                                        <TreeItem itemId={subSubcategory.id} label={subSubcategory.name} />
+                                        <TreeItem itemId={String(subSubcategory.id)} key={subSubcategory.id} label={subSubcategory.name} />
                                     ))}
                                 </TreeItem>
                             ))}
@@ -68,12 +68,12 @@ const renderCategoryTree = (categoryTree) => {
                 )}
                 {/* Render from currentCategory */}
                 {!parentParentCategory && !currentParentCategory && (
-                    <TreeItem itemId={currentCategory.id} label={currentCategory.name}>
+                    <TreeItem itemId={String(currentCategory.id)} key={currentCategory.id} label={currentCategory.name}>
                         {currentSubcategories.map(subcategory => (
-                            <TreeItem itemId={subcategory.id} label={subcategory.name}>
+                            <TreeItem itemId={String(subcategory.id)} key={subcategory.id} label={subcategory.name}>
                                 {/* Render subSubcategories */}
                                 {subSubcategories[subcategory.id] && subSubcategories[subcategory.id].map(subSubcategory => (
-                                    <TreeItem itemId={subSubcategory.id} label={subSubcategory.name} />
+                                    <TreeItem itemId={String(subSubcategory.id)} key={subSubcategory.id} label={subSubcategory.name} />
                                 ))}
                             </TreeItem>
                         ))}
