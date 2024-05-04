@@ -3,8 +3,6 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import CategoryService from '../../services/CategoryService';
 import CategoryTreeRenderer from '../CategoryTreeRenderer';
 
@@ -12,6 +10,7 @@ import CategoryTreeRenderer from '../CategoryTreeRenderer';
 const ShowCategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpen }) => {
 
     const [categoryTree, setCategoryTree] = useState([]);
+    const [currentCategoryName, setCurrentCategoryName] = useState([]);
 
     const handleClose = () => {
         setIsOpen(false);
@@ -19,10 +18,20 @@ const ShowCategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpe
     }
 
     useEffect(() => {
+        // Clear tree when component mounts
+        setCategoryTree(undefined);
+        setCurrentCategoryName(undefined);
         // Fetch category tree when the component mounts
-        CategoryService.fetchCategoryTree(categoryTreeId)
-            .then(data => setCategoryTree(data))
+        if (categoryTreeId != undefined) {
+            CategoryService.fetchCategoryTree(categoryTreeId)
+            .then(data => {
+                // Extract the currentCategory from the data
+                const { currentCategory } = data;
+                setCurrentCategoryName(currentCategory.name);
+                setCategoryTree(data);
+            })
             .catch(error => console.error('Error:', error));
+        }
     }, [isOpen]);
 
     return (
@@ -45,12 +54,10 @@ const ShowCategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpe
                     outline: '1px solid #81be83'
                 }}
             >
-                <Typography variant="h5" component="div" gutterBottom>Category tree</Typography>
+                <Typography variant="h5" component="div" gutterBottom>Category tree for '{currentCategoryName}'</Typography>
                 <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
-                    <SimpleTreeView>
-                        {/* Call the renderCategoryTree function with the categoryTree and subSubcategories */}
-                        {CategoryTreeRenderer(categoryTree)}
-                    </SimpleTreeView>
+                    {/* Call the renderCategoryTree function with the categoryTree and subSubcategories */}
+                    {CategoryTreeRenderer(categoryTree)}
                 </Box>
                 <Box sx={{ textAlign: 'right' }}>
                     <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
