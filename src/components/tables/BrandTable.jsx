@@ -23,6 +23,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import CountryService from '../../services/CountryService';
 import Select from '@mui/material/Select';
+import NotificationService from "../../services/NotificationService";
 
 function getModifiedRowDifference(newRow, oldRow) {
     if (newRow.name !== oldRow.name) {
@@ -116,23 +117,6 @@ export default function BrandTable() {
         setModalActive(!modalActive);
     }
 
-    const getNotificationTextByStatusCode = (code) => {
-        let text = code + ": An error occurred, please try again later!";
-        if(code === 400) {
-            text = code + ": A brand with this name might already exist.";
-        }
-        if(code === 401) {
-            text = code + ": Authentication failed. Log in again!";
-        }
-        if(code === 403) {
-            text = code + ": You cannot access this page. Your session might have expired or you might need admin privileges to view.";
-        }
-        if(code === 404) {
-            text = code + ": NOT FOUND.";
-        }
-        return text;
-    }
-
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
@@ -147,9 +131,9 @@ export default function BrandTable() {
                 method: 'POST',
                 headers,
             });
-            const errorMessage = getNotificationTextByStatusCode(response.status);
             if (!response.ok) {
-                showSnackBar("error", errorMessage);
+                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
+                showSnackBar('error', errorMessage);
                 throw new Error(errorMessage);
             }
             else {
@@ -178,9 +162,9 @@ export default function BrandTable() {
                 method: 'POST',
                 headers,
             });
-            const errorMessage = getNotificationTextByStatusCode(response.status);
             if (!response.ok) {
-                showSnackBar("error", errorMessage);
+                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
+                showSnackBar('error', errorMessage);
                 throw new Error(errorMessage);
             }
             else {
@@ -210,8 +194,8 @@ export default function BrandTable() {
                     headers,
                     body: JSON.stringify(params)
                 });
-                const errorMessage = getNotificationTextByStatusCode(response.status);
                 if (!response.ok) {
+                    const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
                     showSnackBar('error', errorMessage);
                     throw new Error(errorMessage);
                 }
@@ -239,7 +223,8 @@ export default function BrandTable() {
             });
 
             if (!response.ok) {
-                showSnackBar('error', getNotificationTextByStatusCode(response.status));
+                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
+                showSnackBar('error', errorMessage);
                 throw new Error('Failed to update brand.');
             }
             else {
@@ -272,8 +257,8 @@ export default function BrandTable() {
             });
 
             if (!response.ok) {
-                const errorMessage = 'Failed to find brands.';
-                showSnackBar('error', getNotificationTextByStatusCode(response.status));
+                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
+                showSnackBar('error', errorMessage);
                 throw new Error(errorMessage);
             }
             const data = await response.json();

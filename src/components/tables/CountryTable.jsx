@@ -21,8 +21,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import CountryService from '../../services/CountryService';
-import Select from '@mui/material/Select';
+import NotificationService from '../../services/NotificationService';
 
 function getModifiedRowDifference(newRow, oldRow) {
     if (newRow.name !== oldRow.name) {
@@ -104,23 +103,6 @@ export default function CountriesTable() {
         setModalActive(!modalActive);
     }
 
-    const getNotificationTextByStatusCode = (code) => {
-        let text = code + ": An error occurred, please try again later!";
-        if(code === 400) {
-            text = code + ": A country with this name or country code might already exist.";
-        }
-        if(code === 401) {
-            text = code + ": Authentication failed. Log in again!";
-        }
-        if(code === 403) {
-            text = code + ": You cannot access this page. Your session might have expired or you might need admin privileges to view.";
-        }
-        if(code === 404) {
-            text = code + ": NOT FOUND.";
-        }
-        return text;
-    }
-
     // --- CRUD API calls --- //
 
     const deleteEntity = async (countryCode) => {
@@ -136,7 +118,7 @@ export default function CountriesTable() {
                 headers,
             });
             if (!response.ok) {
-                const errorMessage = await response.text();
+                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
                 showSnackBar("error", errorMessage);
                 throw new Error(errorMessage);
             }
@@ -167,7 +149,7 @@ export default function CountriesTable() {
                 headers,
             });
             if (!response.ok) {
-                const errorMessage = await response.text();
+                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
                 showSnackBar("error", errorMessage);
                 throw new Error(errorMessage);
             }
@@ -197,8 +179,8 @@ export default function CountriesTable() {
                     headers,
                     body: JSON.stringify(params)
                 });
-                const errorMessage = getNotificationTextByStatusCode(response.status);
                 if (!response.ok) {
+                    const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
                     showSnackBar('error', errorMessage);
                     throw new Error(errorMessage);
                 }
@@ -226,7 +208,8 @@ export default function CountriesTable() {
             });
 
             if (!response.ok) {
-                showSnackBar('error', getNotificationTextByStatusCode(response.status));
+                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
+                showSnackBar('error', errorMessage);
                 throw new Error('Failed to update country.');
             }
             else {
@@ -259,8 +242,8 @@ export default function CountriesTable() {
             });
 
             if (!response.ok) {
-                const errorMessage = 'Failed to find countries.';
-                showSnackBar('error', getNotificationTextByStatusCode(response.status));
+                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
+                showSnackBar('error', errorMessage);
                 throw new Error(errorMessage);
             }
             const data = await response.json();
