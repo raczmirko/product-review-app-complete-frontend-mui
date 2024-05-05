@@ -10,8 +10,12 @@ class CategoryService {
             if (!response.ok) {
                 throw new Error('Failed to fetch categories');
             }
-            const data = await response.json();
-            return data;
+            if (response.status === 204) {
+                return [];
+            } else {
+                const data = await response.json();
+                return data;
+            }
         } catch (error) {
             console.error('Error fetching categories:', error);
             return [];
