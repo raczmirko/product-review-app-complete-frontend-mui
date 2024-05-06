@@ -69,7 +69,6 @@ const CreateBrandModal = ({ closeFunction, createEntityFunction, isOpen, setIsOp
                         onChange={(e) => setDescription(e.target.value)}
                         variant="outlined"
                         fullWidth
-                        required
                         multiline
                         rows={4}
                         inputProps={{ maxLength: 100 }}
