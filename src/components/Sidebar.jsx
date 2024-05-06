@@ -25,6 +25,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CategoryIcon from '@mui/icons-material/Category';
+import StyleIcon from '@mui/icons-material/Style';
 
 const drawerWidth = 240;
 
@@ -143,6 +144,7 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
         { icon: <StorefrontIcon />, text: 'Brands', route: '/brands', visibleWithoutLogin: false },
         { icon: <PublicIcon />, text: 'Countries', route: '/countries', visibleWithoutLogin: false },
         { icon: <CategoryIcon />, text: 'Categories', route: '/categories', visibleWithoutLogin: false },
+        { icon: <StyleIcon />, text: 'Characteristics', route: '/characteristics', visibleWithoutLogin: false },
     ];
 
   return (

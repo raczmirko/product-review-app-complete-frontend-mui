@@ -13,6 +13,7 @@ import AlertSnackBar from './components/AlertSnackBar';
 import ParticleBackground from './components/ParticleBackground';
 import Container from '@mui/material/Container';
 import Categories from './pages/Categories';
+import Characteristics from './pages/Characteristics';
 
 const darkTheme = createTheme({
     palette: {
@@ -119,6 +120,11 @@ const App = () => {
                     <Route path="/categories" element={
                         <div>
                             <Categories />
+                        </div>
+                    } />
+                    <Route path="/characteristics" element={
+                        <div>
+                            <Characteristics />
                         </div>
                     } />
                 </Routes>
