@@ -17,7 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import CategoryIcon from '@mui/icons-material/Category';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -458,7 +458,7 @@ export default function CharacteristicTable() {
                     color="inherit"
                 />,
                 <GridActionsCellItem
-                    icon={<AccountTreeIcon />}
+                    icon={<CategoryIcon />}
                     label="Edit"
                     className="textPrimary"
                     onClick={handleShowAssignmentModalClick(id)}
