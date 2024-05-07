@@ -200,7 +200,7 @@ export default function BrandTable() {
                     throw new Error(errorMessage);
                 }
                 else {
-                    showSnackBar('success', 'Record successfully.');
+                    showSnackBar('success', 'Record successfully created.');
                 }
                 searchEntities();
             } catch (error) {
