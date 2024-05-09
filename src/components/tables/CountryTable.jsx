@@ -69,10 +69,13 @@ export default function CountriesTable() {
 
     const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
 
-    const [modalActive, setModalActive] = useState(false);
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [creationModalActive, setCreationModalActive] = useState(false);
 
-    const [countryCodeToDelete, setCountryCodeToDelete] = useState();
+    const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+    const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
+    const [confirmationDialogDescription, setConfirmationDialogDescription] = useState('');
+    const [confirmationDialogFunction, setConfirmationDialogFunction] = useState(null);
+    const [confirmationDialogFunctionParams, setConfirmationDialogFunctionParams] = useState([]);
 
     const [paginationModel, setPaginationModel] = React.useState({
         page: 0,
@@ -100,7 +103,7 @@ export default function CountriesTable() {
     }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
 
     const toggleShowModal = () => {
-        setModalActive(!modalActive);
+        setCreationModalActive(!creationModalActive);
     }
 
     // --- CRUD API calls --- //
@@ -323,8 +326,11 @@ export default function CountriesTable() {
     };
     
     const handleDeleteClick = (id) => () => {
-        setCountryCodeToDelete(id);
-        setDeleteDialogOpen(true);
+        setConfirmationDialogTitle("Are you sure want to delete?");
+        setConfirmationDialogDescription("This cannot be reverted.");
+        setConfirmationDialogFunction(() => deleteEntity);
+        setConfirmationDialogFunctionParams([id]);
+        setConfirmationDialogOpen(true);
     };
     
     const handleCancelClick = (id) => () => {
@@ -449,19 +455,20 @@ export default function CountriesTable() {
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             <CreateCountryModal
-                isOpen={modalActive}
-                setIsOpen={setModalActive}
+                isOpen={creationModalActive}
+                setIsOpen={setCreationModalActive}
                 entityToAdd="country"
                 closeFunction={toggleShowModal}
                 createEntityFunction={createEntity}
             />
             {renderConfirUpdateDialog()}
             <ConfirmationDialog 
-                dialogTitle={"Delete country?"}
-                dialogDescription={"This cannot be undone."}
-                isOpen={deleteDialogOpen}
-                setIsOpen={setDeleteDialogOpen}
-                functionToRunOnConfirm={() => deleteEntity(countryCodeToDelete)}
+                dialogTitle={confirmationDialogTitle}
+                dialogDescription={confirmationDialogDescription}
+                isOpen={confirmationDialogOpen}
+                setIsOpen={setConfirmationDialogOpen}
+                functionToRunOnConfirm={confirmationDialogFunction}
+                functionParams={confirmationDialogFunctionParams}
             />
             <DataGrid
                 autoHeight
@@ -500,7 +507,7 @@ export default function CountriesTable() {
                 slotProps={{
                     toolbar: {
                         showQuickFilter: true,
-                        setmodalactive: setModalActive,
+                        setmodalactive: setCreationModalActive,
                         deleterecords: deleteEntities,
                         rowselectionmodel: rowSelectionModel
                     },

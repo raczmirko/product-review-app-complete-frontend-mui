@@ -75,9 +75,12 @@ export default function BrandTable() {
     const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
 
     const [modalActive, setModalActive] = useState(false);
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    const [idToDelete, setIdToDelete] = useState();
+    const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+    const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
+    const [confirmationDialogDescription, setConfirmationDialogDescription] = useState('');
+    const [confirmationDialogFunction, setConfirmationDialogFunction] = useState(null);
+    const [confirmationDialogFunctionParams, setConfirmationDialogFunctionParams] = useState([]);
 
     const [paginationModel, setPaginationModel] = React.useState({
         page: 0,
@@ -338,8 +341,11 @@ export default function BrandTable() {
     };
     
     const handleDeleteClick = (id) => () => {
-        setIdToDelete(id);
-        setDeleteDialogOpen(true);
+        setConfirmationDialogTitle("Are you sure want to delete?");
+        setConfirmationDialogDescription("This cannot be reverted.");
+        setConfirmationDialogFunction(() => deleteEntity);
+        setConfirmationDialogFunctionParams([id]);
+        setConfirmationDialogOpen(true);
     };
     
     const handleCancelClick = (id) => () => {
@@ -520,11 +526,12 @@ export default function BrandTable() {
             />
             {renderConfirUpdateDialog()}
             <ConfirmationDialog 
-                dialogTitle={"Delete brand?"}
-                dialogDescription={"This cannot be undone."}
-                isOpen={deleteDialogOpen}
-                setIsOpen={setDeleteDialogOpen}
-                functionToRunOnConfirm={() => deleteEntity(idToDelete)}
+                dialogTitle={confirmationDialogTitle}
+                dialogDescription={confirmationDialogDescription}
+                isOpen={confirmationDialogOpen}
+                setIsOpen={setConfirmationDialogOpen}
+                functionToRunOnConfirm={confirmationDialogFunction}
+                functionParams={confirmationDialogFunctionParams}
             />
             <DataGrid
                 autoHeight
