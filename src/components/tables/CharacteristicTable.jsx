@@ -78,9 +78,13 @@ export default function CharacteristicTable() {
 
     const [creationModalActive, setCreationModalActive] = useState(false);
     const [assignmentModalActive, setAssignmentModalActive] = useState(false);
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    const [idToDelete, setIdToDelete] = useState();
+    const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+    const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
+    const [confirmationDialogDescription, setConfirmationDialogDescription] = useState('');
+    const [confirmationDialogFunction, setConfirmationDialogFunction] = useState(null);
+    const [confirmationDialogFunctionParams, setConfirmationDialogFunctionParams] = useState([]);
+
     const [characteristicToAssignId, setCharacteristicToAssignId] = useState();
 
     const [paginationModel, setPaginationModel] = React.useState({
@@ -116,6 +120,16 @@ export default function CharacteristicTable() {
         setAssignmentModalActive(!assignmentModalActive);
     }
 
+    // --- Error handling --- //
+
+    const showCascadeDeleteConfirmation = (id) => () => {
+        setConfirmationDialogTitle("Would you like to cascade delete?");
+        setConfirmationDialogDescription("Would you like to delete this characteristic along with all links between it and its categories? This cannot be reverted.");
+        setConfirmationDialogFunction(() => cascadeDeleteEntity);
+        setConfirmationDialogFunctionParams([id]);
+        setConfirmationDialogOpen(true);
+    };
+
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
@@ -127,6 +141,34 @@ export default function CharacteristicTable() {
 
         try {
             const response = await fetch(`http://localhost:8080/characteristic/${id}/delete`, {
+                method: 'POST',
+                headers,
+            });
+            if (!response.ok) {
+                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
+                showSnackBar('error', errorMessage);
+                showCascadeDeleteConfirmation(id)();
+                //throw new Error(errorMessage);
+            }
+            else {
+                showSnackBar("success", "Successful deletion.");
+            }
+            searchEntities();
+            return;
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const cascadeDeleteEntity = async (id) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+
+        try {
+            const response = await fetch(`http://localhost:8080/characteristic/${id}/cascade-delete`, {
                 method: 'POST',
                 headers,
             });
@@ -337,8 +379,11 @@ export default function CharacteristicTable() {
     };
     
     const handleDeleteClick = (id) => () => {
-        setIdToDelete(id);
-        setDeleteDialogOpen(true);
+        setConfirmationDialogTitle("Are you sure want to delete?");
+        setConfirmationDialogDescription("This cannot be reverted.");
+        setConfirmationDialogFunction(() => deleteEntity);
+        setConfirmationDialogFunctionParams([id]);
+        setConfirmationDialogOpen(true);
     };
 
     const handleShowAssignmentModalClick = (id) => () => {
@@ -492,11 +537,12 @@ export default function CharacteristicTable() {
             
             {renderConfirUpdateDialog()}
             <ConfirmationDialog 
-                dialogTitle={"Delete characteristic?"}
-                dialogDescription={"This cannot be undone."}
-                isOpen={deleteDialogOpen}
-                setIsOpen={setDeleteDialogOpen}
-                functionToRunOnConfirm={() => deleteEntity(idToDelete)}
+                dialogTitle={confirmationDialogTitle}
+                dialogDescription={confirmationDialogDescription}
+                isOpen={confirmationDialogOpen}
+                setIsOpen={setConfirmationDialogOpen}
+                functionToRunOnConfirm={confirmationDialogFunction}
+                functionParams={confirmationDialogFunctionParams}
             />
             <DataGrid
                 autoHeight
