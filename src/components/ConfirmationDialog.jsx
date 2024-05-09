@@ -17,11 +17,11 @@ function PaperComponent(props) {
     );
 }
 
-export default function ConfirmationDialog({ dialogTitle, dialogDescription, isOpen, setIsOpen, functionToRunOnConfirm }) {
+export default function ConfirmationDialog({ dialogTitle, dialogDescription, isOpen, setIsOpen, functionToRunOnConfirm, functionParams }) {
     
-      const handleConfirm = () => {
+    const handleConfirm = () => {
         setIsOpen(false);
-        functionToRunOnConfirm();
+        functionToRunOnConfirm(...functionParams);
     };    
 
     return (
