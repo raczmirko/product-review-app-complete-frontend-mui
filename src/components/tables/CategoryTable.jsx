@@ -87,14 +87,14 @@ export default function CategoryTable() {
 
     const [categoryTreeId, setCategoryTreeId] = useState();
 
-    const [paginationModel, setPaginationModel] = React.useState({
+    const [paginationModel, setPaginationModel] = useState({
         page: 0,
         pageSize: 10,
       });
-    const [filterModel, setFilterModel] = React.useState({ items: [] });
-    const [sortModel, setSortModel] = React.useState([]); 
-    const [rowModesModel, setRowModesModel] = React.useState({});
-    const [rowSelectionModel, setRowSelectionModel] = React.useState({});
+    const [filterModel, setFilterModel] = useState({ items: [] });
+    const [sortModel, setSortModel] = useState([]); 
+    const [rowModesModel, setRowModesModel] = useState({});
+    const [rowSelectionModel, setRowSelectionModel] = useState({});
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
     
@@ -431,7 +431,7 @@ export default function CategoryTable() {
     function SelectEditInputCell(props) {
         const { id, value, field, options } = props;
         const apiRef = useGridApiContext();
-        const [selectedCategory, setSelectedCategory] = React.useState(value);
+        const [selectedCategory, setSelectedCategory] = useState(value);
 
         const handleChange = (event) => {
             let newCategoryName = event.target.value;
