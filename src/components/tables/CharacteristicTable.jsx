@@ -23,6 +23,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import NotificationService from '../../services/NotificationService';
+import ShowCharacteristicCategoriesModal from '../modals/ShowCharacteristicCategoriesModal';
 
 function getModifiedRowDifference(newRow, oldRow) {
     if (newRow.name !== oldRow.name) {
@@ -77,7 +78,7 @@ export default function CharacteristicTable() {
     const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
 
     const [creationModalActive, setCreationModalActive] = useState(false);
-    const [assignmentModalActive, setAssignmentModalActive] = useState(false);
+    const [assignedCategoriesModalActive, setAssignedCategoriesModalActive] = useState(false);
 
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
@@ -116,8 +117,8 @@ export default function CharacteristicTable() {
         setCreationModalActive(!creationModalActive);
     }
 
-    const toggleShowTreeModal = () => {
-        setAssignmentModalActive(!assignmentModalActive);
+    const toggleAssignedCategoriesModal = () => {
+        setAssignedCategoriesModalActive(!assignedCategoriesModalActive);
     }
 
     // --- Error handling --- //
@@ -388,7 +389,7 @@ export default function CharacteristicTable() {
 
     const handleShowAssignmentModalClick = (id) => () => {
         setCharacteristicToAssignId(id);
-        setAssignmentModalActive(true);
+        setAssignedCategoriesModalActive(true);
     }
     
     const handleCancelClick = (id) => () => {
@@ -534,7 +535,12 @@ export default function CharacteristicTable() {
                 closeFunction={toggleShowCreationModal}
                 createEntityFunction={createEntity}
             />
-            
+            <ShowCharacteristicCategoriesModal
+                isOpen={assignedCategoriesModalActive}
+                setIsOpen={setAssignedCategoriesModalActive}
+                closeFunction={toggleAssignedCategoriesModal}
+                characteristicId={characteristicToAssignId}
+            />
             {renderConfirUpdateDialog()}
             <ConfirmationDialog 
                 dialogTitle={confirmationDialogTitle}
