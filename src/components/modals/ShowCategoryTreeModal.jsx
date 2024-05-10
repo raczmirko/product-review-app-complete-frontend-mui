@@ -7,7 +7,7 @@ import CategoryService from '../../services/CategoryService';
 import CategoryTreeRenderer from '../CategoryTreeRenderer';
 
 
-const ShowCategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpen }) => {
+const CategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpen }) => {
 
     const [categoryTree, setCategoryTree] = useState([]);
     const [currentCategoryName, setCurrentCategoryName] = useState([]);
@@ -67,4 +67,4 @@ const ShowCategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpe
     );
 };
 
-export default ShowCategoryTreeModal;
+export default CategoryTreeModal;

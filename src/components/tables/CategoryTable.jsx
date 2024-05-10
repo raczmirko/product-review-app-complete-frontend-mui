@@ -11,7 +11,8 @@ import { DataGrid,
         useGridApiContext } from '@mui/x-data-grid';
 import AlertSnackBar from '../AlertSnackBar';
 import CreateCategoryModal from '../modals/CreateCategoryModal';
-import ShowCategoryTreeModal from '../modals/ShowCategoryTreeModal';
+import CategoryTreeModal from '../modals/ShowCategoryTreeModal';
+import AssignCharacteristicsModal from '../modals/AssignCharacteristicsModal';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CategoryService from '../../services/CategoryService';
 import AddIcon from '@mui/icons-material/Add';
@@ -20,6 +21,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import AddLinkIcon from '@mui/icons-material/AddLink';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -78,6 +80,7 @@ export default function CategoryTable() {
 
     const [creationModalActive, setCreationModalActive] = useState(false);
     const [treeModalActive, setTreeModalActive] = useState(false);
+    const [assignCharacteristicsModalActive, setAssignCharacteristicsModalActive] = useState(false);
     
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
@@ -85,7 +88,7 @@ export default function CategoryTable() {
     const [confirmationDialogFunction, setConfirmationDialogFunction] = useState(null);
     const [confirmationDialogFunctionParams, setConfirmationDialogFunctionParams] = useState([]);
 
-    const [categoryTreeId, setCategoryTreeId] = useState();
+    const [idOfActionRow, setIdOfActionRow] = useState();
 
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
@@ -119,6 +122,8 @@ export default function CategoryTable() {
         searchEntities();
     }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
 
+    // --- Modal-related functions --- //
+
     const toggleShowCreationModal = () => {
         setCreationModalActive(!creationModalActive);
     }
@@ -126,6 +131,20 @@ export default function CategoryTable() {
     const toggleShowTreeModal = () => {
         setTreeModalActive(!treeModalActive);
     }
+
+    const toggleShowAssignemntModal = () => {
+        setAssignCharacteristicsModalActive(!assignCharacteristicsModalActive);
+    }
+
+    const handleShowTreeModalClick = (id) => () => {
+        setIdOfActionRow(id);
+        setTreeModalActive(true);
+    };
+
+    const handleShowAssignmentModalClick = (id) => () => {
+        setIdOfActionRow(id);
+        setAssignCharacteristicsModalActive(true);
+    };
 
     // --- CRUD API calls --- //
 
@@ -353,11 +372,6 @@ export default function CategoryTable() {
         setConfirmationDialogFunctionParams([id]);
         setConfirmationDialogOpen(true);
     };
-
-    const handleShowTreeModalClick = (id) => () => {
-        setCategoryTreeId(id);
-        setTreeModalActive(true);
-    }
     
     const handleCancelClick = (id) => () => {
         setRowModesModel({...rowModesModel, [id]: { mode: GridRowModes.View, ignoreModifications: true },
@@ -491,7 +505,7 @@ export default function CategoryTable() {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            width: 130,
+            width: 180,
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -531,6 +545,13 @@ export default function CategoryTable() {
                     color="inherit"
                 />,
                 <GridActionsCellItem
+                    icon={<AddLinkIcon />}
+                    label="Edit"
+                    className="textPrimary"
+                    onClick={handleShowAssignmentModalClick(id)}
+                    color="inherit"
+                />,
+                <GridActionsCellItem
                     icon={<DeleteIcon />}
                     label="Delete"
                     onClick={handleDeleteClick(id)}
@@ -555,11 +576,17 @@ export default function CategoryTable() {
                 closeFunction={toggleShowCreationModal}
                 createEntityFunction={createEntity}
             />
-            <ShowCategoryTreeModal
+            <CategoryTreeModal
                 isOpen={treeModalActive}
                 setIsOpen={setTreeModalActive}
                 closeFunction={toggleShowTreeModal}
-                categoryTreeId={categoryTreeId}
+                categoryTreeId={idOfActionRow}
+            />
+            <AssignCharacteristicsModal
+                isOpen={assignCharacteristicsModalActive}
+                setIsOpen={setAssignCharacteristicsModalActive}
+                closeFunction={toggleShowAssignemntModal}
+                idOfActionRow={idOfActionRow}
             />
             {renderConfirUpdateDialog()}
             <ConfirmationDialog 
