@@ -16,6 +16,7 @@ import NotificationService from '../../services/NotificationService';
 
 const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
     const [category, setCategory] = useState([]);
+    const [inheritedCharacteristics, setInheritedCharacteristics] = useState([]);
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState([]);
     const [right, setRight] = React.useState([]);
@@ -93,7 +94,7 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
     };
 
     const customList = (items) => (
-        <Paper sx={{ width: 200, height: 230, overflow: 'auto' }}>
+        <Paper sx={{ minWidth: 300, height: 300, overflow: 'auto' }}>
           <List dense component="div" role="list">
             {items.map((value) => {
               const labelId = `transfer-list-item-${value.id}-label`;
@@ -145,6 +146,10 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
             CharacteristicService.fetchAvailableCharacteristics(categoryId)
             .then(data => {
                 setLeft(data);
+            });
+            CharacteristicService.listInheritedCharacteristics(categoryId)
+            .then(data => {
+                setInheritedCharacteristics(data);
             })
         }
     }, []);
@@ -166,6 +171,7 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
                         maxWidth: '60%',
+                        minWidth: 800,
                         bgcolor: 'background.paper',
                         boxShadow: 24,
                         p: 4,
@@ -174,8 +180,14 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
                     }}
                 >
                     <Typography variant="h5" component="div" gutterBottom>Assign characteristics to {category.name}</Typography>
+                    <Typography variant="subtitle2" component="div" gutterBottom>Characteristics are inherited from parent categories. It is not possible to assign characteristics that are already inherited, or that are already assigned to one of the subcategories.</Typography>
                     <hr/>
-                    <Typography variant="p" component="div" gutterBottom>Characteristics are inherited from parent categories.</Typography>
+                    <Typography variant="h6" component="div" gutterBottom>{category.name}'s inherited characteristics:</Typography>
+                    {inheritedCharacteristics.map((characteristic) => (
+                        <Typography key={characteristic.id} variant="subititle2" component="paragraph" gutterBottom>
+                            {`${characteristic.name}(${characteristic.id}) `}
+                        </Typography>
+                    ))}
                     <hr/>
                     <Grid container spacing={2} justifyContent="center" alignItems="center">
                         <Grid item>{customList(left)}</Grid>
@@ -225,7 +237,7 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
                         </Grid>
                         <Grid item>{customList(right)}</Grid>
                     </Grid>
-                    <Box sx={{ textAlign: 'right'}}>
+                    <Box sx={{ textAlign: 'right', mt: 5}}>
                         <Button variant="contained" color="primary" sx={{ mr: 1 }} onClick={handleSave}>Save</Button>
                         <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
                     </Box>
