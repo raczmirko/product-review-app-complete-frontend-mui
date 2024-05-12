@@ -11,7 +11,7 @@ import { DataGrid,
         useGridApiContext } from '@mui/x-data-grid';
 import AlertSnackBar from '../AlertSnackBar';
 import CreateCategoryModal from '../modals/CreateCategoryModal';
-import CategoryTreeModal from '../modals/ShowCategoryTreeModal';
+import CategoryTreeModal from '../modals/CategoryTreeModal';
 import AssignCharacteristicsModal from '../modals/AssignCharacteristicsModal';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CategoryService from '../../services/CategoryService';

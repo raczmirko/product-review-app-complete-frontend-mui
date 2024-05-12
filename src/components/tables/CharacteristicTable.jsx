@@ -23,7 +23,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import NotificationService from '../../services/NotificationService';
-import ShowCharacteristicCategoriesModal from '../modals/ShowCharacteristicCategoriesModal';
+import ShowCharacteristicCategoriesModal from '../modals/CharacteristicCategoriesModal';
 
 function getModifiedRowDifference(newRow, oldRow) {
     if (newRow.name !== oldRow.name) {
