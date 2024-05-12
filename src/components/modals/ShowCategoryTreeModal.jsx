@@ -47,11 +47,12 @@ const CategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpen })
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: '30%',
+                    maxWidth: '30%',
                     bgcolor: 'background.paper',
                     boxShadow: 24,
                     p: 4,
-                    outline: '1px solid #81be83'
+                    outline: '1px solid #81be83',
+                    textAlign: 'center'
                 }}
             >
                 <Typography variant="h5" component="div" gutterBottom>Category tree for '{currentCategoryName}'</Typography>
