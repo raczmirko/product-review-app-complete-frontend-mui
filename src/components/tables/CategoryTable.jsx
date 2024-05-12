@@ -143,7 +143,7 @@ export default function CategoryTable() {
 
     const handleShowAssignmentModalClick = (id) => () => {
         setIdOfActionRow(id);
-        setAssignCharacteristicsModalActive(true);
+        toggleShowAssignemntModal();
     };
 
     // --- CRUD API calls --- //
