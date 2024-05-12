@@ -454,22 +454,22 @@ export default function CountriesTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            <CreateCountryModal
+            {creationModalActive && <CreateCountryModal
                 isOpen={creationModalActive}
                 setIsOpen={setCreationModalActive}
                 entityToAdd="country"
                 closeFunction={toggleShowModal}
                 createEntityFunction={createEntity}
-            />
+            />}
             {renderConfirUpdateDialog()}
-            <ConfirmationDialog 
+            {confirmationDialogOpen && <ConfirmationDialog 
                 dialogTitle={confirmationDialogTitle}
                 dialogDescription={confirmationDialogDescription}
                 isOpen={confirmationDialogOpen}
                 setIsOpen={setConfirmationDialogOpen}
                 functionToRunOnConfirm={confirmationDialogFunction}
                 functionParams={confirmationDialogFunctionParams}
-            />
+            />}
             <DataGrid
                 autoHeight
                 editMode="row" 

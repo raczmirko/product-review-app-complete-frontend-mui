@@ -569,34 +569,34 @@ export default function CategoryTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            <CreateCategoryModal
+            {creationModalActive && <CreateCategoryModal
                 isOpen={creationModalActive}
                 setIsOpen={setCreationModalActive}
                 entityToAdd="category"
                 closeFunction={toggleShowCreationModal}
                 createEntityFunction={createEntity}
-            />
-            <CategoryTreeModal
+            />}
+            {treeModalActive && <CategoryTreeModal
                 isOpen={treeModalActive}
                 setIsOpen={setTreeModalActive}
                 closeFunction={toggleShowTreeModal}
                 categoryTreeId={idOfActionRow}
-            />
-            <AssignCharacteristicsModal
+            />}
+            {assignCharacteristicsModalActive && <AssignCharacteristicsModal
                 isOpen={assignCharacteristicsModalActive}
                 setIsOpen={setAssignCharacteristicsModalActive}
                 closeFunction={toggleShowAssignemntModal}
-                idOfActionRow={idOfActionRow}
-            />
+                categoryId={idOfActionRow}
+            />}
             {renderConfirUpdateDialog()}
-            <ConfirmationDialog 
+            {confirmationDialogOpen && <ConfirmationDialog 
                 dialogTitle={confirmationDialogTitle}
                 dialogDescription={confirmationDialogDescription}
                 isOpen={confirmationDialogOpen}
                 setIsOpen={setConfirmationDialogOpen}
                 functionToRunOnConfirm={confirmationDialogFunction}
                 functionParams={confirmationDialogFunctionParams}
-            />
+            />}
             <DataGrid
                 autoHeight
                 editMode="row" 

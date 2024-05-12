@@ -74,7 +74,7 @@ export default function BrandTable() {
 
     const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
 
-    const [modalActive, setModalActive] = useState(false);
+    const [createBrandModalActive, setModalActive] = useState(false);
 
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
@@ -117,7 +117,7 @@ export default function BrandTable() {
     }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
 
     const toggleShowModal = () => {
-        setModalActive(!modalActive);
+        setModalActive(!createBrandModalActive);
     }
 
     // --- CRUD API calls --- //
@@ -517,22 +517,22 @@ export default function BrandTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            <CreateBrandModal
-                isOpen={modalActive}
+            {createBrandModalActive && <CreateBrandModal
+                isOpen={createBrandModalActive}
                 setIsOpen={setModalActive}
                 entityToAdd="brand"
                 closeFunction={toggleShowModal}
                 createEntityFunction={createEntity}
-            />
+            />}
             {renderConfirUpdateDialog()}
-            <ConfirmationDialog 
+            {confirmationDialogOpen && <ConfirmationDialog 
                 dialogTitle={confirmationDialogTitle}
                 dialogDescription={confirmationDialogDescription}
                 isOpen={confirmationDialogOpen}
                 setIsOpen={setConfirmationDialogOpen}
                 functionToRunOnConfirm={confirmationDialogFunction}
                 functionParams={confirmationDialogFunctionParams}
-            />
+            />}
             <DataGrid
                 autoHeight
                 editMode="row" 

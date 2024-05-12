@@ -528,28 +528,28 @@ export default function CharacteristicTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            <CreateCharacteristicModal
+            {creationModalActive && <CreateCharacteristicModal
                 isOpen={creationModalActive}
                 setIsOpen={setCreationModalActive}
                 entityToAdd="characteristic"
                 closeFunction={toggleShowCreationModal}
                 createEntityFunction={createEntity}
-            />
-            <ShowCharacteristicCategoriesModal
+            />}
+            {assignedCategoriesModalActive && <ShowCharacteristicCategoriesModal
                 isOpen={assignedCategoriesModalActive}
                 setIsOpen={setAssignedCategoriesModalActive}
                 closeFunction={toggleAssignedCategoriesModal}
                 characteristicId={characteristicToAssignId}
-            />
+            />}
             {renderConfirUpdateDialog()}
-            <ConfirmationDialog 
+            {confirmationDialogOpen && <ConfirmationDialog 
                 dialogTitle={confirmationDialogTitle}
                 dialogDescription={confirmationDialogDescription}
                 isOpen={confirmationDialogOpen}
                 setIsOpen={setConfirmationDialogOpen}
                 functionToRunOnConfirm={confirmationDialogFunction}
                 functionParams={confirmationDialogFunctionParams}
-            />
+            />}
             <DataGrid
                 autoHeight
                 editMode="row" 
