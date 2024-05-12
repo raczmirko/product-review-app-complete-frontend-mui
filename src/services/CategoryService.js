@@ -22,6 +22,26 @@ class CategoryService {
         }
     }
 
+    static async getCategory(id) {
+        const token = localStorage.getItem('token');
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+        try {
+            const response = await fetch(`http://localhost:8080/category/${id}`, {headers});
+            if (!response.ok) {
+                throw new Error('Failed to fetch category');
+            } else {
+                const data = await response.json();
+                return data;
+            }
+        } catch (error) {
+            console.error('Error fetching category:', error);
+            return [];
+        }
+    }
+
     static async fetchCategoryTree(id) {
         const token = localStorage.getItem('token');
         const headers = {
