@@ -10,6 +10,7 @@ import CharacteristicService from '../../services/CharacteristicService';
 const ShowCharacteristicCategoriesModal = ({ characteristicId, closeFunction, isOpen, setIsOpen }) => {
 
     const [assignedCategoryTrees, setAssignedCategoryTrees] = useState([]);
+    const [characteristic, setCharacteristic] = useState(undefined);
 
     const handleClose = () => {
         setIsOpen(false);
@@ -24,42 +25,49 @@ const ShowCharacteristicCategoriesModal = ({ characteristicId, closeFunction, is
             CharacteristicService.fetchAssignedCategoryTree(characteristicId)
             .then(data => {setAssignedCategoryTrees(data);})
             .catch(error => console.error('Error:', error));
+            CharacteristicService.fetchCharacteristic(characteristicId)
+            .then(data => {setCharacteristic(data);})
+            .catch(error => console.error('Error:', error));
         }
     }, [isOpen]);
 
     return (
-        <Modal
-            open={isOpen}
-            onClose={handleClose}
-            aria-labelledby="create-brand-modal"
-            aria-describedby="modal-to-create-brand"
-        >
-            <Box
-                sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: '30%',
-                    bgcolor: 'background.paper',
-                    boxShadow: 24,
-                    p: 4,
-                    outline: '1px solid #81be83'
-                }}
+        <>
+        {characteristic && 
+            <Modal
+                open={isOpen}
+                onClose={handleClose}
+                aria-labelledby="create-brand-modal"
+                aria-describedby="modal-to-create-brand"
             >
-                <Typography variant="h5" component="div" gutterBottom>Categories to which characteristic #{characteristicId} is assigned</Typography>
-                <hr/>
-                <Typography variant="p" component="div" gutterBottom>Subcategories inherit the characteristics of the parent categories. Categories that have the '>' symbol can be opened to view the hierarchy.</Typography>
-                <hr/>
-                <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
-                    {/* Call the renderCategoryTree function with the categoryTree and subSubcategories */}
-                    {renderAssignedCategoryTree(assignedCategoryTrees)}
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '30%',
+                        bgcolor: 'background.paper',
+                        boxShadow: 24,
+                        p: 4,
+                        outline: '1px solid #81be83'
+                    }}
+                >
+                    <Typography variant="h5" component="div" gutterBottom>Categories to which '{characteristic.name}' (ID#{characteristic.id}) is assigned</Typography>
+                    <hr/>
+                    <Typography variant="p" component="div" gutterBottom>Subcategories inherit the characteristics of the parent categories. Categories that have the '>' symbol can be opened to view the hierarchy.</Typography>
+                    <hr/>
+                    <Box sx={{ height: 220, flexGrow: 1, maxWidth: 400 }}>
+                        {/* Call the renderCategoryTree function with the categoryTree and subSubcategories */}
+                        {renderAssignedCategoryTree(assignedCategoryTrees)}
+                    </Box>
+                    <Box sx={{ textAlign: 'right' }}>
+                        <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                    </Box>
                 </Box>
-                <Box sx={{ textAlign: 'right' }}>
-                    <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
-                </Box>
-            </Box>
-        </Modal>
+            </Modal>
+        }
+        </>
     );
 };
 

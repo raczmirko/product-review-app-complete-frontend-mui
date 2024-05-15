@@ -18,6 +18,25 @@ class CharacteristicService {
         }
     };
 
+    static async fetchCharacteristic(id) {
+        const token = localStorage.getItem('token');
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+        try {
+            const response = await fetch(`http://localhost:8080/characteristic/${id}`, {headers});
+            if (!response.ok) {
+                throw new Error('Failed to fetch characteristic.');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching characteristic:', error);
+            return [];
+        }
+    };
+
     static async fetchAvailableCharacteristics(categoryId) {
         const token = localStorage.getItem('token');
         const headers = {
