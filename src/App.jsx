@@ -8,6 +8,7 @@ import SignInSide from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Home from './pages/Home';
 import Brands from './pages/Brands';
+import Articles from './pages/Articles';
 import Countries from './pages/Countries';
 import AlertSnackBar from './components/AlertSnackBar';
 import ParticleBackground from './components/ParticleBackground';
@@ -125,6 +126,11 @@ const App = () => {
                     <Route path="/characteristics" element={
                         <div>
                             <Characteristics />
+                        </div>
+                    } />
+                    <Route path="/articles" element={
+                        <div>
+                            <Articles />
                         </div>
                     } />
                 </Routes>
