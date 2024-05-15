@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CategoryService from '../../services/CategoryService';
 import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -145,6 +147,15 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
         filterLeftList('');
     }
 
+    const getRandomColor = () => {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    };
+
     useEffect(() => {
         setCategory(undefined);
         setLeft([]);
@@ -198,12 +209,30 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
                     <Typography variant="subtitle2" component="div" gutterBottom>Characteristics are inherited from parent categories. It is not possible to assign characteristics that are already inherited, or that are already assigned to one of the subcategories, thus these don't appear in the list.</Typography>
                     <hr/>
                     <Typography variant="h6" component="div" gutterBottom>{category.name}'s inherited characteristics:</Typography>
-                    <Box sx={{ maxHeight: 150, overflowY: 'auto', mb: 2 }}>
+                    <Box sx={{ maxHeight: 200, overflowY: 'auto', mb: 2, display: 'flex', flexWrap: 'wrap', gap: 2 }}>
                         {inheritedCharacteristics.length > 0 ? (
                                 inheritedCharacteristics.map(characteristic => (
-                                    <Typography key={characteristic.id} variant="subtitle2" component="p" gutterBottom>
-                                        {`${characteristic.name} (${characteristic.id}) `}
-                                    </Typography>
+                                    <Card 
+                                        key={characteristic.id} 
+                                        sx={{ 
+                                            minWidth: 100, 
+                                            maxWidth: 'calc(100% / 3)', // Adjust the max width to fit within the container
+                                            flexGrow: 1, 
+                                            backgroundColor: getRandomColor(), 
+                                            borderRadius: 2,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            p: 2,
+                                        }}
+                                    >
+                                        <CardContent>
+                                            <Typography variant="subtitle2" component="div">
+                                                {`${characteristic.name} (${characteristic.id})`}
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
                                 ))
                             ) : ('No characteristics inherited.')
                         }
