@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CategoryService from '../../services/CategoryService';
@@ -17,9 +18,11 @@ import NotificationService from '../../services/NotificationService';
 const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
     const [category, setCategory] = useState([]);
     const [inheritedCharacteristics, setInheritedCharacteristics] = useState([]);
-    const [checked, setChecked] = React.useState([]);
-    const [left, setLeft] = React.useState([]);
-    const [right, setRight] = React.useState([]);
+    const [checked, setChecked] = useState([]);
+    const [left, setLeft] = useState([]);
+    const [filteredLeft, setFilteredLeft] = useState([]);
+    const [right, setRight] = useState([]);
+    const [filter, setFilter] = useState('');
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
     
@@ -72,24 +75,24 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
     };
     
     const handleAllRight = () => {
-        setRight(right.concat(left));
-        setLeft([]);
+        setRight(right.concat(filteredLeft));
+        setFilteredLeft([]);
     };
     
     const handleCheckedRight = () => {
         setRight(right.concat(leftChecked));
-        setLeft(not(left, leftChecked));
+        setFilteredLeft(not(filteredLeft, leftChecked));
         setChecked(not(checked, leftChecked));
     };
     
     const handleCheckedLeft = () => {
-        setLeft(left.concat(rightChecked));
+        setFilteredLeft(filteredLeft.concat(rightChecked));
         setRight(not(right, rightChecked));
         setChecked(not(checked, rightChecked));
     };
     
     const handleAllLeft = () => {
-        setLeft(left.concat(right));
+        setFilteredLeft(filteredLeft.concat(right));
         setRight([]);
     };
 
@@ -131,6 +134,17 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
         return a.filter((value) => b.indexOf(value) !== -1);
     }
 
+    const filterLeftList = (filter) => {
+        setFilter(filter);
+        const regex = new RegExp(filter, 'i'); // 'i' makes the search case-insensitive
+        setFilteredLeft(left.filter(item => regex.test(item.name)));
+    }
+
+    const resetFilter = () => {
+        setFilter('');
+        filterLeftList('');
+    }
+
     useEffect(() => {
         setCategory(undefined);
         setLeft([]);
@@ -146,6 +160,7 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
             CharacteristicService.fetchAvailableCharacteristics(categoryId)
             .then(data => {
                 setLeft(data);
+                setFilteredLeft(data);
             });
             CharacteristicService.listInheritedCharacteristics(categoryId)
             .then(data => {
@@ -179,18 +194,26 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
                         textAlign: 'center'
                     }}
                 >
-                    <Typography variant="h5" component="div" gutterBottom>Assign characteristics to {category.name}</Typography>
-                    <Typography variant="subtitle2" component="div" gutterBottom>Characteristics are inherited from parent categories. It is not possible to assign characteristics that are already inherited, or that are already assigned to one of the subcategories.</Typography>
+                    <Typography variant="h5" component="div" gutterBottom>Assign characteristics to '{category.name}'</Typography>
+                    <Typography variant="subtitle2" component="div" gutterBottom>Characteristics are inherited from parent categories. It is not possible to assign characteristics that are already inherited, or that are already assigned to one of the subcategories, thus these don't appear in the list.</Typography>
                     <hr/>
                     <Typography variant="h6" component="div" gutterBottom>{category.name}'s inherited characteristics:</Typography>
-                    {inheritedCharacteristics.map((characteristic) => (
-                        <Typography key={characteristic.id} variant="subititle2" component="paragraph" gutterBottom>
-                            {`${characteristic.name}(${characteristic.id}) `}
-                        </Typography>
-                    ))}
+                    <Box sx={{ maxHeight: 150, overflowY: 'auto', mb: 2 }}>
+                        {inheritedCharacteristics.length > 0 ? (
+                                inheritedCharacteristics.map(characteristic => (
+                                    <Typography key={characteristic.id} variant="subtitle2" component="p" gutterBottom>
+                                        {`${characteristic.name} (${characteristic.id}) `}
+                                    </Typography>
+                                ))
+                            ) : ('No characteristics inherited.')
+                        }
+                    </Box>
                     <hr/>
                     <Grid container spacing={2} justifyContent="center" alignItems="center">
-                        <Grid item>{customList(left)}</Grid>
+                        <Grid item>
+                            <Typography variant="h6" component="div" gutterBottom>Available characteristics:</Typography>
+                            {customList(filteredLeft)}
+                        </Grid>
                         <Grid item>
                             <Grid container direction="column" alignItems="center">
                             <Button
@@ -198,7 +221,7 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
                                 variant="outlined"
                                 size="small"
                                 onClick={handleAllRight}
-                                disabled={left.length === 0}
+                                disabled={filteredLeft.length === 0}
                                 aria-label="move all right"
                             >
                                 ≫
@@ -235,11 +258,28 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
                             </Button>
                             </Grid>
                         </Grid>
-                        <Grid item>{customList(right)}</Grid>
+                        <Grid item>
+                            <Typography variant="h6" component="div" gutterBottom>Assigned characteristics:</Typography>
+                            {customList(right)}
+                        </Grid>
                     </Grid>
-                    <Box sx={{ textAlign: 'right', mt: 5}}>
-                        <Button variant="contained" color="primary" sx={{ mr: 1 }} onClick={handleSave}>Save</Button>
-                        <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 5 }}>
+                        <Box>
+                            <TextField 
+                                id='filterName'
+                                label='Filter name'
+                                name='name'
+                                size='small'
+                                value={filter}
+                                onChange={(e) => filterLeftList(e.target.value)}
+                                sx={{ maxWidth: '300px' }}
+                            />
+                            <Button variant="contained" color="error" sx={{ ml: 1 }} onClick={(e) => resetFilter()}>Clear</Button>
+                        </Box>
+                        <Box sx={{ textAlign: 'right' }}>
+                            <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={handleSave}>Save</Button>
+                            <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                        </Box>
                     </Box>
                 </Box>
             </Modal>
