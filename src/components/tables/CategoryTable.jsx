@@ -66,6 +66,7 @@ function EditToolbar(props) {
 export default function CategoryTable() {
 
     const [categories, setCategories] = useState([]);
+    const [availableParentCaregories, setAvailableParentCategories] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState('');
@@ -113,8 +114,8 @@ export default function CategoryTable() {
 
     useEffect(() => {
         // Fetch categories when the component mounts
-        CategoryService.fetchCategories()
-            .then(data => setCategories(data))
+        CategoryService.fetchAvailableParentCategories()
+            .then(data => setAvailableParentCategories(data))
             .catch(error => console.error('Error:', error));
     }, []);
 
@@ -494,7 +495,7 @@ export default function CategoryTable() {
             headerName: 'Parent category',
             width: 150,
             editable: true,
-            renderEditCell: (params) => renderSelectEditInputCell({ ...params, options: categories }),
+            renderEditCell: (params) => renderSelectEditInputCell({ ...params, options: availableParentCaregories }),
             valueGetter: (value, row) => {
                 return row.parentCategory;
             },
