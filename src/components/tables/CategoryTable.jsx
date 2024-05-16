@@ -475,9 +475,11 @@ export default function CategoryTable() {
             {/* Populate options from the categories data */}
             <option value='none'>None</option>
             {options.map(option => (
-              <option key={option.id} value={option.name}>
-                {option.name}
-              </option>
+                id != option.id && (
+                    <option key={option.id} value={option.name}>
+                        {option.name}
+                    </option>
+                )
             ))}
           </Select>
         );
