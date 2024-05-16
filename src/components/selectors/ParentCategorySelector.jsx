@@ -6,12 +6,12 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import CategoryService from '../../services/CategoryService';
 
-const CategorySelector = ({ selectedCategory, setSelectedCategory }) => {
+const ParentCategorySelector = ({ selectedCategory, setSelectedCategory }) => {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         // Fetch categories when the component mounts
-        CategoryService.fetchCategories()
+        CategoryService.fetchAvailableParentCategories()
             .then(data => setCategories(data))
             .catch(error => console.error('Error:', error));
     }, []);
@@ -22,7 +22,7 @@ const CategorySelector = ({ selectedCategory, setSelectedCategory }) => {
 
     return (
         <FormControl fullWidth>
-            <InputLabel id="category-select-label">Category</InputLabel>
+            <InputLabel id="category-select-label">Parent category</InputLabel>
             <Select
             labelId="category-select-label"
             variant='filled'
@@ -39,4 +39,4 @@ const CategorySelector = ({ selectedCategory, setSelectedCategory }) => {
     );
 };
 
-export default CategorySelector;
+export default ParentCategorySelector;
