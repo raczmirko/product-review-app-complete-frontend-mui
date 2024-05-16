@@ -101,7 +101,7 @@ export default function BrandTable() {
     const [snackBarText, setSnackBarText] = useState('');
     const [snackBarStatus, setSnackBarStatus] = useState('info');
 
-    const [categories, setCategories] = useState([]);
+    const [leafCategories, setLeafCategories] = useState([]);
     const [brands, setBrands] = useState([]);
 
     function showSnackBar (status, text) {
@@ -112,8 +112,8 @@ export default function BrandTable() {
 
     useEffect(() => {
         // Fetch categories and brands when the component mounts
-        CategoryService.fetchCategories()
-            .then(data => setCategories(data))
+        CategoryService.fetchLeafCategories()
+            .then(data => setLeafCategories(data))
             .catch(error => console.error('Error:', error));
         BrandService.fetchBrands()
             .then(data => setBrands(data))
@@ -506,7 +506,7 @@ export default function BrandTable() {
             headerName: 'Category',
             width: 150,
             editable: true,
-            renderEditCell: (params) => renderSelectCategoryEditInputCell({ ...params, options: categories }),
+            renderEditCell: (params) => renderSelectCategoryEditInputCell({ ...params, options: leafCategories }),
             valueGetter: (value, row) => {
                 return row.category;
             },
