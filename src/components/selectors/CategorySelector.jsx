@@ -6,15 +6,30 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import CategoryService from '../../services/CategoryService';
 
-const ParentCategorySelector = ({ selectedCategory, setSelectedCategory }) => {
+const CategorySelector = ({ selectedCategory, setSelectedCategory, selectorType }) => {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         // Fetch categories when the component mounts
-        CategoryService.fetchAvailableParentCategories()
+        // If selectorType is 'parent' then use fetchAvailableParentCategories endpoint
+        if(selectorType === 'parent') {
+            CategoryService.fetchAvailableParentCategories()
             .then(data => setCategories(data))
             .catch(error => console.error('Error:', error));
-    }, []);
+        }
+        // If selectorType is 'leaf' then use fetchLeafCategories endpoint
+        else if(selectorType === 'leaf') {
+            CategoryService.fetchLeafCategories()
+            .then(data => setCategories(data))
+            .catch(error => console.error('Error:', error));
+        }
+        // If selectorType is anything else fetch all categories
+        else {
+            CategoryService.fetchCategories()
+            .then(data => setCategories(data))
+            .catch(error => console.error('Error:', error));
+        }
+    }, [selectorType]);
 
     const handleChange = (event) => {
         setSelectedCategory(event.target.value);
@@ -22,7 +37,7 @@ const ParentCategorySelector = ({ selectedCategory, setSelectedCategory }) => {
 
     return (
         <FormControl fullWidth>
-            <InputLabel id="category-select-label">Parent category</InputLabel>
+            <InputLabel id="category-select-label">Category</InputLabel>
             <Select
             labelId="category-select-label"
             variant='filled'
@@ -39,4 +54,4 @@ const ParentCategorySelector = ({ selectedCategory, setSelectedCategory }) => {
     );
 };
 
-export default ParentCategorySelector;
+export default CategorySelector;

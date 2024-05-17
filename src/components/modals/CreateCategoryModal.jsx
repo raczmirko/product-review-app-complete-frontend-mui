@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
-import ParentCategorySelector from "../selectors/ParentCategorySelector";
+import CategorySelector from "../selectors/CategorySelector";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -62,7 +62,7 @@ const CreateCategoryModal = ({ closeFunction, createEntityFunction, isOpen, setI
                         inputProps={{ maxLength: 100 }}
                         sx={{ mb: 2 }}
                     />
-                    <ParentCategorySelector selectedCategory={parentCategory} setSelectedCategory={setParentCategory}/>
+                    <CategorySelector selectedCategory={parentCategory} setSelectedCategory={setParentCategory} selectorType='parent'/>
                     <TextField
                         label="Description"
                         value={description}
