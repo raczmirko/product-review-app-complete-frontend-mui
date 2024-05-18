@@ -2,7 +2,7 @@ class NotificationService {
     static getCustomNotification = (code, message) => {
         let text = code + ": An error occurred, please try again later!";
         if(code === 400) {
-            text = code + ": A country with this name or country code might already exist.";
+            text = code + ": BAD REQUEST. Something went wrong, please try again!";
         }
         if(code === 401) {
             text = code + ": Authentication failed. Log in again!";
