@@ -23,7 +23,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import BrandService from '../../services/BrandService'
 import Select from '@mui/material/Select';
-import NotificationService from "../../services/NotificationService";
 import CategoryService from '../../services/CategoryService';
 import { apiRequest } from '../../services/CrudService';
 
