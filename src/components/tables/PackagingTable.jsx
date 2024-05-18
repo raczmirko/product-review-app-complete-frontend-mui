@@ -114,13 +114,12 @@ export default function PackagingTable() {
         }
     };
 
-    const createEntity = async (name, unitOfMeasure, unitOfMeasureName, description, size, amount) => {
+    const createEntity = async (name, unitOfMeasure, unitOfMeasureName, size, amount) => {
         const endpoint = 'http://localhost:8080/packaging/create';
         const requestBody = {
             name: name,
             unitOfMeasure: unitOfMeasure,
             unitOfMeasureName: unitOfMeasureName,
-            description: description,
             size: size,
             amount: amount
         };
@@ -319,12 +318,11 @@ export default function PackagingTable() {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'name', headerName: 'Name', width: 150, editable: true },
-        { field: 'size', headerName: 'Size', width: 70, editable: true },
-        { field: 'unitOfMeasure', headerName: 'Unit of measure', width: 100, editable: true },
-        { field: 'unitOfMeasureName', headerName: 'Unit of measure name', width: 200, editable: true },
-        { field: 'amount', headerName: 'Amount', width: 70, editable: true },
-        { field: 'description', headerName: 'Description', flex:1, editable: true },
+        { field: 'name', headerName: 'Name', width: 200, editable: true },
+        { field: 'size', headerName: 'Size', width: 100, editable: true },
+        { field: 'amount', headerName: 'Amount', width: 100, editable: true },
+        { field: 'unitOfMeasure', headerName: 'Unit of measure', width: 150, editable: true },
+        { field: 'unitOfMeasureName', headerName: 'Unit of measure name', width: 200, flex:1, editable: true },
         {
             field: 'actions',
             type: 'actions',
