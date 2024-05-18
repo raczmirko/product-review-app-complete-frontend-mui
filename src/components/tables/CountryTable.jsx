@@ -21,7 +21,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import NotificationService from '../../services/NotificationService';
+import { apiRequest } from '../../services/CrudService';
 
 function getModifiedRowDifference(newRow, oldRow) {
     if (newRow.name !== oldRow.name) {
@@ -108,29 +108,17 @@ export default function CountriesTable() {
 
     // --- CRUD API calls --- //
 
-    const deleteEntity = async (countryCode) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/country/${countryCode}/delete`, {
-                method: 'POST',
-                headers,
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar("error", errorMessage);
-                throw new Error(errorMessage);
-            }
-            else {
-                showSnackBar("success", "Successful deletion.");
-            }
+    const deleteEntity = async (id) => {
+        const endpoint = `http://localhost:8080/country/${id}/delete`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'Record successfully deleted.');
             searchEntities();
-        } catch (error) {
-            console.error(error);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
@@ -140,86 +128,47 @@ export default function CountriesTable() {
             return;
         }
 
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/country/multi-delete/${ids}`, {
-                method: 'POST',
-                headers,
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar("error", errorMessage);
-                throw new Error(errorMessage);
-            }
-            else {
-                showSnackBar("success", "All records have been successfully deleted.");
-            }
+        const endpoint = `http://localhost:8080/country/multi-delete/${ids}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'All records have been successfully deleted.');
             searchEntities();
-        } catch (error) {
-            console.log(error);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
     const createEntity = async (countryCode, name) => {
-            const token = localStorage.getItem('token');
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            };
-            const params = {
-                countryCode: countryCode,
-                name: name
-            };
-
-            try {
-                const response = await fetch(`http://localhost:8080/country/create`, {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify(params)
-                });
-                if (!response.ok) {
-                    const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                    showSnackBar('error', errorMessage);
-                    throw new Error(errorMessage);
-                }
-                else {
-                    showSnackBar('success', 'Record successfully created.');
-                }
-                searchEntities();
-            } catch (error) {
-                console.error(error, 'Country may already exist.');
-            }
+        const endpoint = 'http://localhost:8080/country/create';
+        const requestBody = {
+            countryCode: countryCode,
+            name: name
+        };
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            searchEntities();
+            showSnackBar('success', 'Record successfully created.');
+        } else {
+            showSnackBar('error', result.message);
+        }
     };
 
     const modifyEntity = async (newCountry) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/country/${newCountry.countryCode}/modify`, {
-                method: 'PUT',
-                headers,
-                body: JSON.stringify(newCountry)
-            });
-
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error('Failed to update country.');
-            }
-            else {
-                showSnackBar('success', "Modification successful.")
-            }
-        } catch (error) {
-            console.error('Error modifying country:', error);
+        const endpoint = `http://localhost:8080/country/${newCountry.countryCode}/modify`;
+        const requestBody = newCountry;
+    
+        const result = await apiRequest(endpoint, 'PUT', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'Record successfully updated.');
+            searchEntities();
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
@@ -227,36 +176,22 @@ export default function CountriesTable() {
         if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('name')};
         if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('asc')};
 
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
         let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
         if (searchValue) queryParams += `&searchText=${searchValue}`;
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        try {
-            const response = await fetch(`http://localhost:8080/country/search${queryParams}`, {
-                method: 'GET',
-                headers,
-            });
-
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error(errorMessage);
-            }
-            const data = await response.json();
-            // Id attribute has to manually be added otherwise the GridTable doesn't function correctly
-            setCountries(data.content.map(country => ({...country, id: country.countryCode})));
-            setTotalPages(data.totalPages);
-            setTotalElements(data.totalElements)
-            return;
-        } catch (error) {
-            console.error('Error searching countries:', error);
+        const endpoint = `http://localhost:8080/country/search${queryParams}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+    
+        if (result.success) {
+            setCountries(result.data.content.map(country => ({...country, id: country.countryCode})));
+            setTotalPages(result.data.totalPages);
+            setTotalElements(result.data.totalElements);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 

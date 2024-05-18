@@ -23,7 +23,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import CountryService from '../../services/CountryService';
 import Select from '@mui/material/Select';
-import NotificationService from "../../services/NotificationService";
+import { apiRequest } from '../../services/CrudService';
 
 function getModifiedRowDifference(newRow, oldRow) {
     if (newRow.name !== oldRow.name) {
@@ -123,28 +123,16 @@ export default function BrandTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/brand/${id}/delete`, {
-                method: 'POST',
-                headers,
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error(errorMessage);
-            }
-            else {
-                showSnackBar("success", "Successful deletion.");
-            }
+        const endpoint = `http://localhost:8080/brand/${id}/delete`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'Record successfully deleted.');
             searchEntities();
-        } catch (error) {
-            console.error(error);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
@@ -154,87 +142,48 @@ export default function BrandTable() {
             return;
         }
 
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/brand/multi-delete/${ids}`, {
-                method: 'POST',
-                headers,
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error(errorMessage);
-            }
-            else {
-                showSnackBar("success", "All records have been successfully deleted.");
-            }
+        const endpoint = `http://localhost:8080/brand/multi-delete/${ids}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'All records have been successfully deleted.');
             searchEntities();
-        } catch (error) {
-            console.error(error);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
     const createEntity = async (name, country, description) => {
-            const token = localStorage.getItem('token');
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            };
-            const params = {
-                name: name,
-                countryOfOrigin: country,
-                description: description
-            };
-
-            try {
-                const response = await fetch(`http://localhost:8080/brand/create`, {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify(params)
-                });
-                if (!response.ok) {
-                    const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                    showSnackBar('error', errorMessage);
-                    throw new Error(errorMessage);
-                }
-                else {
-                    showSnackBar('success', 'Record successfully created.');
-                }
-                searchEntities();
-            } catch (error) {
-                console.error(error, 'Brand may already exist.');
-            }
+        const endpoint = 'http://localhost:8080/brand/create';
+        const requestBody = {
+            name: name,
+            countryOfOrigin: country,
+            description: description
+        };
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            searchEntities();
+            showSnackBar('success', 'Record successfully created.');
+        } else {
+            showSnackBar('error', result.message);
+        }
     };
 
     const modifyEntity = async (newBrand) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/brand/${newBrand.id}/modify`, {
-                method: 'PUT',
-                headers,
-                body: JSON.stringify(newBrand)
-            });
-
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error('Failed to update brand.');
-            }
-            else {
-                showSnackBar('success', "Modification successful.")
-            }
-        } catch (error) {
-            console.error('Error modifying brand:', error);
+        const endpoint = `http://localhost:8080/brand/${newBrand.id}/modify`;
+        const requestBody = newBrand;
+    
+        const result = await apiRequest(endpoint, 'PUT', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'Record successfully updated.');
+            searchEntities();
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
@@ -242,36 +191,22 @@ export default function BrandTable() {
         if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('name')};
         if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('asc')};
 
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
         let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
         if (searchValue) queryParams += `&searchText=${searchValue}`;
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        try {
-            const response = await fetch(`http://localhost:8080/brand/search${queryParams}`, {
-                method: 'GET',
-                headers,
-            });
-
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error(errorMessage);
-            }
-            const data = await response.json();
-            setBrands(data.content);
-            setTotalPages(data.totalPages);
-            setTotalElements(data.totalElements)
-            return;
-        } catch (error) {
-            console.error('Error searching brands:', error);
-            return []; // Return an empty array if an error occurs
+        const endpoint = `http://localhost:8080/brand/search${queryParams}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+    
+        if (result.success) {
+            setBrands(result.data.content);
+            setTotalPages(result.data.totalPages);
+            setTotalElements(result.data.totalElements);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 

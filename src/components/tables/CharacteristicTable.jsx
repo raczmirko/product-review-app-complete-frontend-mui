@@ -22,7 +22,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import NotificationService from '../../services/NotificationService';
+import { apiRequest } from '../../services/CrudService';
 import ShowCharacteristicCategoriesModal from '../modals/CharacteristicCategoriesModal';
 
 function getModifiedRowDifference(newRow, oldRow) {
@@ -134,57 +134,31 @@ export default function CharacteristicTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/characteristic/${id}/delete`, {
-                method: 'POST',
-                headers,
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                showCascadeDeleteConfirmation(id)();
-                //throw new Error(errorMessage);
-            }
-            else {
-                showSnackBar("success", "Successful deletion.");
-            }
+        const endpoint = `http://localhost:8080/characteristic/${id}/delete`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'Record successfully deleted.');
             searchEntities();
-            return;
-        } catch (error) {
-            console.error(error);
+        } else {
+            showSnackBar('error', result.message);
+            showCascadeDeleteConfirmation(id)();
         }
     };
 
     const cascadeDeleteEntity = async (id) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/characteristic/${id}/cascade-delete`, {
-                method: 'POST',
-                headers,
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error(errorMessage);
-            }
-            else {
-                showSnackBar("success", "Successful deletion.");
-            }
+        const endpoint = `http://localhost:8080/characteristic/${id}/cascade-delete`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'Record successfully deleted.');
             searchEntities();
-            return;
-        } catch (error) {
-            console.error(error);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
@@ -194,87 +168,49 @@ export default function CharacteristicTable() {
             return;
         }
 
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/characteristic/multi-delete/${ids}`, {
-                method: 'POST',
-                headers,
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-            }
-            else {
-                showSnackBar("success", "All records have been successfully deleted.");
-            }
+        const endpoint = `http://localhost:8080/characteristic/multi-delete/${ids}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'All records have been successfully deleted.');
             searchEntities();
-        } catch (error) {
-            throw new Error(error);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
     const createEntity = async (name, unitOfMeasure, unitOfMeasureName, description) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-        const params = {
+        const endpoint = 'http://localhost:8080/characteristic/create';
+        const requestBody = {
             name: name,
             unitOfMeasure: unitOfMeasure,
             unitOfMeasureName: unitOfMeasureName,
             description: description
         };
-
-        try {
-            const response = await fetch(`http://localhost:8080/characteristic/create`, {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(params)
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error(errorMessage);
-            }
-            else {
-                showSnackBar('success', 'Record successfully created.');
-            }
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
             searchEntities();
-        } catch (error) {
-            console.error(error, 'Characteristic may already exist.');
+            showSnackBar('success', 'Record successfully created.');
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
     const modifyEntity = async (newCharacteristic) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/characteristic/${newCharacteristic.id}/modify`, {
-                method: 'PUT',
-                headers,
-                body: JSON.stringify(newCharacteristic)
-            });
-
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error('Failed to update characteristic.');
-            }
-            else {
-                showSnackBar('success', "Modification successful.")
-            }
-        } catch (error) {
-            console.error('Error modifying characteristic:', error);
+        const endpoint = `http://localhost:8080/characteristic/${newCharacteristic.id}/modify`;
+        const requestBody = newCharacteristic;
+    
+        const result = await apiRequest(endpoint, 'PUT', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'Record successfully updated.');
+            searchEntities();
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
@@ -282,35 +218,22 @@ export default function CharacteristicTable() {
         if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('name')};
         if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('asc')};
 
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
         let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
         if (searchValue) queryParams += `&searchText=${searchValue}`;
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        try {
-            const response = await fetch(`http://localhost:8080/characteristic/search${queryParams}`, {
-                method: 'GET',
-                headers,
-            });
-
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error(errorMessage);
-            }
-            const data = await response.json();
-            setCharacteristics(data.content);
-            setTotalPages(data.totalPages);
-            setTotalElements(data.totalElements)
-            return;
-        } catch (error) {
-            console.error('Error searching characteristics:', error);
+        const endpoint = `http://localhost:8080/characteristic/search${queryParams}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+    
+        if (result.success) {
+            setCharacteristics(result.data.content);
+            setTotalPages(result.data.totalPages);
+            setTotalElements(result.data.totalElements);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 

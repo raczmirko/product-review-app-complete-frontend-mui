@@ -27,7 +27,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Select from '@mui/material/Select';
-import NotificationService from '../../services/NotificationService';
+import { apiRequest } from '../../services/CrudService';
 
 function getModifiedRowDifference(newRow, oldRow) {
     if (newRow.name !== oldRow.name) {
@@ -150,29 +150,16 @@ export default function CategoryTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/category/${id}/delete`, {
-                method: 'POST',
-                headers,
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error(errorMessage);
-            }
-            else {
-                showSnackBar("success", "Successful deletion.");
-            }
+        const endpoint = `http://localhost:8080/category/${id}/delete`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'Record successfully deleted.');
             searchEntities();
-            return;
-        } catch (error) {
-            console.error(error);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
@@ -182,86 +169,48 @@ export default function CategoryTable() {
             return;
         }
 
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/category/multi-delete/${ids}`, {
-                method: 'POST',
-                headers,
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-            }
-            else {
-                showSnackBar("success", "All records have been successfully deleted.");
-            }
+        const endpoint = `http://localhost:8080/category/multi-delete/${ids}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'All records have been successfully deleted.');
             searchEntities();
-        } catch (error) {
-            throw new Error(error);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
     const createEntity = async (name, parentCategory, description) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-        const params = {
+        const endpoint = 'http://localhost:8080/category/create';
+        const requestBody = {
             name: name,
             parentCategory: parentCategory ? parentCategory : undefined,
             description: description
         };
-
-        try {
-            const response = await fetch(`http://localhost:8080/category/create`, {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(params)
-            });
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error(errorMessage);
-            }
-            else {
-                showSnackBar('success', 'Record successfully created.');
-            }
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
             searchEntities();
-        } catch (error) {
-            console.error(error, 'Category may already exist.');
+            showSnackBar('success', 'Record successfully created.');
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
     const modifyEntity = async (newCategory) => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            const response = await fetch(`http://localhost:8080/category/${newCategory.id}/modify`, {
-                method: 'PUT',
-                headers,
-                body: JSON.stringify(newCategory)
-            });
-
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error('Failed to update category.');
-            }
-            else {
-                showSnackBar('success', "Modification successful.")
-            }
-        } catch (error) {
-            console.error('Error modifying category:', error);
+        const endpoint = `http://localhost:8080/category/${newCategory.id}/modify`;
+        const requestBody = newCategory;
+    
+        const result = await apiRequest(endpoint, 'PUT', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'Record successfully updated.');
+            searchEntities();
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
@@ -269,35 +218,22 @@ export default function CategoryTable() {
         if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('name')};
         if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('asc')};
 
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
         let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
         if (searchValue) queryParams += `&searchText=${searchValue}`;
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        try {
-            const response = await fetch(`http://localhost:8080/category/search${queryParams}`, {
-                method: 'GET',
-                headers,
-            });
-
-            if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                showSnackBar('error', errorMessage);
-                throw new Error(errorMessage);
-            }
-            const data = await response.json();
-            setCategories(data.content);
-            setTotalPages(data.totalPages);
-            setTotalElements(data.totalElements)
-            return;
-        } catch (error) {
-            console.error('Error searching categorys:', error);
+        const endpoint = `http://localhost:8080/category/search${queryParams}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+    
+        if (result.success) {
+            setCategories(result.data.content);
+            setTotalPages(result.data.totalPages);
+            setTotalElements(result.data.totalElements);
+        } else {
+            showSnackBar('error', result.message);
         }
     };
 
