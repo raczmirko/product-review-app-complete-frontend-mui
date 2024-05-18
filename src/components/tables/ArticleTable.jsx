@@ -10,7 +10,7 @@ import { DataGrid,
         GridRowEditStopReasons,
         useGridApiContext } from '@mui/x-data-grid';
 import AlertSnackBar from '../AlertSnackBar';
-import CreateBrandModal from '../modals/CreateBrandModal';
+import CreateArticleModal from '../modals/CreateArticleModal';
 import ConfirmationDialog from '../ConfirmationDialog';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -573,7 +573,7 @@ export default function BrandTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            {createBrandModalActive && <CreateBrandModal
+            {createBrandModalActive && <CreateArticleModal
                 isOpen={createBrandModalActive}
                 setIsOpen={setModalActive}
                 entityToAdd="brand"
