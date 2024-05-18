@@ -9,8 +9,8 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
     const [name, setName] = useState('');
     const [unitOfMeasure, setUnitOfMeasure] = useState('');
     const [unitOfMeasureName, setUnitOfMeasureName] = useState('');
-    const [size, setSize] = useState('');
-    const [amount, setAmount] = useState(1);
+    const [size, setSize] = useState(undefined);
+    const [amount, setAmount] = useState(undefined);
 
     const handleClose = () => {
         setIsOpen(false);
@@ -61,11 +61,21 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
                         inputProps={{ maxLength: 100 }}
                         sx={{ mb: 2 }}
                     />
+                    <TextField
+                        label="Size"
+                        value={name}
+                        onChange={(e) => setSize(e.target.value)}
+                        variant="outlined"
+                        fullWidth
+                        inputProps={{ maxLength: 100 }}
+                        sx={{ mb: 2 }}
+                    />
                      <TextField
                         id="outlined-number"
-                        label="Number"
+                        label="Amount"
                         type="number"
                         fullWidth
+                        required
                         InputLabelProps={{
                             maxLength: 100,
                             shrink: true,
