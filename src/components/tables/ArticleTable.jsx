@@ -187,7 +187,7 @@ export default function BrandTable() {
         }
     };
 
-    const createEntity = async (name, country, description) => {
+    const createEntity = async (name, category, brand, description) => {
             const token = localStorage.getItem('token');
             const headers = {
                 'Authorization': `Bearer ${token}`,
@@ -195,7 +195,8 @@ export default function BrandTable() {
             };
             const params = {
                 name: name,
-                countryOfOrigin: country,
+                category: category,
+                brand: brand,
                 description: description
             };
 
