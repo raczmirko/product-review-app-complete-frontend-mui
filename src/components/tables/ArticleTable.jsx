@@ -27,27 +27,8 @@ import CategoryService from '../../services/CategoryService';
 import { apiRequest } from '../../services/CrudService';
 import { Typography } from '@mui/material';
 import { getModifiedRowDifference } from '../../util/stringUtil';
+import EditToolbar from '../../components/EditToolbar';
 
-function EditToolbar(props) {
-    const { setmodalactive, deleterecords, rowselectionmodel, showQuickFilter } = props;
-    return (
-        <GridToolbarContainer>
-            <GridToolbar showQuickFilter/>
-            <Button color="primary" 
-                    startIcon={<AddIcon />} 
-                    onClick={() => setmodalactive(true)}
-            >
-                Add record
-            </Button>
-            <Button color="primary" 
-                    startIcon={<DeleteIcon />} 
-                    onClick={() => deleterecords(rowselectionmodel)}
-            >
-                Delete selected
-            </Button>
-        </GridToolbarContainer>
-    );
-}
 
 export default function BrandTable() {
 
