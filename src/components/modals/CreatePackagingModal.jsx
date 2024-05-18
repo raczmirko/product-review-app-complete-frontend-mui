@@ -9,7 +9,8 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
     const [name, setName] = useState('');
     const [unitOfMeasure, setUnitOfMeasure] = useState('');
     const [unitOfMeasureName, setUnitOfMeasureName] = useState('');
-    const [description, setDescription] = useState('');
+    const [size, setSize] = useState('');
+    const [amount, setAmount] = useState(1);
 
     const handleClose = () => {
         setIsOpen(false);
@@ -17,12 +18,13 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
         setName(undefined);
         setUnitOfMeasure(undefined);
         setUnitOfMeasureName(undefined);
-        setDescription(undefined);
+        setSize(undefined);
+        setAmount(undefined);
     }
 
     const handleCreate = (e) => {
         e.preventDefault();
-        createEntityFunction(name, unitOfMeasure, unitOfMeasureName, description);
+        createEntityFunction(name, unitOfMeasure, unitOfMeasureName, size, amount);
         handleClose();
     }
 
@@ -30,8 +32,8 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
         <Modal
             open={isOpen}
             onClose={handleClose}
-            aria-labelledby="create-characteristic-modal"
-            aria-describedby="modal-to-create-characteristic"
+            aria-labelledby="create-packaging-modal"
+            aria-describedby="modal-to-create-packaging"
         >
             <Box
                 sx={{
@@ -46,7 +48,7 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
                     outline: '1px solid #81be83'
                 }}
             >
-                <Typography variant="h5" component="div" gutterBottom>New characteristic</Typography>
+                <Typography variant="h5" component="div" gutterBottom>New packaging</Typography>
                 <form onSubmit={handleCreate}>
                     <TextField
                         label="Name"
@@ -59,8 +61,19 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
                         inputProps={{ maxLength: 100 }}
                         sx={{ mb: 2 }}
                     />
+                     <TextField
+                        id="outlined-number"
+                        label="Number"
+                        type="number"
+                        fullWidth
+                        InputLabelProps={{
+                            maxLength: 100,
+                            shrink: true,
+                        }}
+                    />
                     <TextField
                         label="Unit of measure"
+                        helperText="E.g.: kg"
                         value={unitOfMeasure}
                         onChange={(e) => setUnitOfMeasure(e.target.value)}
                         variant="outlined"
@@ -70,17 +83,9 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
                     />
                     <TextField
                         label="Unit of measure name"
+                        helperText="E.g.: Kilogram"
                         value={unitOfMeasureName}
                         onChange={(e) => setUnitOfMeasureName(e.target.value)}
-                        variant="outlined"
-                        fullWidth
-                        inputProps={{ maxLength: 100 }}
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
                         variant="outlined"
                         fullWidth
                         inputProps={{ maxLength: 100 }}
