@@ -83,6 +83,8 @@ const CreateCharacteristicModal = ({ closeFunction, createEntityFunction, isOpen
                         onChange={(e) => setDescription(e.target.value)}
                         variant="outlined"
                         fullWidth
+                        multiline
+                        rows={2}
                         inputProps={{ maxLength: 100 }}
                         sx={{ mb: 2 }}
                     />
