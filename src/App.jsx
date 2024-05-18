@@ -15,6 +15,7 @@ import ParticleBackground from './components/ParticleBackground';
 import Container from '@mui/material/Container';
 import Categories from './pages/Categories';
 import Characteristics from './pages/Characteristics';
+import Packagings from './pages/Packagings';
 
 const darkTheme = createTheme({
     palette: {
@@ -131,6 +132,11 @@ const App = () => {
                     <Route path="/articles" element={
                         <div>
                             <Articles />
+                        </div>
+                    } />
+                    <Route path="/packagings" element={
+                        <div>
+                            <Packagings />
                         </div>
                     } />
                 </Routes>
