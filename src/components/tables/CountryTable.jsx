@@ -22,16 +22,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { apiRequest } from '../../services/CrudService';
-
-function getModifiedRowDifference(newRow, oldRow) {
-    if (newRow.name !== oldRow.name) {
-        return `Name from '${oldRow.name}' to '${newRow.name}'`;
-    }
-    if (newRow.countryOfOrigin !== oldRow.countryOfOrigin) {
-        return `Country code from '${oldRow.countryOfOrigin.name || 'none'}' to '${newRow.countryOfOrigin.name || 'none'}'`;
-    }
-    return null;
-}
+import { Typography } from '@mui/material';
+import { getModifiedRowDifference } from '../../util/stringUtil';
 
 function EditToolbar(props) {
     const { setmodalactive, deleterecords, rowselectionmodel, showQuickFilter } = props;
@@ -327,7 +319,10 @@ export default function CountriesTable() {
             >
             <DialogTitle>Are you sure?</DialogTitle>
             <DialogContent dividers>
-                {`Pressing 'Yes' will change ${mutation}.`}
+                <Typography variant="h6" component="div">Pressing 'Yes' will change:</Typography>
+                <Typography variant="body1" component="div" sx={{ whiteSpace: 'pre-line' }}>
+                    {mutation}
+                </Typography>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCancelModification}>No</Button>

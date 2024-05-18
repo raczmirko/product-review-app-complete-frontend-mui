@@ -24,22 +24,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { apiRequest } from '../../services/CrudService';
 import ShowCharacteristicCategoriesModal from '../modals/CharacteristicCategoriesModal';
-
-function getModifiedRowDifference(newRow, oldRow) {
-    if (newRow.name !== oldRow.name) {
-        return `Name from '${oldRow.name}' to '${newRow.name}'`;
-    }
-    if (newRow.unitOfMeasure !== oldRow.unitOfMeasure) {
-        return `Unit of measure from '${oldRow.unitOfMeasure || 'none'}' to '${newRow.unitOfMeasure || 'none'}'`;
-    }
-    if (newRow.unitOfMeasureName !== oldRow.unitOfMeasureName) {
-        return `Unit of measure name from '${oldRow.unitOfMeasureName || 'none'}' to '${newRow.unitOfMeasureName || 'none'}'`;
-    }
-    if (newRow.description !== oldRow.description) {
-        return `Description from '${oldRow.description || 'none'}' to '${newRow.description || 'none'}'`;
-    }
-    return null;
-}
+import { Typography } from '@mui/material';
+import { getModifiedRowDifference } from '../../util/stringUtil';
 
 function EditToolbar(props) {
     const { setmodalactive, deleterecords, rowselectionmodel, showQuickFilter } = props;
@@ -374,7 +360,10 @@ export default function CharacteristicTable() {
             >
             <DialogTitle>Are you sure?</DialogTitle>
             <DialogContent dividers>
-                {`Pressing 'Yes' will change ${mutation}.`}
+                <Typography variant="h6" component="div">Pressing 'Yes' will change:</Typography>
+                <Typography variant="body1" component="div" sx={{ whiteSpace: 'pre-line' }}>
+                    {mutation}
+                </Typography>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCancelModification}>No</Button>

@@ -24,19 +24,8 @@ import DialogActions from '@mui/material/DialogActions';
 import CountryService from '../../services/CountryService';
 import Select from '@mui/material/Select';
 import { apiRequest } from '../../services/CrudService';
-
-function getModifiedRowDifference(newRow, oldRow) {
-    if (newRow.name !== oldRow.name) {
-        return `Name from '${oldRow.name}' to '${newRow.name}'`;
-    }
-    if (newRow.countryOfOrigin !== oldRow.countryOfOrigin) {
-        return `Country from '${oldRow.countryOfOrigin.name || 'none'}' to '${newRow.countryOfOrigin.name || 'none'}'`;
-    }
-    if (newRow.description !== oldRow.description) {
-        return `Description from '${oldRow.description || 'none'}' to '${newRow.description || 'none'}'`;
-    }
-    return null;
-}
+import { Typography } from '@mui/material';
+import { getModifiedRowDifference } from '../../util/stringUtil';
 
 function EditToolbar(props) {
     const { setmodalactive, deleterecords, rowselectionmodel, showQuickFilter } = props;
@@ -337,12 +326,15 @@ export default function BrandTable() {
 
         return (
             <Dialog
-            maxWidth="xs"
+            maxWidth="md"
             open={!!updatePromiseArguments}
             >
             <DialogTitle>Are you sure?</DialogTitle>
             <DialogContent dividers>
-                {`Pressing 'Yes' will change ${mutation}.`}
+                <Typography variant="h6" component="div">Pressing 'Yes' will change:</Typography>
+                <Typography variant="body1" component="div" sx={{ whiteSpace: 'pre-line' }}>
+                    {mutation}
+                </Typography>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCancelModification}>No</Button>
