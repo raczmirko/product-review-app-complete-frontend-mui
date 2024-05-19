@@ -71,8 +71,9 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
                         sx={{ mb: 2 }}
                     />
                      <TextField
-                        id="outlined-number"
                         label="Amount"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
                         type="number"
                         fullWidth
                         required
