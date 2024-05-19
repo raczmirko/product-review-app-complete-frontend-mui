@@ -372,45 +372,48 @@ export default function CharacteristicTable() {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
                 if (isInEditMode) {
                 return [
-                    <GridActionsCellItem
-                    icon={<Tooltip title={'Save row'}><SaveIcon /></Tooltip>}
-                    label="Save"
-                    sx={{
-                        color: 'primary.main',
-                    }}
-                    onClick={setRowModeToView(id)}
-                    />,
-                    <GridActionsCellItem
-                    icon={<Tooltip title={'Cancel modifications'}><CancelIcon /></Tooltip>}
-                    label="Cancel"
-                    className="textPrimary"
-                    onClick={handleCancelClick(id)}
-                    color="inherit"
-                    />,
+                    <Tooltip title={'Save row'}>
+                        <GridActionsCellItem
+                        icon={<SaveIcon />}
+                        label="Save"
+                        onClick={setRowModeToView(id)}
+                        />
+                    </Tooltip>,
+                    <Tooltip title={'Cancel modifications'}>
+                        <GridActionsCellItem
+                        icon={<CancelIcon />}
+                        label="Cancel"
+                        className="textPrimary"
+                        onClick={handleCancelClick(id)}
+                        />
+                    </Tooltip>,
                 ];
                 }
         
                 return [
-                <GridActionsCellItem
-                    icon={<Tooltip title={'Edit row'}><EditIcon /></Tooltip>}
-                    label="Edit"
-                    className="textPrimary"
-                    onClick={setRowModeToEdit(id)}
-                    color="inherit"
-                />,
-                <GridActionsCellItem
-                    icon={<Tooltip title={'Show assigned categories'}><CategoryIcon /></Tooltip>}
-                    label="Categories"
-                    className="textPrimary"
-                    onClick={handleShowAssignmentModalClick(id)}
-                    color="inherit"
-                />,
-                <GridActionsCellItem
-                    icon={<Tooltip title={'Delete row'}><DeleteIcon /></Tooltip>}
-                    label="Delete"
-                    onClick={handleDeleteClick(id)}
-                    color="inherit"
-                />,
+                <Tooltip title={'Edit row'}>
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label="Edit"
+                        className="textPrimary"
+                        onClick={setRowModeToEdit(id)}
+                    />
+                </Tooltip>,
+                <Tooltip title={'Show assigned categories'}>
+                    <GridActionsCellItem
+                        icon={<CategoryIcon />}
+                        label="Categories"
+                        className="textPrimary"
+                        onClick={handleShowAssignmentModalClick(id)}
+                    />
+                </Tooltip>,
+                <Tooltip title={'Delete row'}>
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={handleDeleteClick(id)}
+                    />
+                </Tooltip>,
                 ];
             }
     }];
