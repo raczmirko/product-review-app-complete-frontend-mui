@@ -23,6 +23,7 @@ import { getModifiedRowDifference } from '../../util/stringUtil';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreatePackagingModal from '../modals/CreatePackagingModal';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function PackagingTable() {
 
@@ -335,7 +336,7 @@ export default function PackagingTable() {
                 if (isInEditMode) {
                 return [
                     <GridActionsCellItem
-                    icon={<SaveIcon />}
+                    icon={<Tooltip title={'Save row'}><SaveIcon /></Tooltip>}
                     label="Save"
                     sx={{
                         color: 'primary.main',
@@ -343,7 +344,7 @@ export default function PackagingTable() {
                     onClick={setRowModeToView(id)}
                     />,
                     <GridActionsCellItem
-                    icon={<CancelIcon />}
+                    icon={<Tooltip title={'Cancel modifications'}><CancelIcon /></Tooltip>}
                     label="Cancel"
                     className="textPrimary"
                     onClick={handleCancelClick(id)}
@@ -354,14 +355,14 @@ export default function PackagingTable() {
         
                 return [
                 <GridActionsCellItem
-                    icon={<EditIcon />}
+                    icon={<Tooltip title={'Edit row'}><EditIcon /></Tooltip>}
                     label="Edit"
                     className="textPrimary"
                     onClick={setRowModeToEdit(id)}
                     color="inherit"
                 />,
                 <GridActionsCellItem
-                    icon={<DeleteIcon />}
+                    icon={<Tooltip title={'Delete row'}><DeleteIcon /></Tooltip>}
                     label="Delete"
                     onClick={handleDeleteClick(id)}
                     color="inherit"

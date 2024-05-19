@@ -1,8 +1,8 @@
+import AddLinkIcon from '@mui/icons-material/AddLink';
 import CancelIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
-import AddLinkIcon from '@mui/icons-material/AddLink';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,6 +11,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Select from '@mui/material/Select';
+import Tooltip from '@mui/material/Tooltip';
 import {
     DataGrid,
     GridActionsCellItem,
@@ -27,9 +28,8 @@ import { apiRequest } from '../../services/CrudService';
 import { getModifiedRowDifference } from '../../util/stringUtil';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
-import CreateArticleModal from '../modals/CreateArticleModal';
-import AssignCharacteristicsModal from '../modals/AssignCharacteristicsModal';
 import AssignPackagingModal from '../modals/AssignPackagingModal';
+import CreateArticleModal from '../modals/CreateArticleModal';
 
 export default function ArticleTable() {
 
@@ -456,7 +456,7 @@ export default function ArticleTable() {
                 if (isInEditMode) {
                 return [
                     <GridActionsCellItem
-                    icon={<SaveIcon />}
+                    icon={<Tooltip title={'Save row'}><SaveIcon /></Tooltip>}
                     label="Save"
                     sx={{
                         color: 'primary.main',
@@ -464,7 +464,7 @@ export default function ArticleTable() {
                     onClick={setRowModeToView(id)}
                     />,
                     <GridActionsCellItem
-                    icon={<CancelIcon />}
+                    icon={<Tooltip title={'Cancel modifications'}><CancelIcon /></Tooltip>}
                     label="Cancel"
                     className="textPrimary"
                     onClick={handleCancelClick(id)}
@@ -475,21 +475,21 @@ export default function ArticleTable() {
         
                 return [
                 <GridActionsCellItem
-                    icon={<EditIcon />}
+                    icon={<Tooltip title={'Edit row'}><EditIcon /></Tooltip>}
                     label="Edit"
                     className="textPrimary"
                     onClick={setRowModeToEdit(id)}
                     color="inherit"
                 />,
                 <GridActionsCellItem
-                    icon={<AddLinkIcon />}
+                    icon={<Tooltip title={'Create product from article'}><AddLinkIcon /></Tooltip>}
                     label="Edit"
                     className="textPrimary"
                     onClick={toggleShowCreateProductModal(id)}
                     color="inherit"
                 />,
                 <GridActionsCellItem
-                    icon={<DeleteIcon />}
+                    icon={<Tooltip title={'Delete row'}><DeleteIcon /></Tooltip>}
                     label="Delete"
                     onClick={handleDeleteClick(id)}
                     color="inherit"

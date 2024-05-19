@@ -30,6 +30,7 @@ import ConfirmationDialog from '../ConfirmationDialog';
 import AssignCharacteristicsModal from '../modals/AssignCharacteristicsModal';
 import CategoryTreeModal from '../modals/CategoryTreeModal';
 import CreateCategoryModal from '../modals/CreateCategoryModal';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function CategoryTable() {
 
@@ -426,7 +427,7 @@ export default function CategoryTable() {
                 if (isInEditMode) {
                 return [
                     <GridActionsCellItem
-                    icon={<SaveIcon />}
+                    icon={<Tooltip title={'Save row'}><SaveIcon /></Tooltip>}
                     label="Save"
                     sx={{
                         color: 'primary.main',
@@ -434,7 +435,7 @@ export default function CategoryTable() {
                     onClick={setRowModeToView(id)}
                     />,
                     <GridActionsCellItem
-                    icon={<CancelIcon />}
+                    icon={<Tooltip title={'Cancel modifications'}><CancelIcon /></Tooltip>}
                     label="Cancel"
                     className="textPrimary"
                     onClick={handleCancelClick(id)}
@@ -445,28 +446,28 @@ export default function CategoryTable() {
         
                 return [
                 <GridActionsCellItem
-                    icon={<EditIcon />}
+                    icon={<Tooltip title={'Edit row'}><EditIcon /></Tooltip>}
                     label="Edit"
                     className="textPrimary"
                     onClick={setRowModeToEdit(id)}
                     color="inherit"
                 />,
                 <GridActionsCellItem
-                    icon={<AccountTreeIcon />}
+                    icon={<Tooltip title={'Show category hierarchy'}><AccountTreeIcon /></Tooltip>}
                     label="Edit"
                     className="textPrimary"
                     onClick={handleShowTreeModalClick(id)}
                     color="inherit"
                 />,
                 <GridActionsCellItem
-                    icon={<AddLinkIcon />}
+                    icon={<Tooltip title={'Assign characteristics'}><AddLinkIcon /></Tooltip>}
                     label="Edit"
                     className="textPrimary"
                     onClick={handleShowAssignmentModalClick(id)}
                     color="inherit"
                 />,
                 <GridActionsCellItem
-                    icon={<DeleteIcon />}
+                    icon={<Tooltip title={'Delete row'}><DeleteIcon /></Tooltip>}
                     label="Delete"
                     onClick={handleDeleteClick(id)}
                     color="inherit"

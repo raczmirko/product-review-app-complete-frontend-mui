@@ -23,6 +23,7 @@ import { getModifiedRowDifference } from '../../util/stringUtil';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreateCountryModal from '../modals/CreateCountryModal';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function CountriesTable() {
 
@@ -328,7 +329,7 @@ export default function CountriesTable() {
                 if (isInEditMode) {
                 return [
                     <GridActionsCellItem
-                    icon={<SaveIcon />}
+                    icon={<Tooltip title={'Save row'}><SaveIcon /></Tooltip>}
                     label="Save"
                     sx={{
                         color: 'primary.main',
@@ -336,7 +337,7 @@ export default function CountriesTable() {
                     onClick={setRowModeToView(id)}
                     />,
                     <GridActionsCellItem
-                    icon={<CancelIcon />}
+                    icon={<Tooltip title={'Cancel modifications'}><CancelIcon /></Tooltip>}
                     label="Cancel"
                     className="textPrimary"
                     onClick={handleCancelClick(id)}
@@ -347,14 +348,14 @@ export default function CountriesTable() {
         
                 return [
                 <GridActionsCellItem
-                    icon={<EditIcon />}
+                    icon={<Tooltip title={'Edit row'}><EditIcon /></Tooltip>}
                     label="Edit"
                     className="textPrimary"
                     onClick={setRowModeToEdit(id)}
                     color="inherit"
                 />,
                 <GridActionsCellItem
-                    icon={<DeleteIcon />}
+                    icon={<Tooltip title={'Delete row'}><DeleteIcon /></Tooltip>}
                     label="Delete"
                     onClick={handleDeleteClick(id)}
                     color="inherit"
