@@ -2,6 +2,7 @@ import CancelIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import AddLinkIcon from '@mui/icons-material/AddLink';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -27,9 +28,10 @@ import { getModifiedRowDifference } from '../../util/stringUtil';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreateArticleModal from '../modals/CreateArticleModal';
+import AssignCharacteristicsModal from '../modals/AssignCharacteristicsModal';
+import AssignPackagingModal from '../modals/AssignPackagingModal';
 
-
-export default function BrandTable() {
+export default function ArticleTable() {
 
     const [articles, setArticles] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
@@ -44,7 +46,8 @@ export default function BrandTable() {
 
     const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
 
-    const [createBrandModalActive, setModalActive] = useState(false);
+    const [creationModalActive, setCreationModalActive] = useState(false);
+    const [createProductModalActive, setCreateProductModalActive] = useState(false);
 
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
@@ -70,6 +73,8 @@ export default function BrandTable() {
     const [leafCategories, setLeafCategories] = useState([]);
     const [brands, setBrands] = useState([]);
 
+    const [idOfActionRow, setIdOfActionRow] = useState('');
+
     function showSnackBar (status, text) {
         setSnackBarOpen(true);
         setSnackBarStatus(status);
@@ -90,8 +95,15 @@ export default function BrandTable() {
         searchEntities();
     }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
 
-    const toggleShowModal = () => {
-        setModalActive(!createBrandModalActive);
+    // --- Modal-related functions --- //
+
+    const toggleShowCreationModal = () => {
+        setCreationModalActive(!creationModalActive);
+    }
+
+    const toggleShowCreateProductModal = (id) => () => {
+        setIdOfActionRow(id);
+        setCreateProductModalActive(!createProductModalActive);
     }
 
     // --- CRUD API calls --- //
@@ -433,7 +445,7 @@ export default function BrandTable() {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            width: 100,
+            width: 180,
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -466,6 +478,13 @@ export default function BrandTable() {
                     color="inherit"
                 />,
                 <GridActionsCellItem
+                    icon={<AddLinkIcon />}
+                    label="Edit"
+                    className="textPrimary"
+                    onClick={toggleShowCreateProductModal(id)}
+                    color="inherit"
+                />,
+                <GridActionsCellItem
                     icon={<DeleteIcon />}
                     label="Delete"
                     onClick={handleDeleteClick(id)}
@@ -478,12 +497,18 @@ export default function BrandTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            {createBrandModalActive && <CreateArticleModal
-                isOpen={createBrandModalActive}
-                setIsOpen={setModalActive}
+            {creationModalActive && <CreateArticleModal
+                isOpen={creationModalActive}
+                setIsOpen={setCreationModalActive}
                 entityToAdd="brand"
-                closeFunction={toggleShowModal}
+                closeFunction={toggleShowCreationModal}
                 createEntityFunction={createEntity}
+            />}
+            {createProductModalActive && <AssignPackagingModal
+                isOpen={createProductModalActive}
+                setIsOpen={setCreateProductModalActive}
+                articleId={idOfActionRow}
+                closeFunction={toggleShowCreateProductModal}
             />}
             {renderConfirUpdateDialog()}
             {confirmationDialogOpen && <ConfirmationDialog 
@@ -531,7 +556,7 @@ export default function BrandTable() {
                 slotProps={{
                     toolbar: {
                         showQuickFilter: true,
-                        setmodalactive: setModalActive,
+                        setmodalactive: setCreationModalActive,
                         deleterecords: deleteEntities,
                         rowselectionmodel: rowSelectionModel
                     },
