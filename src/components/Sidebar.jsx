@@ -222,29 +222,31 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
             }
             </ListItem>
           ))}
-          <ListItem key={"Logout"} disablePadding sx={{ display: 'block' }}>
-            {
-                isLoggedIn && 
-                <ListItemButton onClick={logOut}
-                sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-                }}
-                >
-                    <ListItemIcon
-                    sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : 'auto',
-                        justifyContent: 'center',
-                    }}
-                    >
-                        <LogoutIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={"Log out"} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-            }
-          </ListItem>
+          <Tooltip title="Logout" placement="right">
+            <ListItem key={"Logout"} disablePadding sx={{ display: 'block' }}>
+              {
+                  isLoggedIn && 
+                  <ListItemButton onClick={logOut}
+                  sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                  }}
+                  >
+                      <ListItemIcon
+                      sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : 'auto',
+                          justifyContent: 'center',
+                      }}
+                      >
+                          <LogoutIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={"Log out"} sx={{ opacity: open ? 1 : 0 }} />
+                  </ListItemButton>
+              }
+            </ListItem>
+          </Tooltip>
         </List>
       </Drawer>
       {/* Adjust content margin based on sidebar state */}
