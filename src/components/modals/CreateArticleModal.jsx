@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import Modal from '@mui/material/Modal';
-import CategorySelector from "../selectors/CategorySelector";
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import React, { useState } from 'react';
 import BrandSelector from '../selectors/BrandSelector';
+import CategorySelector from "../selectors/CategorySelector";
 
 const CreateArticleModal = ({ closeFunction, createEntityFunction, isOpen, setIsOpen }) => {
     const [name, setName] = useState('');

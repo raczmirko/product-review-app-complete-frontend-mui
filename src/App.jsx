@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Typography } from '@mui/material';
-import Sidebar from './components/Sidebar';
-import { ThemeContext, ThemeProvider, createTheme } from '@mui/material/styles';
+import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignInSide from './pages/SignIn';
-import SignUp from './pages/SignUp';
-import Home from './pages/Home';
-import Brands from './pages/Brands';
-import Articles from './pages/Articles';
-import Countries from './pages/Countries';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import React, { useEffect, useState } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AlertSnackBar from './components/AlertSnackBar';
 import ParticleBackground from './components/ParticleBackground';
-import Container from '@mui/material/Container';
+import Sidebar from './components/Sidebar';
+import Articles from './pages/Articles';
+import Brands from './pages/Brands';
 import Categories from './pages/Categories';
 import Characteristics from './pages/Characteristics';
+import Countries from './pages/Countries';
+import Home from './pages/Home';
 import Packagings from './pages/Packagings';
+import SignInSide from './pages/SignIn';
+import SignUp from './pages/SignUp';
 
 const darkTheme = createTheme({
     palette: {

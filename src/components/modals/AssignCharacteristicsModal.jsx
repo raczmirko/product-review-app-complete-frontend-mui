@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import CategoryService from '../../services/CategoryService';
-import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
+import Modal from '@mui/material/Modal';
 import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import React, { useEffect, useState } from 'react';
+import CategoryService from '../../services/CategoryService';
 import CharacteristicService from '../../services/CharacteristicService';
 import NotificationService from '../../services/NotificationService';
 

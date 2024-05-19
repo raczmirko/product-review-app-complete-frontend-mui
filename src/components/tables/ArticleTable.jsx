@@ -1,33 +1,32 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import CancelIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { DataGrid, 
-        GridToolbar, 
-        GridToolbarContainer,
-        GridRowModes,
-        GridActionsCellItem,
-        GridRowEditStopReasons,
-        useGridApiContext } from '@mui/x-data-grid';
-import AlertSnackBar from '../AlertSnackBar';
-import CreateArticleModal from '../modals/CreateArticleModal';
-import ConfirmationDialog from '../ConfirmationDialog';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
 import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import BrandService from '../../services/BrandService'
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import Select from '@mui/material/Select';
+import {
+    DataGrid,
+    GridActionsCellItem,
+    GridRowEditStopReasons,
+    GridRowModes,
+    useGridApiContext
+} from '@mui/x-data-grid';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import EditToolbar from '../../components/EditToolbar';
+import BrandService from '../../services/BrandService';
 import CategoryService from '../../services/CategoryService';
 import { apiRequest } from '../../services/CrudService';
-import { Typography } from '@mui/material';
 import { getModifiedRowDifference } from '../../util/stringUtil';
-import EditToolbar from '../../components/EditToolbar';
+import AlertSnackBar from '../AlertSnackBar';
+import ConfirmationDialog from '../ConfirmationDialog';
+import CreateArticleModal from '../modals/CreateArticleModal';
 
 
 export default function BrandTable() {

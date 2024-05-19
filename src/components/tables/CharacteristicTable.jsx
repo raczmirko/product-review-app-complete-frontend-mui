@@ -1,32 +1,30 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import CategoryIcon from '@mui/icons-material/Category';
+import CancelIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { DataGrid, 
-        GridToolbar, 
-        GridToolbarContainer,
-        GridRowModes,
-        GridActionsCellItem,
-        GridRowEditStopReasons,
-        useGridApiContext } from '@mui/x-data-grid';
-import AlertSnackBar from '../AlertSnackBar';
-import CreateCharacteristicModal from '../modals/CreateCharacteristicModal';
-import ConfirmationDialog from '../ConfirmationDialog';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
-import CategoryIcon from '@mui/icons-material/Category';
 import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import { apiRequest } from '../../services/CrudService';
-import ShowCharacteristicCategoriesModal from '../modals/CharacteristicCategoriesModal';
-import { Typography } from '@mui/material';
-import { getModifiedRowDifference } from '../../util/stringUtil';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import {
+    DataGrid,
+    GridActionsCellItem,
+    GridRowEditStopReasons,
+    GridRowModes
+} from '@mui/x-data-grid';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import EditToolbar from '../../components/EditToolbar';
+import { apiRequest } from '../../services/CrudService';
+import { getModifiedRowDifference } from '../../util/stringUtil';
+import AlertSnackBar from '../AlertSnackBar';
+import ConfirmationDialog from '../ConfirmationDialog';
+import ShowCharacteristicCategoriesModal from '../modals/CharacteristicCategoriesModal';
+import CreateCharacteristicModal from '../modals/CreateCharacteristicModal';
 
 export default function CharacteristicTable() {
 

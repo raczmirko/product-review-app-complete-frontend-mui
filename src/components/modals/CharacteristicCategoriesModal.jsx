@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import renderAssignedCategoryTree from '../CharacteristicCategoryTreeRenderer';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import React, { useEffect, useState } from 'react';
 import CharacteristicService from '../../services/CharacteristicService';
+import renderAssignedCategoryTree from '../CharacteristicCategoryTreeRenderer';
 
 
 const ShowCharacteristicCategoriesModal = ({ characteristicId, closeFunction, isOpen, setIsOpen }) => {
