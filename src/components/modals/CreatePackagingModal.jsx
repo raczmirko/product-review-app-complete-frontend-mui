@@ -63,7 +63,7 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
                     />
                     <TextField
                         label="Size"
-                        value={name}
+                        value={size}
                         onChange={(e) => setSize(e.target.value)}
                         variant="outlined"
                         fullWidth
