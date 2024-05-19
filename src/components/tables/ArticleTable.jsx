@@ -43,6 +43,7 @@ export default function ArticleTable() {
     const [searchOperator, setSearchOperator] = useState('');
     const [orderByColumn, setOrderByColumn] = useState('name');
     const [orderByDirection, setOrderByDirection] = useState('asc');
+    const [loading, setLoading] = useState(false);
 
     const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
 
@@ -178,6 +179,8 @@ export default function ArticleTable() {
         if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('name')};
         if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('asc')};
 
+        setLoading(true);
+
         let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
         if (searchValue) queryParams += `&searchText=${searchValue}`;
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
@@ -192,6 +195,7 @@ export default function ArticleTable() {
             setArticles(result.data.content);
             setTotalPages(result.data.totalPages);
             setTotalElements(result.data.totalElements);
+            setLoading(false);
         } else {
             showSnackBar('error', result.message);
         }
@@ -530,6 +534,7 @@ export default function ArticleTable() {
                 rows={articles}
                 rowCount={totalElements}
                 columns={columns}
+                loading={loading}
                 filterMode="server"
                 sortingMode="server"
                 paginationMode="server"
