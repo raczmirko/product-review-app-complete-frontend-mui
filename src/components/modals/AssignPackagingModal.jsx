@@ -1,3 +1,5 @@
+import LinkIcon from '@mui/icons-material/Link';
+import { Card, CardContent, Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
@@ -5,14 +7,15 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import ArticleService from '../../services/ArticleService';
-import DataDisplayTable from '../tables/DataDisplayTable';
 import PackagingService from '../../services/PackagingService';
-
+import PackagingSelector from '../selectors/PackagingSelector';
+import DataDisplayTable from '../tables/DataDisplayTable';
 
 const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) => {
 
-    const [article, setArticle] = useState(undefined);
-    const [packagings, setPackagings] = useState(undefined);
+    const [article, setArticle] = useState('');
+    const [packaging, setPackaging] = useState('');
+    const [packagings, setPackagings] = useState([]);
     const [filteredArticles, setFilteredArticles] = useState([]);
     const [filter, setFilter] = useState('');
 
@@ -21,8 +24,16 @@ const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) =
         closeFunction();
     }
 
+    function resetVariables() {
+        setArticle('');
+        setPackaging('');
+        setPackagings([]);
+        setFilteredArticles([]);
+        setFilter('');
+    }
+
     useEffect(() => {
-        setArticle(undefined);
+        resetVariables();
         // Fetch all articles
         PackagingService.fetchPackagings()
         .then(data => {
@@ -52,54 +63,85 @@ const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) =
     }
 
     return (
-        <>
-        {article && packagings &&
-            <Modal
-                open={isOpen}
-                onClose={handleClose}
-                aria-labelledby="assign-packaging-modal"
-                aria-describedby="modal-to-assign-packaging"
+        <Modal
+            open={isOpen}
+            onClose={handleClose}
+            aria-labelledby="assign-packaging-modal"
+            aria-describedby="modal-to-assign-packaging"
+        >
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    maxWidth: '75%',
+                    bgcolor: 'background.paper',
+                    boxShadow: 24,
+                    p: 4,
+                    outline: '1px solid #81be83',
+                    textAlign: 'center'
+                }}
             >
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        maxWidth: '75%',
-                        bgcolor: 'background.paper',
-                        boxShadow: 24,
-                        p: 4,
-                        outline: '1px solid #81be83',
-                        textAlign: 'center'
-                    }}
-                >
-                    <Typography variant="h5" component="div" gutterBottom>Create a product of "{article.name}"</Typography>
-                    <Box sx={{ flexGrow: 1 }}>
-                        <DataDisplayTable data={filteredArticles} maxHeight={200}/>
+            <Typography variant="h5" component="div" gutterBottom>Create a product of "{article.name}"</Typography>
+            <hr/>
+            <Typography variant="subtitle1" component="div" gutterBottom>
+                An article is the theorical product. Products are made up of the combination of an article and a packaging type. 
+                One article may be available in many different packaging options, resulting in many products of the same article.
+            </Typography>
+            <hr/>
+            <Box>
+                <Typography variant="subtitle2" component="div" gutterBottom>
+                    Product structure:
+                </Typography>
+                <Grid container spacing={2} alignItems="center" justifyContent="center">
+                    <Grid item xs={5}>
+                        { article &&
+                        <Card sx={{ minWidth: 275, backgroundColor: '#81BE83', padding: 2 }}>
+                            <CardContent>
+                                <Typography variant="h5" color="black" gutterBottom>{article.name}</Typography>
+                                <Typography variant="body2" color="black">ID: {article.id}</Typography>
+                                <Typography variant="body2" color="black">Brand: {article.brand.name}</Typography>
+                                <Typography variant="body2" color="black">Category: {article.category.name}</Typography>
+                                <Typography variant="body2" color="black">Description: {article.description}</Typography>
+                            </CardContent>
+                        </Card>
+                        }
+                    </Grid>
+                    <Grid item xs={2} container justifyContent="center">
+                        <LinkIcon fontSize="large" />
+                    </Grid>
+                    <Grid item xs={5}>
+                        <PackagingSelector selectedPackaging={packaging} setSelectedPackaging={setPackaging} />
+                    </Grid>
+                </Grid>
+            </Box>
+                <hr/>
+                <Typography variant="subtitle2" component="div" gutterBottom>Available packaging options:</Typography>
+                <hr/>
+                <Box sx={{ flexGrow: 1 }}>
+                    <DataDisplayTable data={filteredArticles} maxHeight={200}/>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 5 }}>
+                    <Box>
+                        <TextField 
+                            id='filterName'
+                            label='Filter name'
+                            name='name'
+                            size='small'
+                            value={filter}
+                            onChange={(e) => filterArticles(e.target.value)}
+                            sx={{ maxWidth: '300px' }}
+                        />
+                        <Button variant="contained" color="error" sx={{ ml: 1 }} onClick={(e) => resetFilter()}>Clear</Button>
                     </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 5 }}>
-                        <Box>
-                            <TextField 
-                                id='filterName'
-                                label='Filter name'
-                                name='name'
-                                size='small'
-                                value={filter}
-                                onChange={(e) => filterArticles(e.target.value)}
-                                sx={{ maxWidth: '300px' }}
-                            />
-                            <Button variant="contained" color="error" sx={{ ml: 1 }} onClick={(e) => resetFilter()}>Clear</Button>
-                        </Box>
-                        <Box sx={{ textAlign: 'right' }}>
-                            <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={null}>Save</Button>
-                            <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
-                        </Box>
+                    <Box sx={{ textAlign: 'right' }}>
+                        <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={null}>Save</Button>
+                        <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
                     </Box>
                 </Box>
-            </Modal>
-        }
-        </>
+            </Box>
+        </Modal>
     );
 };
 
