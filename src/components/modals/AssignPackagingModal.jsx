@@ -101,8 +101,8 @@ const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) =
                 <Typography variant="subtitle2" component="div" gutterBottom>
                     Product structure:
                 </Typography>
-                <Grid container spacing={2} alignItems="center" justifyContent="center">
-                    <Grid item xs={5}>
+                <Grid container spacing={2} alignItems="center" justifyContent="center"  direction={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}>
+                    <Grid item xs={12} md={5}>
                         { article &&
                         <Card sx={{ minWidth: 275, backgroundColor: '#81BE83', padding: 2, overflow: 'auto' }}>
                             <CardContent>
@@ -115,10 +115,10 @@ const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) =
                         </Card>
                         }
                     </Grid>
-                    <Grid item xs={2} container justifyContent="center">
+                    <Grid item xs={12} md={1} container justifyContent="center">
                         <LinkIcon fontSize="large" />
                     </Grid>
-                    <Grid item xs={5}>
+                    <Grid item xs={12} md={5}>
                         <PackagingSelector selectedPackaging={packaging} setSelectedPackaging={setPackaging} />
                     </Grid>
                 </Grid>
