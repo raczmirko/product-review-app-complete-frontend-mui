@@ -42,7 +42,7 @@ export default function BrandTable() {
 
     const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
 
-    const [createBrandModalActive, setModalActive] = useState(false);
+    const [creationModalActive, setModalActive] = useState(false);
 
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
@@ -85,7 +85,7 @@ export default function BrandTable() {
     }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
 
     const toggleShowModal = () => {
-        setModalActive(!createBrandModalActive);
+        setModalActive(!creationModalActive);
     }
 
     // --- CRUD API calls --- //
@@ -423,8 +423,8 @@ export default function BrandTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            {createBrandModalActive && <CreateBrandModal
-                isOpen={createBrandModalActive}
+            {creationModalActive && <CreateBrandModal
+                isOpen={creationModalActive}
                 setIsOpen={setModalActive}
                 entityToAdd="brand"
                 closeFunction={toggleShowModal}
