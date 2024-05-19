@@ -6,12 +6,13 @@ import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import ArticleService from '../../services/ArticleService';
 import DataDisplayTable from '../tables/DataDisplayTable';
+import PackagingService from '../../services/PackagingService';
 
 
 const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) => {
 
     const [article, setArticle] = useState(undefined);
-    const [articles, setArticles] = useState(undefined);
+    const [packagings, setPackagings] = useState(undefined);
     const [filteredArticles, setFilteredArticles] = useState([]);
     const [filter, setFilter] = useState('');
 
@@ -23,9 +24,9 @@ const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) =
     useEffect(() => {
         setArticle(undefined);
         // Fetch all articles
-        ArticleService.fetchArticles()
+        PackagingService.fetchPackagings()
         .then(data => {
-            setArticles(data);
+            setPackagings(data);
             setFilteredArticles(data);
         })
         .catch(error => console.error('Error:', error));
@@ -42,7 +43,7 @@ const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) =
     const filterArticles = (filter) => {
         setFilter(filter);
         const regex = new RegExp(filter, 'i'); // 'i' makes the search case-insensitive
-        setFilteredArticles(articles.filter(item => regex.test(item.name) || regex.test(item.id)));
+        setFilteredArticles(packagings.filter(item => regex.test(item.name) || regex.test(item.id)));
     }
 
     const resetFilter = () => {
@@ -52,7 +53,7 @@ const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) =
 
     return (
         <>
-        {article && articles &&
+        {article && packagings &&
             <Modal
                 open={isOpen}
                 onClose={handleClose}
@@ -75,7 +76,7 @@ const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) =
                 >
                     <Typography variant="h5" component="div" gutterBottom>Create a product of "{article.name}"</Typography>
                     <Box sx={{ flexGrow: 1 }}>
-                        <DataDisplayTable data={filteredArticles}/>
+                        <DataDisplayTable data={filteredArticles} maxHeight={200}/>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 5 }}>
                         <Box>
