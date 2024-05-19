@@ -28,6 +28,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import StyleIcon from '@mui/icons-material/Style';
 import CoffeeIcon from '@mui/icons-material/Coffee';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import Tooltip from '@mui/material/Tooltip';
 
 const drawerWidth = 240;
 
@@ -205,15 +206,17 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
                     px: 2.5,
                     }}
                 >
-                    <ListItemIcon
-                    sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : 'auto',
-                        justifyContent: 'center',
-                    }}
-                    >
+                    <Tooltip title={option.text} placement="right">
+                      <ListItemIcon
+                      sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : 'auto',
+                          justifyContent: 'center',
+                      }}
+                      >
                         {option.icon}
-                    </ListItemIcon>
+                      </ListItemIcon>
+                    </Tooltip>
                     <ListItemText primary={option.text} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
             }
