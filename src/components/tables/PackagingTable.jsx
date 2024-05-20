@@ -25,11 +25,11 @@ import ConfirmationDialog from '../ConfirmationDialog';
 import CreatePackagingModal from '../modals/CreatePackagingModal';
 import Tooltip from '@mui/material/Tooltip';
 
-export default function PackagingTable() {
+export default function PackagingTable( {defPageSize, defDensity} ) {
 
     const [packagings, setPackagings] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(defPageSize);
     const [totalPages, setTotalPages] = useState('');
     const [totalElements, setTotalElements] = useState(0);
     const [searchValue, setSearchValue] = useState('');
@@ -51,7 +51,7 @@ export default function PackagingTable() {
 
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
-        pageSize: 10,
+        pageSize: defPageSize ? defPageSize : 10,
       });
     const [filterModel, setFilterModel] = useState({ items: [] });
     const [sortModel, setSortModel] = useState([]); 
@@ -400,6 +400,7 @@ export default function PackagingTable() {
             <DataGrid
                 autoHeight
                 editMode="row" 
+                density={defDensity ? defDensity : 'standard'}
                 rowModesModel={rowModesModel}
                 onRowSelectionModelChange={handleRowSelectionModelChange}
                 onRowModesModelChange={handleRowModesModelChange}

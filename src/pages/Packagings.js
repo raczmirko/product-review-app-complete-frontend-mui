@@ -12,7 +12,7 @@ const Packagings = () => {
             </Container>
             <Container >
                 <PageHeader text="Packagings" color="#81BE83" textColor="white"/>
-                <PackagingTable/>
+                <PackagingTable defPageSize={10} />
              </Container>
         </Container>
       );
