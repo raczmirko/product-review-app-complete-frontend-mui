@@ -142,7 +142,7 @@ export default function ArticleTable() {
         }
     };
 
-    const createEntity = async (name, category, brand, description) => {
+    const createArticle = async (name, category, brand, description) => {
         const endpoint = 'http://localhost:8080/article/create';
         const requestBody = {
             name: name,
@@ -156,6 +156,22 @@ export default function ArticleTable() {
         if (result.success) {
             searchEntities();
             showSnackBar('success', 'Record successfully created.');
+        } else {
+            showSnackBar('error', result.message);
+        }
+    };
+
+    const createProduct = async (article, packaging) => {
+        const endpoint = 'http://localhost:8080/product/create';
+        const requestBody = {
+            article: article,
+            packaging: packaging
+        };
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            showSnackBar('success', 'Product successfully created.');
         } else {
             showSnackBar('error', result.message);
         }
@@ -509,13 +525,14 @@ export default function ArticleTable() {
                 setIsOpen={setCreationModalActive}
                 entityToAdd="brand"
                 closeFunction={toggleShowCreationModal}
-                createEntityFunction={createEntity}
+                createEntityFunction={createArticle}
             />}
             {createProductModalActive && <AssignPackagingModal
                 isOpen={createProductModalActive}
                 setIsOpen={setCreateProductModalActive}
                 articleId={idOfActionRow}
                 closeFunction={toggleShowCreateProductModal}
+                createFunction={createProduct}
             />}
             {renderConfirUpdateDialog()}
             {confirmationDialogOpen && <ConfirmationDialog 

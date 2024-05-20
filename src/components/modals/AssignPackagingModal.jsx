@@ -11,7 +11,7 @@ import PackagingService from '../../services/PackagingService';
 import PackagingSelector from '../selectors/PackagingSelector';
 import DataDisplayTable from '../tables/DataDisplayTable';
 
-const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) => {
+const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen, createFunction }) => {
 
     const [article, setArticle] = useState('');
     const [packaging, setPackaging] = useState('');
@@ -67,6 +67,11 @@ const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) =
             return text.substring(0, 25) + '...';
         }
         return text;
+    }
+
+    const handleCreate = () => {
+        createFunction(article, packaging);
+        handleClose();
     }
 
     return (
@@ -143,7 +148,7 @@ const AssignPackagingModal = ({ articleId, closeFunction, isOpen, setIsOpen }) =
                         <Button variant="contained" color="error" sx={{ ml: 1 }} onClick={(e) => resetFilter()}>Clear</Button>
                     </Box>
                     <Box sx={{ textAlign: 'right' }}>
-                        <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={null}>Save</Button>
+                        <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={(e) => handleCreate()}>Save</Button>
                         <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
                     </Box>
                 </Box>
