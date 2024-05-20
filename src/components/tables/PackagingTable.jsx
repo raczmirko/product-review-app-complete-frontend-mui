@@ -417,7 +417,7 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
                 onFilterModelChange={handleFilterChange}
                 onSortModelChange={handleSortChange}
                 onPaginationModelChange={handlePaginationChange}
-                pageSizeOptions={[10, 30, 50, 70, 100]}
+                pageSizeOptions={[defPageSize, 10, 30, 50, 70, 100]}
                 initialState={{
                     pagination: {
                     paginationModel: paginationModel,
