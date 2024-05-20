@@ -8,11 +8,15 @@ import PackagingService from '../../services/PackagingService';
 
 const PackagingSelector = ({ selectedPackaging, setSelectedPackaging }) => {
     const [packagings, setPackagings] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         // Fetch countries when the component mounts
         PackagingService.fetchPackagings()
-            .then(data => setPackagings(data))
+            .then(data => {
+                setPackagings(data);
+                setIsLoaded(true);
+            })
             .catch(error => console.error('Error:', error));
     }, []);
 
@@ -22,7 +26,7 @@ const PackagingSelector = ({ selectedPackaging, setSelectedPackaging }) => {
 
     return (
         <>
-        {packagings &&
+        {packagings && isLoaded &&
             <FormControl fullWidth>
                 <InputLabel id="packaging-select-label">Packaging</InputLabel>
                 <Select
@@ -35,7 +39,7 @@ const PackagingSelector = ({ selectedPackaging, setSelectedPackaging }) => {
                 onChange={(e) => handleChange(e)}
                 >
                     {packagings.map(packaging => (
-                        <MenuItem key={packaging.id} value={packaging}>[ID#{packaging.id}] - {packaging.name}</MenuItem>
+                        <MenuItem key={packaging.id} value={packaging.id}>[ID#{packaging.id}] - {packaging.name}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
