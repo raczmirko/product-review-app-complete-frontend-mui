@@ -28,7 +28,7 @@ import { apiRequest } from '../../services/CrudService';
 import { getModifiedRowDifference } from '../../util/stringUtil';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
-import AssignPackagingModal from '../modals/AssignPackagingModal';
+import AssignPackagingModal from '../modals/CreateProductModal';
 import CreateArticleModal from '../modals/CreateArticleModal';
 
 export default function ArticleTable() {
