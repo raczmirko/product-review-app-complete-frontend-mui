@@ -6,13 +6,13 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import PackagingService from '../../services/PackagingService';
 
-const PackagingSelector = ({ selectedPackaging, setSelectedPackaging }) => {
+const PackagingSelector = ({ selectedPackaging, setSelectedPackaging, articleId }) => {
     const [packagings, setPackagings] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         // Fetch countries when the component mounts
-        PackagingService.fetchPackagings()
+        PackagingService.fetchAvailablePackagings(articleId)
             .then(data => {
                 setPackagings(data);
                 setIsLoaded(true);
