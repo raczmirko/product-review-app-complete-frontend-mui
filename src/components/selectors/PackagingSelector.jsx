@@ -21,7 +21,9 @@ const PackagingSelector = ({ selectedPackaging, setSelectedPackaging }) => {
     }, []);
 
     const handleChange = (event) => {
-        setSelectedPackaging(event.target.value);
+        const selectedId = event.target.value;
+        const selectedPack = packagings.find(pack => pack.id === selectedId);
+        setSelectedPackaging(selectedPack);
     };
 
     return (
@@ -34,7 +36,7 @@ const PackagingSelector = ({ selectedPackaging, setSelectedPackaging }) => {
                 labelId="packaging-select-label"
                 variant='outlined'
                 id="packaging-select"
-                value={selectedPackaging}
+                value={selectedPackaging ? selectedPackaging.id : ''}
                 label="Packaging"
                 onChange={(e) => handleChange(e)}
                 >
