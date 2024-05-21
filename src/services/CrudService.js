@@ -21,7 +21,7 @@ export const apiRequest = async (endpoint, method, requestBody) => {
 
         var data = undefined;
         try { 
-            var data = await response.json();
+            data = await response.json();
         }
         catch (error) {
            // If the response doesn't have a body then just ignore it
