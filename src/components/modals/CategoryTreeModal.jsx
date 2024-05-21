@@ -22,7 +22,7 @@ const CategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpen })
         setCategoryTree(undefined);
         setCurrentCategoryName(undefined);
         // Fetch category tree when the component mounts
-        if (categoryTreeId != undefined) {
+        if (categoryTreeId !== undefined) {
             CategoryService.fetchCategoryTree(categoryTreeId)
             .then(data => {
                 // Extract the currentCategory from the data

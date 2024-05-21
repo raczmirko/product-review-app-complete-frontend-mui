@@ -161,7 +161,7 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
         setLeft([]);
         setRight([]);
         // Fetch category tree when the component mounts
-        if (categoryId != undefined) {
+        if (categoryId !== undefined) {
             CategoryService.getCategory(categoryId)
             .then(data => {
                 setCategory(data);
