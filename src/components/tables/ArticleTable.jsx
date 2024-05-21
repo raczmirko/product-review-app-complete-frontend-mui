@@ -30,6 +30,7 @@ import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import AssignPackagingModal from '../modals/CreateProductModal';
 import CreateArticleModal from '../modals/CreateArticleModal';
+import ProductImageService from '../../services/ProductImageService';
 
 export default function ArticleTable() {
 
@@ -168,12 +169,25 @@ export default function ArticleTable() {
             packaging: packaging
         };
     
-        const result = await apiRequest(endpoint, 'POST', requestBody);
+        const response = await apiRequest(endpoint, 'POST', requestBody);
     
-        if (result.success) {
+        if (response.success) {
             showSnackBar('success', 'Product successfully created.');
+            return { success: true, productId:  response.data };
         } else {
-            showSnackBar('error', result.message);
+            showSnackBar('error', response.message);
+            return { success: false, message: response.message };
+        }
+    };
+
+    const uploadProductImages = async (productId, images) => {
+        
+        const response = await ProductImageService.uploadProductImages(productId, images);
+    
+        if (response.success) {
+            showSnackBar('success', 'Product images successfully uploaded.');
+        } else {
+            showSnackBar('error', 'Error during image upload.');
         }
     };
 
@@ -533,6 +547,7 @@ export default function ArticleTable() {
                 articleId={idOfActionRow}
                 closeFunction={toggleShowCreateProductModal}
                 createFunction={createProduct}
+                uploadImageFunction={uploadProductImages}
             />}
             {renderConfirUpdateDialog()}
             {confirmationDialogOpen && <ConfirmationDialog 
