@@ -1,27 +1,48 @@
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import LinkIcon from '@mui/icons-material/Link';
 import { Card, CardContent, Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
+import TextField from '@mui/material/TextField';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
-import React, { useEffect, useState } from 'react';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import ArticleService from '../../services/ArticleService';
 import PackagingService from '../../services/PackagingService';
+import CharacteristicService from '../../services/CharacteristicService';
 import PackagingSelector from '../selectors/PackagingSelector';
-import DataDisplayTable from '../tables/DataDisplayTable';
+import PackagingTable from '../tables/PackagingTable';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
-const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, createFunction }) => {
+const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, createFunction, uploadImageFunction, assignCharacteristicValueFunction }) => {
 
     const [article, setArticle] = useState('');
     const [packaging, setPackaging] = useState('');
     const [packagings, setPackagings] = useState([]);
-    const [filteredPackagings, setFilteredArticles] = useState([]);
-    const [filter, setFilter] = useState('');
-
+    const [inheritedCharacteristics, setInheritedCharacteristics] = useState([]);
+    const [characteristicAndValue, setCharacteristicAndValue] = useState([]);
     const [selectedPage, setSelectedPage] = useState('structure');
+    const [showPackagingTable, setShowPackagingTable] = useState(false);
+    const [images, setImages] = React.useState([]);
+
+    const VisuallyHiddenInput = styled('input')({
+        clip: 'rect(0 0 0 0)',
+        clipPath: 'inset(50%)',
+        height: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        whiteSpace: 'nowrap',
+        width: 1,
+    });
 
     const handlePageChange = (event, newPage) => {
         if (newPage !== null) {
@@ -29,48 +50,59 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
         }
     };
 
+    const handleFileChange = (event) => {
+        const fileArray = Array.from(event.target.files);
+    
+        const imageArray = fileArray.map((file) => {
+          return URL.createObjectURL(file);
+        });
+    
+        setImages(imageArray);
+    };
+
+    const handleRemoveImage = (index) => {
+        setImages((prevImages) => {
+            const updatedImages = [...prevImages];
+            updatedImages.splice(index, 1); // Remove the image at the specified index
+            return updatedImages;
+        });
+    };
+
     const handleClose = () => {
         setIsOpen(false);
         closeFunction();
     }
 
-    function resetVariables() {
-        setArticle('');
-        setPackaging('');
-        setPackagings([]);
-        setFilteredArticles([]);
-        setFilter('');
-    }
+    const togglePackagingComponent = () => {
+        setShowPackagingTable((prevShow) => !prevShow);
+    };
 
     useEffect(() => {
-        resetVariables();
-        // Fetch all articles
-        PackagingService.fetchPackagings()
+        PackagingService.fetchAvailablePackagings(articleId)
         .then(data => {
             setPackagings(data);
-            setFilteredArticles(data);
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('Error fetching available packaging options:', error));
         // If articleId is not null, fetch article
-        if (articleId != undefined) {
+        if (articleId !== undefined) {
             ArticleService.fetchArticleById(articleId)
             .then(data => {
                 setArticle(data);
+                CharacteristicService.listInheritedCharacteristics(data.category.id)
+                .then(data => {
+                    setInheritedCharacteristics(data);
+                    // Manually add a value field to characteristics to then send them to the server later
+                    const characteristicsAndValue = data.map(characteristic => ({
+                        ...characteristic,
+                        value: ''
+                    }));
+                    setCharacteristicAndValue(characteristicsAndValue);
+                })
+                .catch(error => console.error('Error setting inheritec characteristics:', error));
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error fetching article:', error));
         }
     }, [isOpen]);
-
-    const filterArticles = (filter) => {
-        setFilter(filter);
-        const regex = new RegExp(filter, 'i'); // 'i' makes the search case-insensitive
-        setFilteredArticles(packagings.filter(item => regex.test(item.name) || regex.test(item.id)));
-    }
-
-    const resetFilter = () => {
-        setFilter('');
-        filterArticles('');
-    }
 
     function truncateDescription(text) {
         if (text && text.length > 25) {
@@ -79,10 +111,39 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
         return text;
     }
 
-    const handleCreate = () => {
-        createFunction(article, packaging);
-        handleClose();
+    const modifyCharacteristicValue = (characteristicId, value) => {
+        setCharacteristicAndValue((prevCharacteristics) => {
+            return prevCharacteristics.map(char => 
+                char.id === characteristicId ? { ...char, value: value } : char
+            );
+        });
     }
+
+    const handleCreate = async () => {
+        try {
+            // Create the product and get the product
+            const response = await createFunction(article, packaging);
+            
+            if (response.success === true) {
+                if(images.length > 0){
+                    // Create Product API returns the created product as message
+                    uploadImageFunction(response.product.id, images);
+                }
+                characteristicAndValue.forEach((characteristic, index) => {
+                    if(characteristic.value !== ''){
+                        let product = response.product;
+                        let char = inheritedCharacteristics.find(c => c.id === characteristic.id);
+                        let value = characteristic.value;
+                        assignCharacteristicValueFunction(product, char, value);
+                    }
+                });
+            }
+            handleClose();
+        } catch (error) {
+            // Handle errors
+            console.error('Error creating product:', error);
+        }
+    };
 
     const renderSelectedPage = () => {
         switch (selectedPage) {
@@ -110,7 +171,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
                                 <LinkIcon fontSize="large" />
                             </Grid>
                             <Grid item xs={12} md={5}>
-                                <PackagingSelector selectedPackaging={packaging} setSelectedPackaging={setPackaging} />
+                                <PackagingSelector selectedPackaging={packaging} setSelectedPackaging={setPackaging} articleId={articleId}/>
                             </Grid>
                         </Grid>
                     </Box>
@@ -121,7 +182,43 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
                         <Typography variant="subtitle2" component="div" gutterBottom>
                             Product Images
                         </Typography>
-                        {/* Your Product Images component or content goes here */}
+                        <Box>
+                            {images.length > 0 && (
+                                <Box sx={{ width: '100%', mt: 2 }}>
+                                    <Box sx={{ display: 'flex', overflowX: 'auto', mt: 2 }}>
+                                        {images.map((image, index) => (
+                                        <Box key={index} sx={{ position: 'relative' }}>
+                                            <img
+                                                src={image}
+                                                alt={`Uploaded image ${index}`}
+                                                style={{
+                                                    width: 'auto',
+                                                    height: '200px',
+                                                    marginRight: '16px',
+                                                    objectFit: 'contain',
+                                                }}
+                                            />
+                                            <Button
+                                                variant="contained"
+                                                color="error"
+                                                sx={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    right: 0,
+                                                    zIndex: 1,
+                                                    bg: 'red',
+                                                    marginRight: '16px'
+                                                }}
+                                                onClick={() => handleRemoveImage(index)}
+                                            >
+                                                X
+                                            </Button>
+                                        </Box>
+                                        ))}
+                                    </Box>
+                                </Box>
+                            )}
+                        </Box>
                     </Box>
                 );
             case 'characteristics':
@@ -130,7 +227,20 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
                         <Typography variant="subtitle2" component="div" gutterBottom>
                             Product Characteristics
                         </Typography>
-                        {/* Your Product Characteristics component or content goes here */}
+                        <Box sx={{ overflowY: 'auto', maxHeight: 200 }}>
+                            {characteristicAndValue.map((characteristic, index) => (
+                                <FormControl key={index} sx={{ m: 1, width: '95%' }} variant="outlined">
+                                    <InputLabel htmlFor={`outlined-adornment-${index}`}>{characteristic.name}</InputLabel>
+                                    <OutlinedInput
+                                        id={`outlined-adornment-${index}`}
+                                        value={characteristic.value}
+                                        endAdornment={<InputAdornment position="end">{characteristic.unitOfMeasure ? characteristic.unitOfMeasure : ''}</InputAdornment>}
+                                        aria-describedby="outlined-weight-helper-text"
+                                        onChange={(e) => modifyCharacteristicValue(characteristic.id, e.target.value)}
+                                    />
+                                </FormControl>
+                            ))}
+                        </Box>
                     </Box>
                 );
         }
@@ -162,6 +272,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
                 <Typography variant="subtitle1" component="div" gutterBottom>
                     An article is the theorical product. Products are made up of the combination of an article and a packaging type. 
                     One article may be available in many different packaging options, resulting in many products of the same article.
+                    Only the packagings that are not yet assigned to this particular article can be chosen (thus product does not yet exist).
                 </Typography>
                 <hr/>
                 <ToggleButtonGroup
@@ -184,29 +295,30 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
                 <Box sx={{ minHeight: 250 }}>
                     {renderSelectedPage()}
                 </Box>
-                <hr />
-                <Typography variant="subtitle2" component="div" gutterBottom>Available packaging options:</Typography>
-                <hr/>
-                <Box sx={{ flexGrow: 1 }}>
-                    <DataDisplayTable data={filteredPackagings} maxHeight={210}/>
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 5 }}>
-                    <Box>
-                        <TextField 
-                            id='filterName'
-                            label='Filter name'
-                            name='name'
-                            size='small'
-                            value={filter}
-                            onChange={(e) => filterArticles(e.target.value)}
-                            sx={{ maxWidth: '300px' }}
-                        />
-                        <Button variant="contained" color="error" sx={{ ml: 1 }} onClick={(e) => resetFilter()}>Clear</Button>
+                {showPackagingTable && 
+                    <Box sx={{ flexGrow: 1 }}>
+                            <hr />
+                            <Typography variant="subtitle2" component="div" gutterBottom>Available packaging options:</Typography>
+                            <PackagingTable defPageSize={5} defDensity='compact' />
                     </Box>
-                    <Box sx={{ textAlign: 'right' }}>
-                        <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={(e) => handleCreate()}>Save</Button>
-                        <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
-                    </Box>
+                }
+                <Box sx={{ textAlign: 'right', mt: 2 }}>
+                    { selectedPage === 'images' &&
+                    <Button
+                        component="label"
+                        role={undefined}
+                        variant="contained"
+                        tabIndex={-1}
+                        startIcon={<CloudUploadIcon />}
+                        sx={{ mr: 1 }}
+                    >
+                        Upload file
+                        <VisuallyHiddenInput type="file" onChange={handleFileChange} multiple />
+                    </Button>
+                    }
+                    <Button variant="contained" color="warning" sx={{ mr: 1 }} onClick={(e) => togglePackagingComponent()}>Toggle packagings table</Button>
+                    <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={(e) => handleCreate()}>Save</Button>
+                    <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
                 </Box>
             </Box>
         </Modal>

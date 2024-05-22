@@ -173,7 +173,7 @@ export default function ArticleTable() {
     
         if (response.success) {
             showSnackBar('success', 'Product successfully created.');
-            return { success: true, productId:  response.data };
+            return { success: true, product:  response.data };
         } else {
             showSnackBar('error', response.message);
             return { success: false, message: response.message };
@@ -190,6 +190,25 @@ export default function ArticleTable() {
             showSnackBar('error', 'Error during image upload.');
         }
     };
+
+    const assignCharacteristicValueFunction = async (product, characteristic, value) => {
+        const endpoint = 'http://localhost:8080/product-characteristic-value/create';
+        const requestBody = {
+            product: product,
+            characteristic: characteristic,
+            value: value
+        };
+    
+        const response = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (response.success) {
+            showSnackBar('success', 'Product successfully created.');
+            return { success: true, productId:  response.data };
+        } else {
+            showSnackBar('error', response.message);
+            return { success: false, message: response.message };
+        }
+    }
 
     const modifyEntity = async (newArticle) => {
         const endpoint = `http://localhost:8080/article/${newArticle.id}/modify`;
@@ -548,6 +567,7 @@ export default function ArticleTable() {
                 closeFunction={toggleShowCreateProductModal}
                 createFunction={createProduct}
                 uploadImageFunction={uploadProductImages}
+                assignCharacteristicValueFunction={assignCharacteristicValueFunction}
             />}
             {renderConfirUpdateDialog()}
             {confirmationDialogOpen && <ConfirmationDialog 
