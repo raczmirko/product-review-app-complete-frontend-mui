@@ -1,5 +1,5 @@
 class CharacteristicService {
-    static async fetchAssignedCategoryTree(id) {
+    static async fetchCategoryTreeCharacteristics(id) {
         const token = localStorage.getItem('token');
         const headers = {
             'Authorization': `Bearer ${token}`,

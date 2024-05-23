@@ -22,7 +22,7 @@ const ShowCharacteristicCategoriesModal = ({ characteristicId, closeFunction, is
         setAssignedCategoryTrees(undefined);
         // Fetch category tree when the component mounts
         if (characteristicId !== undefined) {
-            CharacteristicService.fetchAssignedCategoryTree(characteristicId)
+            CharacteristicService.fetchCategoryTreeCharacteristics(characteristicId)
             .then(data => {setAssignedCategoryTrees(data);})
             .catch(error => console.error('Error:', error));
             CharacteristicService.fetchCharacteristic(characteristicId)
