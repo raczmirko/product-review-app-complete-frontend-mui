@@ -1,4 +1,4 @@
-import AddLinkIcon from '@mui/icons-material/AddLink';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CancelIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
@@ -26,12 +26,12 @@ import EditToolbar from '../../components/EditToolbar';
 import BrandService from '../../services/BrandService';
 import CategoryService from '../../services/CategoryService';
 import { apiRequest } from '../../services/CrudService';
+import ProductImageService from '../../services/ProductImageService';
 import { getModifiedRowDifference } from '../../util/stringUtil';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
-import AssignPackagingModal from '../modals/CreateProductModal';
 import CreateArticleModal from '../modals/CreateArticleModal';
-import ProductImageService from '../../services/ProductImageService';
+import AssignPackagingModal from '../modals/CreateProductModal';
 import ListCharacteristicsModal from '../modals/ListCharacteristicsModal';
 
 export default function ArticleTable() {
@@ -548,7 +548,7 @@ export default function ArticleTable() {
                 </Tooltip>,
                 <Tooltip title={'Create product from article'}>
                     <GridActionsCellItem
-                        icon={<AddLinkIcon />}
+                        icon={<AddCircleOutlineIcon />}
                         label="Edit"
                         className="textPrimary"
                         onClick={toggleShowCreateProductModal(id)}
