@@ -3,6 +3,7 @@ import CancelIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import StyleIcon from '@mui/icons-material/Style';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -31,6 +32,7 @@ import ConfirmationDialog from '../ConfirmationDialog';
 import AssignPackagingModal from '../modals/CreateProductModal';
 import CreateArticleModal from '../modals/CreateArticleModal';
 import ProductImageService from '../../services/ProductImageService';
+import ListCharacteristicsModal from '../modals/ListCharacteristicsModal';
 
 export default function ArticleTable() {
 
@@ -50,6 +52,7 @@ export default function ArticleTable() {
 
     const [creationModalActive, setCreationModalActive] = useState(false);
     const [createProductModalActive, setCreateProductModalActive] = useState(false);
+    const [characteristicsModalActive, setCharacteristicsModalActive] = useState(false);
 
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
@@ -106,6 +109,11 @@ export default function ArticleTable() {
     const toggleShowCreateProductModal = (id) => () => {
         setIdOfActionRow(id);
         setCreateProductModalActive(!createProductModalActive);
+    }
+
+    const toggleShowCharacteristicsModal = (id) => () => {
+        setIdOfActionRow(id);
+        setCharacteristicsModalActive(!characteristicsModalActive);
     }
 
     // --- CRUD API calls --- //
@@ -546,6 +554,14 @@ export default function ArticleTable() {
                         onClick={toggleShowCreateProductModal(id)}
                     />
                 </Tooltip>,
+                <Tooltip title={'Show inherited characteristics'}>
+                    <GridActionsCellItem
+                        icon={<StyleIcon />}
+                        label="Show characteristics"
+                        className="textPrimary"
+                        onClick={toggleShowCharacteristicsModal(id)}
+                    />
+                </Tooltip>,
                 <Tooltip title={'Delete row'}>
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
@@ -575,6 +591,12 @@ export default function ArticleTable() {
                 createFunction={createProduct}
                 uploadImageFunction={uploadProductImages}
                 assignCharacteristicValueFunction={assignCharacteristicValueFunction}
+            />}
+            {characteristicsModalActive && <ListCharacteristicsModal
+                isOpen={characteristicsModalActive}
+                setIsOpen={setCharacteristicsModalActive}
+                articleId={idOfActionRow}
+                closeFunction={toggleShowCharacteristicsModal}
             />}
             {renderConfirUpdateDialog()}
             {confirmationDialogOpen && <ConfirmationDialog 
