@@ -163,20 +163,27 @@ export default function ArticleTable() {
     };
 
     const createProduct = async (article, packaging) => {
-        const endpoint = 'http://localhost:8080/product/create';
-        const requestBody = {
-            article: article,
-            packaging: packaging
-        };
-    
-        const response = await apiRequest(endpoint, 'POST', requestBody);
-    
-        if (response.success) {
-            showSnackBar('success', 'Product successfully created.');
-            return { success: true, product:  response.data };
-        } else {
-            showSnackBar('error', response.message);
-            return { success: false, message: response.message };
+        if (packaging === '') {
+            let errorMessage = 'ERROR: Packaging cannot be empty.';
+            showSnackBar('error', errorMessage);
+            return { success: false, message: errorMessage };
+        }
+        else {
+            const endpoint = 'http://localhost:8080/product/create';
+            const requestBody = {
+                article: article,
+                packaging: packaging
+            };
+        
+            const response = await apiRequest(endpoint, 'POST', requestBody);
+        
+            if (response.success) {
+                showSnackBar('success', 'Product successfully created.');
+                return { success: true, product:  response.data };
+            } else {
+                showSnackBar('error', response.message);
+                return { success: false, message: response.message };
+            }
         }
     };
 
