@@ -145,6 +145,41 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
         }
     };
 
+    const renderPackagingToggleButton = () => {
+        if (selectedPage === 'structure') {
+            return (
+                <Button 
+                    variant="contained" 
+                    color="warning" 
+                    sx={{ mr: 1 }} 
+                    onClick={(e) => togglePackagingComponent()}
+                >
+                    Toggle packagings table
+                </Button>
+            );
+        }
+        return null;
+    };    
+
+    const renderImageUploadButton = () => {
+        if (selectedPage === 'images') {
+            return (
+                <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                    sx={{ mr: 1 }}
+                >
+                    Upload file
+                    <VisuallyHiddenInput type="file" onChange={() => handleFileChange()} multiple />
+                </Button>
+            );
+        }
+        return null;
+    };    
+
     const renderSelectedPage = () => {
         switch (selectedPage) {
             case 'structure':
@@ -303,21 +338,9 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
                     </Box>
                 }
                 <Box sx={{ textAlign: 'right', mt: 2 }}>
-                    { selectedPage === 'images' &&
-                    <Button
-                        component="label"
-                        role={undefined}
-                        variant="contained"
-                        tabIndex={-1}
-                        startIcon={<CloudUploadIcon />}
-                        sx={{ mr: 1 }}
-                    >
-                        Upload file
-                        <VisuallyHiddenInput type="file" onChange={handleFileChange} multiple />
-                    </Button>
-                    }
-                    <Button variant="contained" color="warning" sx={{ mr: 1 }} onClick={(e) => togglePackagingComponent()}>Toggle packagings table</Button>
-                    <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={(e) => handleCreate()}>Save</Button>
+                    {renderImageUploadButton()}
+                    {renderPackagingToggleButton()}
+                    <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={handleCreate}>Save</Button>
                     <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
                 </Box>
             </Box>
