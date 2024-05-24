@@ -2,7 +2,7 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import AlertSnackBar from './components/AlertSnackBar';
 import ParticleBackground from './components/ParticleBackground';
 import Sidebar from './components/Sidebar';
@@ -29,6 +29,7 @@ const App = () => {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarText, setSnackBarText] = useState('');
     const [snackBarStatus, setSnackBarStatus] = useState('info');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const storedExpiryTime = localStorage.getItem('sessionExpiryTime');
@@ -81,65 +82,64 @@ const App = () => {
         localStorage.removeItem('sessionExpiryTime');
         setIsLoggedIn(false);
         showSnackBar('info', 'You have been logged out.');
+        navigate('/login');
     }
 
     return (
         <ThemeProvider theme={darkTheme}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             <CssBaseline />
-            <Router>
-                <Sidebar isLoggedIn={isLoggedIn} expiryTime={expiryTime} logOut={logOut}/>
-                <Routes>
-                    <Route path="/" element={
-                        <div>
-                            <Home />
-                        </div>
-                    } />
-                    <Route path="/login" element={
-                        <div>
-                            <SignInSide onLogin={handleLogin} isLoggedIn={isLoggedIn} />
-                        </div>
-                    } />
-                    <Route path="/register" element={
-                        <div>
-                            <Container sx={{position: 'absolute', zIndex:-1}}>
-                                <ParticleBackground/>
-                            </Container>
-                            <SignUp />
-                        </div>
-                    } />
-                    <Route path="/brands" element={
-                        <div>
-                            <Brands />
-                        </div>
-                    } />
-                    <Route path="/countries" element={
-                        <div>
-                            <Countries />
-                        </div>
-                    } />
-                    <Route path="/categories" element={
-                        <div>
-                            <Categories />
-                        </div>
-                    } />
-                    <Route path="/characteristics" element={
-                        <div>
-                            <Characteristics />
-                        </div>
-                    } />
-                    <Route path="/articles" element={
-                        <div>
-                            <Articles />
-                        </div>
-                    } />
-                    <Route path="/packagings" element={
-                        <div>
-                            <Packagings />
-                        </div>
-                    } />
-                </Routes>
-            </Router>
+            <Sidebar isLoggedIn={isLoggedIn} expiryTime={expiryTime} logOut={logOut}/>
+            <Routes>
+                <Route path="/" element={
+                    <div>
+                        <Home />
+                    </div>
+                } />
+                <Route path="/login" element={
+                    <div>
+                        <SignInSide onLogin={handleLogin} isLoggedIn={isLoggedIn} />
+                    </div>
+                } />
+                <Route path="/register" element={
+                    <div>
+                        <Container sx={{position: 'absolute', zIndex:-1}}>
+                            <ParticleBackground/>
+                        </Container>
+                        <SignUp />
+                    </div>
+                } />
+                <Route path="/brands" element={
+                    <div>
+                        <Brands />
+                    </div>
+                } />
+                <Route path="/countries" element={
+                    <div>
+                        <Countries />
+                    </div>
+                } />
+                <Route path="/categories" element={
+                    <div>
+                        <Categories />
+                    </div>
+                } />
+                <Route path="/characteristics" element={
+                    <div>
+                        <Characteristics />
+                    </div>
+                } />
+                <Route path="/articles" element={
+                    <div>
+                        <Articles />
+                    </div>
+                } />
+                <Route path="/packagings" element={
+                    <div>
+                        <Packagings />
+                    </div>
+                } />
+            </Routes>
         </ThemeProvider>
     )
 }
