@@ -31,6 +31,7 @@ const BrandSelector = ({ selectedBrand, setSelectedBrand }) => {
             value={selectedBrand}
             label="Brand"
             onChange={(e) => handleChange(e)}
+            sx={{ mb: 2 }}
             >
                 {brands.map(brand => (
                     <MenuItem key={brand.id} value={brand}>{brand.name}</MenuItem>

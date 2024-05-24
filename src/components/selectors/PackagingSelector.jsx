@@ -39,6 +39,7 @@ const PackagingSelector = ({ selectedPackaging, setSelectedPackaging, articleId 
                 value={selectedPackaging ? selectedPackaging.id : ''}
                 label="Packaging"
                 onChange={(e) => handleChange(e)}
+                sx={{ mb: 2 }}
                 >
                     {packagings.map(packaging => (
                         <MenuItem key={packaging.id} value={packaging.id}>[ID#{packaging.id}] - {packaging.name}</MenuItem>

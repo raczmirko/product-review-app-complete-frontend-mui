@@ -31,6 +31,7 @@ const CountrySelector = ({ selectedCountry, setSelectedCountry }) => {
             value={selectedCountry}
             label="Country"
             onChange={(e) => handleChange(e)}
+            sx={{ mb: 2 }}
             >
                 {countries.map(country => (
                     <MenuItem key={country.countryCode} value={country}>{country.name}</MenuItem>

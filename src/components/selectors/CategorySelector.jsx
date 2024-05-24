@@ -45,11 +45,12 @@ const CategorySelector = ({ selectedCategory, setSelectedCategory, selectorType 
             value={selectedCategory}
             label="Category"
             onChange={(e) => handleChange(e)}
+            sx={{ mb: 2 }}
             >
                 {categories.map(category => (
                     <MenuItem key={category.id} value={category}>{category.name}</MenuItem>
                 ))}
-            </Select>
+        </Select>
       </FormControl>
     );
 };
