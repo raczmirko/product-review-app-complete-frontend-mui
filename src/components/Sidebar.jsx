@@ -10,6 +10,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PublicIcon from '@mui/icons-material/Public';
+import QuizIcon from '@mui/icons-material/Quiz';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import StyleIcon from '@mui/icons-material/Style';
 import MuiAppBar from '@mui/material/AppBar';
@@ -149,7 +150,8 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
         { icon: <CategoryIcon />, text: 'Categories', route: '/categories', visibleWithoutLogin: false },
         { icon: <StyleIcon />, text: 'Characteristics', route: '/characteristics', visibleWithoutLogin: false },
         { icon: <CoffeeIcon />, text: 'Articles', route: '/articles', visibleWithoutLogin: false },
-        { icon: <InventoryIcon />, text: 'Packaging', route: '/packagings', visibleWithoutLogin: false },
+        { icon: <InventoryIcon />, text: 'Packagings', route: '/packagings', visibleWithoutLogin: false },
+        { icon: <QuizIcon />, text: 'Aspects', route: '/aspects', visibleWithoutLogin: false },
     ];
 
   return (

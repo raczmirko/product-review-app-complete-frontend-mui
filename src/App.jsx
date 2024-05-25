@@ -13,6 +13,7 @@ import Characteristics from './pages/Characteristics';
 import Countries from './pages/Countries';
 import Home from './pages/Home';
 import Packagings from './pages/Packagings';
+import Aspects from './pages/Aspects';
 import SignInSide from './pages/SignIn';
 import SignUp from './pages/SignUp';
 
@@ -137,6 +138,11 @@ const App = () => {
                 <Route path="/packagings" element={
                     <div>
                         <Packagings />
+                    </div>
+                } />
+                <Route path="/aspects" element={
+                    <div>
+                        <Aspects />
                     </div>
                 } />
             </Routes>
