@@ -1,16 +1,17 @@
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 import AlertSnackBar from '../components/AlertSnackBar';
 import CountrySelector from '../components/selectors/CountrySelector';
 
@@ -37,6 +38,7 @@ export default function SignUp() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarText, setSnackBarText] = useState('');
     const [snackBarStatus, setSnackBarStatus] = useState('info');
+    const navigate = useNavigate();
 
     function showSnackBar (status, text) {
         setSnackBarOpen(true);
@@ -105,12 +107,24 @@ export default function SignUp() {
                 throw new Error('Registration failed');
             }
             else {
-                showSnackBar('success', 'Registration successful!');
-                //Clear form fields upon registration
-                setSelectedCountry('');
+                redirectToLoginPage();
             }
         })
         .catch(error => console.error('Error:', error));
+    };
+
+    const redirectToLoginPage = () => {
+        let time = 3;
+        showSnackBar('success', `Registration successful, redirecting to login page in ${time}...`);
+        const intervalId = setInterval(() => {
+            if (time === 0) {
+                clearInterval(intervalId);
+                navigate('/login');
+            } else {
+                time--;
+                showSnackBar('success', `Registration successful, redirecting to login page in ${time}...`);
+            }
+        }, 1000);
     };
 
   return (
