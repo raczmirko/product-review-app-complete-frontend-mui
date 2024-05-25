@@ -26,7 +26,7 @@ import { apiRequest } from '../../services/CrudService';
 import { getModifiedRowDifference } from '../../util/stringUtil';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
-import CreateBrandModal from '../modals/CreateBrandModal';
+import CreateAspectModal from '../modals/CreateAspectModal';
 import CategoryService from '../../services/CategoryService';
 
 export default function AspectTable() {
@@ -441,7 +441,7 @@ export default function AspectTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            {creationModalActive && <CreateBrandModal
+            {creationModalActive && <CreateAspectModal
                 isOpen={creationModalActive}
                 setIsOpen={setModalActive}
                 entityToAdd="aspect"
