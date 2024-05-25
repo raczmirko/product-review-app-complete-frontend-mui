@@ -51,13 +51,17 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
     };
 
     const handleFileChange = (event) => {
-        const fileArray = Array.from(event.target.files);
+        if (event && event.target && event.target.files) {
+            const fileArray = Array.from(event.target.files);
     
-        const imageArray = fileArray.map((file) => {
-          return URL.createObjectURL(file);
-        });
+            const imageArray = fileArray.map((file) => {
+                return URL.createObjectURL(file);
+            });
     
-        setImages(imageArray);
+            setImages(imageArray);
+        } else {
+            console.error('Event or event.target is undefined');
+        }
     };
 
     const handleRemoveImage = (index) => {
@@ -173,7 +177,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
                     sx={{ mr: 1 }}
                 >
                     Upload file
-                    <VisuallyHiddenInput type="file" onChange={() => handleFileChange()} multiple />
+                    <VisuallyHiddenInput type="file" multiple onChange={(e) => handleFileChange(e)} />
                 </Button>
             );
         }
@@ -263,18 +267,20 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
                             Product Characteristics
                         </Typography>
                         <Box sx={{ overflowY: 'auto', maxHeight: 200 }}>
-                            {characteristicAndValue.map((characteristic, index) => (
-                                <FormControl key={index} sx={{ m: 1, width: '95%' }} variant="outlined">
-                                    <InputLabel htmlFor={`outlined-adornment-${index}`}>{characteristic.name}</InputLabel>
-                                    <OutlinedInput
-                                        id={`outlined-adornment-${index}`}
-                                        value={characteristic.value}
-                                        endAdornment={<InputAdornment position="end">{characteristic.unitOfMeasure ? characteristic.unitOfMeasure : ''}</InputAdornment>}
-                                        aria-describedby="outlined-weight-helper-text"
-                                        onChange={(e) => modifyCharacteristicValue(characteristic.id, e.target.value)}
-                                    />
-                                </FormControl>
-                            ))}
+                            {characteristicAndValue.length > 0 ? 
+                                characteristicAndValue.map((characteristic, index) => (
+                                    <FormControl key={index} sx={{ m: 1, width: '95%' }} variant="outlined">
+                                        <InputLabel htmlFor={`outlined-adornment-${index}`}>{characteristic.name}</InputLabel>
+                                        <OutlinedInput
+                                            id={`outlined-adornment-${index}`}
+                                            value={characteristic.value}
+                                            endAdornment={<InputAdornment position="end">{characteristic.unitOfMeasure ? characteristic.unitOfMeasure : ''}</InputAdornment>}
+                                            aria-describedby="outlined-weight-helper-text"
+                                            onChange={(e) => modifyCharacteristicValue(characteristic.id, e.target.value)}
+                                        />
+                                    </FormControl>
+                                )) : <Box>No characteristics are inherited.</Box>
+                            }
                         </Box>
                     </Box>
                 );
