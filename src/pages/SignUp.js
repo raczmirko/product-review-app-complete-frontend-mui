@@ -19,7 +19,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Product Review Application
+        Product Review Application by Mirkó Rácz
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
