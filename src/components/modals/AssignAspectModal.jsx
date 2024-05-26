@@ -81,6 +81,8 @@ const AssignAspectModal = ({ categoryId, closeFunction, createEntityFunction, is
                         variant="outlined"
                         autoFocus
                         fullWidth
+                        multiline
+                        rows={4}
                         required
                         inputProps={{ maxLength: 100 }}
                         sx={{ mb: 2 }}
