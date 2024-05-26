@@ -92,7 +92,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
             ArticleService.fetchArticleById(articleId)
             .then(data => {
                 setArticle(data);
-                CharacteristicService.listInheritedCharacteristics(data.category.id)
+                CharacteristicService.listAssignedCharacteristics(data.category.id)
                 .then(data => {
                     setInheritedCharacteristics(data);
                     // Manually add a value field to characteristics to then send them to the server later
