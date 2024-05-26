@@ -554,7 +554,7 @@ export default function ArticleTable() {
                         onClick={toggleShowCreateProductModal(id)}
                     />
                 </Tooltip>,
-                <Tooltip title={'Show inherited characteristics'}>
+                <Tooltip title={'Show assigned characteristics'}>
                     <GridActionsCellItem
                         icon={<StyleIcon />}
                         label="Show characteristics"
