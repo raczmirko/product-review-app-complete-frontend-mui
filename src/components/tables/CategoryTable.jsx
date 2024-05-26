@@ -31,6 +31,8 @@ import AssignCharacteristicsModal from '../modals/AssignCharacteristicsModal';
 import CategoryTreeModal from '../modals/CategoryTreeModal';
 import CreateCategoryModal from '../modals/CreateCategoryModal';
 import Tooltip from '@mui/material/Tooltip';
+import AddAspectIcon from '@mui/icons-material/AddToPhotos';
+import AssignAspectModal from '../modals/AssignAspectModal';
 
 export default function CategoryTable() {
 
@@ -52,6 +54,7 @@ export default function CategoryTable() {
     const [creationModalActive, setCreationModalActive] = useState(false);
     const [treeModalActive, setTreeModalActive] = useState(false);
     const [assignCharacteristicsModalActive, setAssignCharacteristicsModalActive] = useState(false);
+    const [aspectModalActive, setAspectModalActive] = useState(false);
     
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
@@ -117,6 +120,11 @@ export default function CategoryTable() {
         toggleShowAssignemntModal();
     };
 
+    const toggleShowAspectModal = (id) => () => {
+        setIdOfActionRow(id);
+        setAspectModalActive(!aspectModalActive);
+    };
+
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
@@ -165,6 +173,24 @@ export default function CategoryTable() {
         if (result.success) {
             searchEntities();
             showSnackBar('success', 'Record successfully created.');
+        } else {
+            showSnackBar('error', result.message);
+        }
+    };
+
+    const createAssignedAspect = async (name, question, category) => {
+        const endpoint = 'http://localhost:8080/aspect/create';
+        const requestBody = {
+            name: name,
+            question: question,
+            category: category
+        };
+    
+        const result = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (result.success) {
+            searchEntities();
+            showSnackBar('success', 'Aspect successfully created.');
         } else {
             showSnackBar('error', result.message);
         }
@@ -420,7 +446,7 @@ export default function CategoryTable() {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            width: 180,
+            width: 200,
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -469,6 +495,14 @@ export default function CategoryTable() {
                         onClick={handleShowAssignmentModalClick(id)}
                     />
                 </Tooltip>,
+                <Tooltip title={'Add review aspect'}>
+                    <GridActionsCellItem
+                        icon={<AddAspectIcon />}
+                        label="Edit"
+                        className="textPrimary"
+                        onClick={toggleShowAspectModal(id)}
+                    />
+                </Tooltip>,
                 <Tooltip title={'Delete row'}>
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
@@ -506,6 +540,13 @@ export default function CategoryTable() {
                 setIsOpen={setAssignCharacteristicsModalActive}
                 closeFunction={toggleShowAssignemntModal}
                 categoryId={idOfActionRow}
+            />}
+            {aspectModalActive && <AssignAspectModal
+                isOpen={aspectModalActive}
+                setIsOpen={setAspectModalActive}
+                closeFunction={toggleShowAspectModal}
+                categoryId={idOfActionRow}
+                createEntityFunction={createAssignedAspect}
             />}
             {renderConfirUpdateDialog()}
             {confirmationDialogOpen && <ConfirmationDialog 
