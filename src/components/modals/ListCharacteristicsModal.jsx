@@ -29,7 +29,7 @@ const ListCharacteristicsModal = ({ articleId, closeFunction, isOpen, setIsOpen 
             .then(article => {
                 setArticle(article);
                 // Then fetch characteristics by article's category
-                CharacteristicService.listInheritedCharacteristics(article.category.id)
+                CharacteristicService.listAssignedCharacteristics(article.category.id)
                 .then(data => {
                     setCharacteristics(data);
                 })
