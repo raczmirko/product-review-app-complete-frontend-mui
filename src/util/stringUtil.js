@@ -13,7 +13,7 @@ export const  getModifiedRowDifference = (newRow, oldRow) => {
                     }
                 } 
                 // Updating from null to an object
-                if (oldValue === null && typeof newValue === 'object' && newValue !== null) {
+                else if (oldValue === null && typeof newValue === 'object' && newValue !== null) {
                     changes += `- ${key.toUpperCase()} from NULL to '${newValue.name}'\n`;
                 }
                 else if (oldValue !== newValue) {
