@@ -1,4 +1,4 @@
-import StyleIcon from '@mui/icons-material/Style';
+import QuizIcon from '@mui/icons-material/Quiz';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
@@ -32,7 +32,7 @@ const ListAspectsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
 
             AspectService.fetchAspectsByCategory(categoryId)
             .then(result => {
-                setAspects(result);
+                setAspects(result.data);
             })
             .catch(error => console.error('Error:', error));
         }
@@ -59,14 +59,15 @@ const ListAspectsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
                     textAlign: 'center'
                 }}
             >
-                <Typography variant="h5" component="div" gutterBottom>Aspects of '{category.name}':</Typography>
+                <Typography variant="h5" component="div" gutterBottom>Review aspects of '{category.name}':</Typography>
+                <Typography variant="subtitle2" component="div" gutterBottom>(Inherited from the category structure)</Typography>
                 <Box sx={{ height: 220, overflowY: 'auto', maxWidth: 400 }}>
                     {aspects.length > 0 ?
                         <List>
                             {aspects.map((aspect) => (
                                 <ListItem key={aspect.id}>
                                     <ListItemIcon>
-                                        <StyleIcon />
+                                        <QuizIcon />
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={aspect.name}
