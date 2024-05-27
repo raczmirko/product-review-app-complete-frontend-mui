@@ -30,6 +30,8 @@ import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import ProductIcon from '@mui/icons-material/EmojiSymbols';
+import ArticleIcon from '@mui/icons-material/Tune';
 
 const drawerWidth = 240;
 
@@ -149,9 +151,10 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
         { icon: <PublicIcon />, text: 'Countries', route: '/countries', visibleWithoutLogin: false },
         { icon: <CategoryIcon />, text: 'Categories', route: '/categories', visibleWithoutLogin: false },
         { icon: <StyleIcon />, text: 'Characteristics', route: '/characteristics', visibleWithoutLogin: false },
-        { icon: <CoffeeIcon />, text: 'Articles', route: '/articles', visibleWithoutLogin: false },
+        { icon: <ArticleIcon />, text: 'Articles', route: '/articles', visibleWithoutLogin: false },
         { icon: <InventoryIcon />, text: 'Packagings', route: '/packagings', visibleWithoutLogin: false },
         { icon: <QuizIcon />, text: 'Aspects', route: '/aspects', visibleWithoutLogin: false },
+        { icon: <ProductIcon />, text: 'Products', route: '/products', visibleWithoutLogin: false },
     ];
 
   return (
