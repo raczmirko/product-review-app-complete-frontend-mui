@@ -104,6 +104,7 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [formattedTime, setFormattedTime] = useState("");
+  const [username, setUsername] = useState("");
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -113,49 +114,53 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
     setOpen(false);
   };
 
-    useEffect(() => {
-        let timer;
-        if (isLoggedIn) {
+  useEffect(() => {
+    setUsername(localStorage.getItem('username'));
+  }, [isLoggedIn])
 
-            timer = setInterval(() => {
-                // Get the current time
-                const currentTime = new Date().getTime();
+  useEffect(() => {
+      let timer;
+      if (isLoggedIn) {
 
-                // Calculate remaining seconds by subtracting the current time from the target time
-                const remainingSeconds = Math.max(Math.floor((expiryTime - currentTime) / 1000), 0);
+          timer = setInterval(() => {
+              // Get the current time
+              const currentTime = new Date().getTime();
 
-                // Format remaining seconds into minutes and seconds
-                const formattedMinutes = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
-                const formattedSeconds = String(remainingSeconds % 60).padStart(2, '0');
+              // Calculate remaining seconds by subtracting the current time from the target time
+              const remainingSeconds = Math.max(Math.floor((expiryTime - currentTime) / 1000), 0);
 
-                // Update state with the formatted time
-                setFormattedTime(`${formattedMinutes}:${formattedSeconds}`);
+              // Format remaining seconds into minutes and seconds
+              const formattedMinutes = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
+              const formattedSeconds = String(remainingSeconds % 60).padStart(2, '0');
 
-                // If remainingSeconds is 0, call logOut and clear the interval
-                if (remainingSeconds === 0) {
-                    logOut();
-                    clearInterval(timer);
-                }
-            }, 1000);
-        }
+              // Update state with the formatted time
+              setFormattedTime(`${formattedMinutes}:${formattedSeconds}`);
 
-        // Clear interval on component unmount
-        return () => clearInterval(timer);
-    }, [isLoggedIn, expiryTime, logOut]);
+              // If remainingSeconds is 0, call logOut and clear the interval
+              if (remainingSeconds === 0) {
+                  logOut();
+                  clearInterval(timer);
+              }
+          }, 1000);
+      }
 
-    const sidebarOptions = [
-        { icon: <HomeIcon />, text: 'Home', route: '/', visibleWithoutLogin: true},
-        { icon: <LoginIcon />, text: 'Login', route: '/login', visibleWithoutLogin: true },
-        { icon: <PersonAddIcon />, text: 'Register', route: '/register', visibleWithoutLogin: true },
-        { icon: <StorefrontIcon />, text: 'Brands', route: '/brands', visibleWithoutLogin: false },
-        { icon: <PublicIcon />, text: 'Countries', route: '/countries', visibleWithoutLogin: false },
-        { icon: <CategoryIcon />, text: 'Categories', route: '/categories', visibleWithoutLogin: false },
-        { icon: <StyleIcon />, text: 'Characteristics', route: '/characteristics', visibleWithoutLogin: false },
-        { icon: <ArticleIcon />, text: 'Articles', route: '/articles', visibleWithoutLogin: false },
-        { icon: <InventoryIcon />, text: 'Packagings', route: '/packagings', visibleWithoutLogin: false },
-        { icon: <QuizIcon />, text: 'Aspects', route: '/aspects', visibleWithoutLogin: false },
-        { icon: <ProductIcon />, text: 'Products', route: '/products', visibleWithoutLogin: false },
-    ];
+      // Clear interval on component unmount
+      return () => clearInterval(timer);
+  }, [isLoggedIn, expiryTime, logOut]);
+
+  const sidebarOptions = [
+      { icon: <HomeIcon />, text: 'Home', route: '/', visibleWithoutLogin: true},
+      { icon: <LoginIcon />, text: 'Login', route: '/login', visibleWithoutLogin: true },
+      { icon: <PersonAddIcon />, text: 'Register', route: '/register', visibleWithoutLogin: true },
+      { icon: <StorefrontIcon />, text: 'Brands', route: '/brands', visibleWithoutLogin: false },
+      { icon: <PublicIcon />, text: 'Countries', route: '/countries', visibleWithoutLogin: false },
+      { icon: <CategoryIcon />, text: 'Categories', route: '/categories', visibleWithoutLogin: false },
+      { icon: <StyleIcon />, text: 'Characteristics', route: '/characteristics', visibleWithoutLogin: false },
+      { icon: <ArticleIcon />, text: 'Articles', route: '/articles', visibleWithoutLogin: false },
+      { icon: <InventoryIcon />, text: 'Packagings', route: '/packagings', visibleWithoutLogin: false },
+      { icon: <QuizIcon />, text: 'Aspects', route: '/aspects', visibleWithoutLogin: false },
+      { icon: <ProductIcon />, text: 'Products', route: '/products', visibleWithoutLogin: false },
+  ];
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -177,8 +182,8 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
                     </IconButton>
                     {isLoggedIn && (
                         <Typography sx={{ display: 'flex', alignItems: 'center' }}>
-                        <AccessTimeIcon sx={{ marginRight: 1 }} />
-                        {formattedTime}
+                          <AccessTimeIcon sx={{ marginRight: 1 }} />
+                          {formattedTime}
                         </Typography>
                     )}
                 </Box>
@@ -252,6 +257,16 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
               }
             </ListItem>
           </Tooltip>
+          <ListItem>
+            <Typography variant="overline" 
+              sx={{   wordWrap: 'break-word',
+                      whiteSpace: 'normal',
+                      wordBreak: 'break-all', 
+                      opacity: open ? 1 : 0 }}
+            >
+              Logged in as {username}
+            </Typography>
+          </ListItem>
         </List>
       </Drawer>
       {/* Adjust content margin based on sidebar state */}
