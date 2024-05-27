@@ -6,10 +6,9 @@ class AspectService {
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
-        const data = await result.json();
     
         if (result.success) {
-            return {success: true, data: data};
+            return {success: true, data: result.data};
         } else {
             return {success: false};
         }
