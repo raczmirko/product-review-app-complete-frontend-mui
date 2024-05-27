@@ -8,10 +8,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
-import ArticleService from '../../services/ArticleService';
-import CharacteristicService from '../../services/CharacteristicService';
-import CategoryService from '../../services/CategoryService';
 import AspectService from '../../services/AspectService';
+import CategoryService from '../../services/CategoryService';
 
 
 const ListAspectsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
