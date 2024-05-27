@@ -2,6 +2,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CancelIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
+import QuizIcon from '@mui/icons-material/Quiz';
 import SaveIcon from '@mui/icons-material/Save';
 import StyleIcon from '@mui/icons-material/Style';
 import { Typography } from '@mui/material';
@@ -32,6 +33,7 @@ import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreateArticleModal from '../modals/CreateArticleModal';
 import AssignPackagingModal from '../modals/CreateProductModal';
+import ListAspectsModal from '../modals/ListAspectsModal';
 import ListCharacteristicsModal from '../modals/ListCharacteristicsModal';
 
 export default function ArticleTable() {
@@ -53,6 +55,7 @@ export default function ArticleTable() {
     const [creationModalActive, setCreationModalActive] = useState(false);
     const [createProductModalActive, setCreateProductModalActive] = useState(false);
     const [characteristicsModalActive, setCharacteristicsModalActive] = useState(false);
+    const [aspectsModalActive, setAspectsModalActive] = useState(false);
 
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
@@ -79,6 +82,7 @@ export default function ArticleTable() {
     const [brands, setBrands] = useState([]);
 
     const [idOfActionRow, setIdOfActionRow] = useState('');
+    const [idOfActionRowCategory, setIdOfActionRowCategory] = useState(undefined);
 
     function showSnackBar (status, text) {
         setSnackBarOpen(true);
@@ -114,6 +118,13 @@ export default function ArticleTable() {
     const toggleShowCharacteristicsModal = (id) => () => {
         setIdOfActionRow(id);
         setCharacteristicsModalActive(!characteristicsModalActive);
+    }
+
+    const toggleShowAspectsModal = (id) => () => {
+        setIdOfActionRow(id);
+        let categoryId = articles.find((article) => article.id === id).category.id;
+        setIdOfActionRowCategory(categoryId);
+        setAspectsModalActive(!aspectsModalActive);
     }
 
     // --- CRUD API calls --- //
@@ -484,7 +495,7 @@ export default function ArticleTable() {
     };
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 90 },
+        { field: 'id', headerName: 'ID', width: 60 },
         { field: 'name', headerName: 'Name', width: 150, editable: true },
         {
             field: 'category',
@@ -513,7 +524,7 @@ export default function ArticleTable() {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            width: 180,
+            width: 200,
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -562,6 +573,14 @@ export default function ArticleTable() {
                         onClick={toggleShowCharacteristicsModal(id)}
                     />
                 </Tooltip>,
+                <Tooltip title={'Show review aspects'}>
+                <GridActionsCellItem
+                    icon={<QuizIcon />}
+                    label="Show review aspects"
+                    className="textPrimary"
+                    onClick={toggleShowAspectsModal(id)}
+                />
+            </Tooltip>,
                 <Tooltip title={'Delete row'}>
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
@@ -597,6 +616,13 @@ export default function ArticleTable() {
                 setIsOpen={setCharacteristicsModalActive}
                 articleId={idOfActionRow}
                 closeFunction={toggleShowCharacteristicsModal}
+            />}
+            {aspectsModalActive && <ListAspectsModal
+                categoryId={idOfActionRowCategory}
+                isOpen={aspectsModalActive}
+                setIsOpen={setAspectsModalActive}
+                articleId={idOfActionRow}
+                closeFunction={toggleShowAspectsModal}
             />}
             {renderConfirUpdateDialog()}
             {confirmationDialogOpen && <ConfirmationDialog 
