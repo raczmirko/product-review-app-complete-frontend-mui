@@ -7,15 +7,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 import React, { useEffect, useState } from 'react';
 import AspectService from '../../services/AspectService';
 import CategoryService from '../../services/CategoryService';
 
-
 const ListAspectsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
-
     const [aspects, setAspects] = useState([]);
     const [category, setCategory] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const handleClose = () => {
         setIsOpen(false);
@@ -23,20 +23,18 @@ const ListAspectsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
     }
 
     useEffect(() => {
-        if (categoryId !== undefined) {
-            CategoryService.getCategory(categoryId)
-            .then(data => {
-                setCategory(data);
-            })
-            .catch(error => console.error('Error:', error));
-
-            AspectService.fetchAspectsByCategory(categoryId)
-            .then(result => {
-                setAspects(result.data);
-            })
-            .catch(error => console.error('Error:', error));
+        if (isOpen && categoryId !== undefined) {
+            setLoading(true);
+            Promise.all([
+                CategoryService.getCategory(categoryId)
+                    .then(data => setCategory(data)),
+                AspectService.fetchAspectsByCategory(categoryId)
+                    .then(result => setAspects(result.data))
+            ])
+            .catch(error => console.error('Error:', error))
+            .finally(() => setLoading(false));
         }
-    }, [isOpen]);
+    }, [isOpen, categoryId]);
 
     return (
         <Modal
@@ -59,25 +57,33 @@ const ListAspectsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
                     textAlign: 'center'
                 }}
             >
-                <Typography variant="h5" component="div" gutterBottom>Review aspects of '{category.name}':</Typography>
-                <Typography variant="subtitle2" component="div" gutterBottom>(Inherited from the category structure)</Typography>
+                <Typography variant="h5" component="div" gutterBottom>
+                    Review aspects of '{category.name}':
+                </Typography>
+                <Typography variant="subtitle2" component="div" gutterBottom>
+                    (Inherited from the category structure)
+                </Typography>
                 <Box sx={{ height: 220, overflowY: 'auto', maxWidth: 400 }}>
-                    {aspects.length > 0 ?
-                        <List>
-                            {aspects.map((aspect) => (
-                                <ListItem key={aspect.id}>
-                                    <ListItemIcon>
-                                        <QuizIcon />
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary={aspect.name}
-                                    />
-                                </ListItem>
-                            ))}
-                        </List>
-                        :
-                        <Typography>No aspects are assigned.</Typography>
-                    }
+                    {loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                        aspects.length > 0 ? (
+                            <List>
+                                {aspects.map((aspect) => (
+                                    <ListItem key={aspect.id}>
+                                        <ListItemIcon>
+                                            <QuizIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary={aspect.name} />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        ) : (
+                            <Typography>No aspects are assigned.</Typography>
+                        )
+                    )}
                 </Box>
                 <Box sx={{ textAlign: 'right' }}>
                     <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
