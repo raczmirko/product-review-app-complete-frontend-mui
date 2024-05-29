@@ -1,12 +1,12 @@
 class CharacteristicService {
-    static async fetchCategoryTreeCharacteristics(id) {
+    static async fetchCategoryTreeCharacteristics(categoryId) {
         const token = localStorage.getItem('token');
         const headers = {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`http://localhost:8080/characteristic/${id}/list-characteristic-category-trees`, {headers});
+            const response = await fetch(`http://localhost:8080/characteristic/${categoryId}/list-characteristic-category-trees`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch assigned category tree');
             }
