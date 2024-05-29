@@ -64,11 +64,12 @@ const ListAspectsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
                     (Inherited from the category structure)
                 </Typography>
                 <Box sx={{ height: 220, overflowY: 'auto', maxWidth: 400 }}>
-                    {loading ? (
+                    { loading &&
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                             <CircularProgress />
                         </Box>
-                    ) : (
+                    } 
+                    { !loading &&    
                         aspects.length > 0 ? (
                             <List>
                                 {aspects.map((aspect) => (
@@ -83,7 +84,7 @@ const ListAspectsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
                         ) : (
                             <Typography>No aspects are assigned.</Typography>
                         )
-                    )}
+                    }
                 </Box>
                 <Box sx={{ textAlign: 'right' }}>
                     <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
