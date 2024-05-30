@@ -22,8 +22,11 @@ import AssignCharacteristicValue from '../modals/AssignCharacteristicValueModal'
 import ListAspectsModal from '../modals/ListAspectsModal';
 import ListCharacteristicsModal from '../modals/ListCharacteristicsModal';
 import CreateProductModal from '../modals/AssignCharacteristicValueModal';
+import Avatar from '@mui/material/Avatar';
+import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 
-export default function ArticleTable() {
+
+export default function ProductTable() {
 
     const [products, setProducts] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
@@ -53,7 +56,6 @@ export default function ArticleTable() {
       });
     const [filterModel, setFilterModel] = useState({ items: [] });
     const [sortModel, setSortModel] = useState([]); 
-    const [rowModesModel, setRowModesModel] = useState({});
     const [rowSelectionModel, setRowSelectionModel] = useState({});
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
@@ -256,26 +258,8 @@ export default function ArticleTable() {
     const handleRowSelectionModelChange = (rowSelectionModel) => {
         setRowSelectionModel(rowSelectionModel);
     }
-
-    // --- Edit-related functionality --- //
-
-    const handleRowEditStop = (params, event) => {
-        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-            setRowModesModel((prevRowModesModel) => ({
-                ...prevRowModesModel,
-                [params.id]: { mode: GridRowModes.View },
-            }));
-        }
-    };
     
     // Actions row buttons and their handlers
-    const setRowModeToEdit = (id) => () => {
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-    };
-    
-    const setRowModeToView = (id) => () => {
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    };
     
     const handleDeleteClick = (id) => () => {
         setConfirmationDialogTitle("Are you sure want to delete?");
@@ -284,91 +268,32 @@ export default function ArticleTable() {
         setConfirmationDialogFunctionParams([id]);
         setConfirmationDialogOpen(true);
     };
-    
-    const handleCancelClick = (id) => () => {
-        setRowModesModel({...rowModesModel, [id]: { mode: GridRowModes.View, ignoreModifications: true },
-        });
-    };
-    
-    const handleRowModesModelChange = (newRowModesModel) => {
-        setRowModesModel(newRowModesModel);
-    };
-
-    function SelectCategoryEditInputCell(props) {
-        const { id, value, field, options } = props;
-        const apiRef = useGridApiContext();
-        const [selectedCategory, setSelectedCategory] = useState(value);
-
-        const handleChange = (event) => {
-            let newCategoryName = event.target.value;
-            let newCategory;
-            newCategory = options.find(option => option.name === newCategoryName);
-            setSelectedCategory(newCategory);
-            apiRef.current.setEditCellValue({ id, field, value: newCategory });
-            apiRef.current.stopCellEditMode({ id, field });
-        };        
-      
-        return (
-          <Select
-            value={selectedCategory.name}
-            onChange={handleChange}
-            size="small"
-            sx={{ height: 1 }}
-            native
-            autoFocus
-          >
-            {/* Populate options from the categories data */}
-            {options.map(option => (
-              <option key={option.id} value={option.name}>
-                {option.name}
-              </option>
-            ))}
-          </Select>
-        );
-    }
-      
-    const renderSelectCategoryEditInputCell = (params) => {
-        return <SelectCategoryEditInputCell {...params} />;
-    };
-
-    function SelectBrandEditInputCell(props) {
-        const { id, value, field, options } = props;
-        const apiRef = useGridApiContext();
-        const [selectedBrand, setSelectedBrand] = useState(value);
-
-        const handleChange = (event) => {
-            let newBrandName = event.target.value;
-            let newBrand = options.find(option => option.name === newBrandName);
-            setSelectedBrand(newBrand);
-            apiRef.current.setEditCellValue({ id, field, value: newBrand });
-            apiRef.current.stopCellEditMode({ id, field });
-        };        
-      
-        return (
-          <Select
-            value={selectedBrand.name}
-            onChange={handleChange}
-            size="small"
-            sx={{ height: 1 }}
-            native
-            autoFocus
-          >
-            {/* Populate options from the countries data */}
-            {options.map(option => (
-              <option key={option.id} value={option.name}>
-                {option.name}
-              </option>
-            ))}
-          </Select>
-        );
-    }
-      
-    const renderSelectBrandEditInputCell = (params) => {
-        return <SelectBrandEditInputCell {...params} />;
-    };
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 60 },
+        {
+            field: 'image',
+            headerName: 'Image',
+            width: 100,
+            renderCell: (params) => (
+                <Box 
+                sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    width: '100%', 
+                    height: '100%' 
+                }}
+                >
+                    <Avatar 
+                        sx={{ width: 45, height: 45 }}
+                        src={params.row.productImages && params.row.productImages.length > 0 ? `data:image/png;base64,${params.row.productImages[0].image}` : null}
+                        alt="Product Image"
+                    >
+                        {(!params.row.productImages || params.row.productImages.length === 0) && <ImageNotSupportedIcon />}
+                    </Avatar>
+                </Box>
+            ),
+        },
         {
             field: 'article',
             headerName: 'Article',
@@ -468,10 +393,6 @@ export default function ArticleTable() {
             <DataGrid
                 autoHeight
                 editMode="row" 
-                rowModesModel={rowModesModel}
-                onRowSelectionModelChange={handleRowSelectionModelChange}
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
                 rows={products}
                 rowCount={totalElements}
                 columns={columns}
@@ -492,7 +413,8 @@ export default function ArticleTable() {
                     },
                     sorting: {
                         sortModel: sortModel
-                    }
+                    },
+                    density: 'comfortable'
                 }}
                 checkboxSelection
                 disableRowSelectionOnClick
