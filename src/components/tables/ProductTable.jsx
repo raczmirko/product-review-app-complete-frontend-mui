@@ -1,15 +1,13 @@
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 import QuizIcon from '@mui/icons-material/Quiz';
 import StyleIcon from '@mui/icons-material/Style';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import {
     DataGrid,
-    GridActionsCellItem,
-    GridRowEditStopReasons,
-    GridRowModes,
-    useGridApiContext
+    GridActionsCellItem
 } from '@mui/x-data-grid';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -18,12 +16,9 @@ import ProductImageService from '../../services/ProductImageService';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbar';
-import AssignCharacteristicValue from '../modals/AssignCharacteristicValueModal';
+import { default as AssignCharacteristicValue, default as CreateProductModal } from '../modals/AssignCharacteristicValueModal';
+import GalleryModal from '../modals/GalleryModal';
 import ListAspectsModal from '../modals/ListAspectsModal';
-import ListCharacteristicsModal from '../modals/ListCharacteristicsModal';
-import CreateProductModal from '../modals/AssignCharacteristicValueModal';
-import Avatar from '@mui/material/Avatar';
-import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 
 
 export default function ProductTable() {
@@ -43,6 +38,7 @@ export default function ProductTable() {
     const [createProductModalActive, setCreateProductModalActive] = useState(false);
     const [characteristicsModalActive, setCharacteristicsModalActive] = useState(false);
     const [aspectsModalActive, setAspectsModalActive] = useState(false);
+    const [galleryModalActive, setGalleryModalActive] = useState(false);
 
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
@@ -96,6 +92,12 @@ export default function ProductTable() {
         let categoryId = products.find((product) => product.id === id).article.category.id;
         setIdOfActionRowCategory(categoryId);
         setAspectsModalActive(!aspectsModalActive);
+    }
+
+    const toggleShowGalleryModal = (product) => () => {
+        console.log(product)
+        setProduct(product);
+        setGalleryModalActive(!galleryModalActive);
     }
 
     // --- CRUD API calls --- //
@@ -281,8 +283,9 @@ export default function ProductTable() {
                     display: 'flex', 
                     alignItems: 'center', 
                     width: '100%', 
-                    height: '100%' 
+                    height: '100%',
                 }}
+                onClick={toggleShowGalleryModal(params.row)} 
                 >
                     <Avatar 
                         sx={{ width: 45, height: 45 }}
@@ -389,6 +392,12 @@ export default function ProductTable() {
                 setIsOpen={setConfirmationDialogOpen}
                 functionToRunOnConfirm={confirmationDialogFunction}
                 functionParams={confirmationDialogFunctionParams}
+            />}
+            {galleryModalActive && <GalleryModal
+                images={product.productImages}
+                isOpen={galleryModalActive}
+                setIsOpen={setGalleryModalActive}
+                closeFunction={toggleShowGalleryModal}
             />}
             <DataGrid
                 autoHeight
