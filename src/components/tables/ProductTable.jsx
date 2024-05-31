@@ -399,7 +399,7 @@ export default function ProductTable() {
                 functionParams={confirmationDialogFunctionParams}
             />}
             {galleryModalActive && <GalleryModal
-                images={product.productImages}
+                product={product}
                 isOpen={galleryModalActive}
                 setIsOpen={setGalleryModalActive}
                 closeFunction={toggleShowGalleryModal}
