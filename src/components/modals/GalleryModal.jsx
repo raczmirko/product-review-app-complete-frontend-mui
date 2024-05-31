@@ -45,7 +45,7 @@ export default function GalleryModal({ images, closeFunction, isOpen, setIsOpen 
                     ))}
                 </ImageList>
                 <Box sx={{ textAlign: 'right' }}>
-                    <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                    <Button variant="contained" color="error" onClick={handleClose}>Close</Button>
                 </Box>
             </Box>
         </Modal>

@@ -95,9 +95,13 @@ export default function ProductTable() {
     }
 
     const toggleShowGalleryModal = (product) => () => {
-        console.log(product)
-        setProduct(product);
-        setGalleryModalActive(!galleryModalActive);
+        if(product.productImages.length !== 0){
+            setProduct(product);
+            setGalleryModalActive(!galleryModalActive);
+        }
+        else {
+            showSnackBar('warning', 'WARNING: There are no product images.');
+        }
     }
 
     // --- CRUD API calls --- //
@@ -284,6 +288,7 @@ export default function ProductTable() {
                     alignItems: 'center', 
                     width: '100%', 
                     height: '100%',
+                    cursor: 'pointer'
                 }}
                 onClick={toggleShowGalleryModal(params.row)} 
                 >
@@ -295,7 +300,7 @@ export default function ProductTable() {
                         {(!params.row.productImages || params.row.productImages.length === 0) && <ImageNotSupportedIcon />}
                     </Avatar>
                 </Box>
-            ),
+            )
         },
         {
             field: 'article',
