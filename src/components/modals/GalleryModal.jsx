@@ -116,7 +116,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                 <Box sx={{ overflowY: 'auto', marginBottom: 3 }}>
                     <ImageList cols={4} >
                         {images.map((item, index) => (
-                            <ImageListItem key={item.id} sx={{ m: 1, maxWidth: '300px', maxHeight: '300px' }}>
+                            <ImageListItem key={item.id} sx={{ m: 1, maxWidth: '300px', maxHeight: 'auto' }}>
                             <img
                                 src={`data:image/png;base64,${item.image}`}
                                 alt={item.title}
