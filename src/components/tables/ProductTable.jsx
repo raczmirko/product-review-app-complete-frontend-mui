@@ -15,7 +15,7 @@ import { apiRequest } from '../../services/CrudService';
 import ProductImageService from '../../services/ProductImageService';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
-import EditToolbar from '../EditToolbar';
+import EditToolbar from '../EditToolbarNoAdd';
 import { default as AssignCharacteristicValue, default as CreateProductModal } from '../modals/AssignCharacteristicValueModal';
 import GalleryModal from '../modals/GalleryModal';
 import ListAspectsModal from '../modals/ListAspectsModal';
