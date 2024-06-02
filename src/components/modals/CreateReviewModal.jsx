@@ -17,7 +17,7 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
     const [selectedPage, setSelectedPage] = useState('head');
     const [description, setDescription] = useState('');
     const [recommended, setRecommended] = useState(true);
-    const [valueForPrice, setValueForPrice] = useState('');
+    const [valueForPrice, setValueForPrice] = useState(5);
     const [purchaseCountry, setPurchaseCountry] = useState('');
 
     const handlePageChange = (event, newPage) => {
