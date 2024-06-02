@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 
 function EditToolbar(props) {
-    const { setmodalactive, deleterecords, rowselectionmodel, showQuickFilter } = props;
+    const { deleterecords, rowselectionmodel, showQuickFilter } = props;
     return (
         <GridToolbarContainer>
             <GridToolbar showQuickFilter={showQuickFilter} />
