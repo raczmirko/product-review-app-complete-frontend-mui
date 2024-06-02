@@ -1,7 +1,7 @@
 import Container from '@mui/material/Container';
 import PageHeader from "../components/PageHeader";
 import ParticleBackground from '../components/ParticleBackground';
-import ProductGrid from '../components/tables/ProductTable';
+import ProductTable from '../components/tables/ProductTable';
 
 const Articles = () => {
 
@@ -12,7 +12,7 @@ const Articles = () => {
             </Container>
             <Container >
                 <PageHeader text="Products" color="#81BE83" textColor="white"/>
-                <ProductGrid />
+                <ProductTable />
              </Container>
         </Container>
       );
