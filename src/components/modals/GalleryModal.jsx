@@ -122,7 +122,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     maxHeight: '75%',
-                    width: '80%',
+                    maxWidth: '80%',
                     bgcolor: 'background.paper',
                     boxShadow: 24,
                     p: 6,
@@ -137,15 +137,14 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                 </Typography>
                 <Box sx={{ display: 'flex', flexGrow: 1, overflowY: 'auto' }}>
                     <Box sx={{ width: '60%', overflowY: 'auto', mr: 2 }}>
-                        <ImageList cols={4} gap={12}>
+                        <ImageList cols={3} gap={12}>
                             {images.map((item, index) => (
                                 <ImageListItem
                                     key={item.id}
-                                    sx={{
-                                        position: 'relative',
+                                    sx={{ position: 'relative',
                                         transition: 'transform 0.3s ease-in-out',
                                         '&:hover': {
-                                            transform: 'scale(1.1)',
+                                            transform: 'scale(0.9)',
                                             zIndex: 999,
                                             '& .magnifyIcon': {
                                                 display: 'block',
@@ -196,71 +195,75 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                             ))}
                         </ImageList>
                     </Box>
-                    <Box
-                        sx={{
-                            width: '40%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            border: '1px solid #ccc',
-                            padding: 2,
-                            position: 'relative',
-                            overflow: 'hidden',
-                        }}
-                        onMouseMove={handleMouseMove}
-                        onWheel={handleWheel}
-                    >
-                        {selectedImage ? (
-                            <Box sx={{ 
+                    {images.length > 0 && 
+                        <Box
+                            sx={{
+                                width: '40%',
                                 display: 'flex',
-                                flexDirection: 'column',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                position: 'relative', 
-                                width: '100%', 
-                                height: '100%' 
-                            }}>
-                                <Typography 
-                                    variant="h4" 
-                                    sx={{ 
-                                        position: 'absolute', 
-                                        top: 0, 
-                                        width: '100%', 
-                                        textAlign: 'center', 
-                                        backgroundColor: 'rgba(255, 255, 255, 0.8)' 
-                                    }}
-                                >
-                                    Image preview
-                                </Typography>
-                                <img
-                                    src={`data:image/png;base64,${selectedImage}`}
-                                    alt="Selected"
-                                    style={{
-                                        width: '100%',
-                                        maxHeight: '100%',
-                                        transform: `scale(${zoomLevel})`,
-                                        transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                                        transition: 'transform 0.1s',
-                                    }}
-                                />
-                                <Typography 
-                                    variant="subtitle1" 
-                                    sx={{ 
-                                        position: 'absolute', 
-                                        bottom: 0, 
-                                        width: '100%', 
-                                        textAlign: 'center', 
-                                        backgroundColor: 'rgba(255, 255, 255, 0.8)' 
-                                    }}
-                                >
-                                    Zoom by scrolling with the mouse wheel.
-                                </Typography>
-                            </Box>
-                        ) : (
-                            <Typography variant="h6">Hover over an image and click the magnifying glass to view</Typography>
-                        )}
+                                border: '1px solid #ccc',
+                                padding: 2,
+                                position: 'relative',
+                                overflow: 'hidden',
+                            }}
+                            onMouseMove={handleMouseMove}
+                            onWheel={handleWheel}
+                        >
+                            {selectedImage ? (
+                                <Box sx={{ 
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    position: 'relative', 
+                                    width: '100%', 
+                                    height: '100%' 
+                                }}>
+                                    <Typography 
+                                        variant="h4" 
+                                        sx={{ 
+                                            position: 'absolute', 
+                                            zIndex: 999,
+                                            top: 0, 
+                                            width: '100%', 
+                                            textAlign: 'center', 
+                                            backgroundColor: 'rgba(255, 255, 255, 0.8)' 
+                                        }}
+                                    >
+                                        Image preview
+                                    </Typography>
+                                    <img
+                                        src={`data:image/png;base64,${selectedImage}`}
+                                        alt="Selected"
+                                        style={{
+                                            width: '80%',
+                                            maxHeight: '100%',
+                                            transform: `scale(${zoomLevel})`,
+                                            transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                                            transition: 'transform 0.1s',
+                                        }}
+                                    />
+                                    <Typography 
+                                        variant="subtitle1" 
+                                        sx={{ 
+                                            position: 'absolute', 
+                                            zIndex: 999,
+                                            bottom: 0, 
+                                            width: '100%', 
+                                            textAlign: 'center', 
+                                            backgroundColor: 'rgba(255, 255, 255, 0.8)' 
+                                        }}
+                                    >
+                                        Zoom by scrolling with the mouse wheel.
+                                    </Typography>
+                                </Box>
+                            ) : (
+                                <Typography variant="h6">Hover over an image and click the magnifying glass to view</Typography>
+                            )}
+                        </Box>
+                    }
                     </Box>
-                </Box>
                 <Box sx={{ textAlign: 'right', mt: 1, display: 'flex', justifyContent: 'flex-end' }}>
                     {renderImageUploadButton()}
                     <Button variant="contained" color="error" onClick={handleClose}>Close</Button>
