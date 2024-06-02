@@ -1,5 +1,6 @@
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import Box from '@mui/material/Box';
+import Rating from '@mui/material/Rating';
 import Tooltip from '@mui/material/Tooltip';
 import {
     DataGrid,
@@ -58,6 +59,15 @@ export default function ReviewTable() {
     useEffect(() => {
         searchEntities();
     }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
+
+    function formatDate(d) {
+        const date = new Date(d);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Month starts from 0
+        const year = date.getFullYear();
+    
+        return `${day}/${month}/${year}`;
+    }
 
     // --- CRUD API calls --- //
 
@@ -179,15 +189,20 @@ export default function ReviewTable() {
     };
 
     const columns = [
-        { field: 'date', headerName: 'Date', width: 100 },
+        { 
+            field: 'date', 
+            headerName: 'Date', 
+            width: 100,
+            valueFormatter: (value, row) => formatDate(value),
+        },
         {
-            field: 'productName',
+            field: 'product',
             headerName: 'Product',
             width: 150,
             valueGetter: (value, row) => {
                 return row.product;
             },
-            valueFormatter: (value, row) => row.product.name
+            valueFormatter: (value, row) => row.product.article.name
         },
         {
             field: 'user',
@@ -198,11 +213,16 @@ export default function ReviewTable() {
             },
             valueFormatter: (value, row) => row.user.username
         },
-        { field: 'recommended', headerName: 'Recommended?', width: 150 },
+        { 
+            field: 'recommended', 
+            headerName: 'Recommended?', 
+            width: 150 ,
+            valueFormatter: (value, row) => row.recommended === true ? 'YES' : 'NO'
+        },
         {
             field: 'purchaseCountry',
-            headerName: 'Purchase country',
-            width: 150,
+            headerName: 'Bought in',
+            width: 100,
             valueGetter: (value, row) => {
                 return row.purchaseCountry;
             },
@@ -211,10 +231,23 @@ export default function ReviewTable() {
         { 
             field: 'valueForPrice', 
             headerName: 'Value For $', 
-            width: 100,
-            valueFormatter: (value, row) => row.valueForPrice + '/5'
+            width: 150,
+            renderCell: (params) => (
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                    <Rating value={params.value} readOnly />
+                </Box>
+            ),
         },
-        { field: 'description', headerName: 'Description', flex: 1 },
+        { 
+            field: 'description', 
+            headerName: 'Description', 
+            flex: 1,
+            renderCell: (params) => (
+                <Box sx={{ display: 'flex', height: '100%' }}>
+                    {params.value}
+                </Box>
+            ),
+        },
         {
             field: 'actions',
             type: 'actions',
@@ -227,7 +260,7 @@ export default function ReviewTable() {
                         <GridActionsCellItem
                             icon={<DeleteIcon />}
                             label="Delete"
-                            onClick={handleDeleteClick(row.userId, row.productId)}
+                            onClick={handleDeleteClick(null, null)}
                         />
                     </Tooltip>,
                 ];

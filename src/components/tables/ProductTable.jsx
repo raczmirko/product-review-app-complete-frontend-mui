@@ -1,6 +1,7 @@
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 import QuizIcon from '@mui/icons-material/Quiz';
+import RateReviewIcon from '@mui/icons-material/RateReview';
 import StyleIcon from '@mui/icons-material/Style';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -16,7 +17,8 @@ import ProductImageService from '../../services/ProductImageService';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbarNoAdd';
-import { default as AssignCharacteristicValue, default as CreateProductModal } from '../modals/AssignCharacteristicValueModal';
+import AssignCharacteristicValueModal from '../modals/AssignCharacteristicValueModal';
+import CreateReviewModal from '../modals/CreateReviewModal';
 import GalleryModal from '../modals/GalleryModal';
 import ListAspectsModal from '../modals/ListAspectsModal';
 
@@ -38,6 +40,7 @@ export default function ProductTable() {
     const [characteristicsModalActive, setCharacteristicsModalActive] = useState(false);
     const [aspectsModalActive, setAspectsModalActive] = useState(false);
     const [galleryModalActive, setGalleryModalActive] = useState(false);
+    const [reviewModalActive, setReviewModalActive] = useState(false);
 
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
@@ -93,6 +96,12 @@ export default function ProductTable() {
         setGalleryModalActive(!galleryModalActive);
     }
 
+    const toggleShowReviewModal = (id) => () => {
+        let product = products.find(product => product.id === id);
+        setProduct(product);
+        setReviewModalActive(!reviewModalActive);
+    }
+
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
@@ -128,28 +137,26 @@ export default function ProductTable() {
         }
     };
 
-    const createProduct = async (article, packaging) => {
-        if (packaging === '') {
-            let errorMessage = 'ERROR: Packaging cannot be empty.';
-            showSnackBar('error', errorMessage);
-            return { success: false, message: errorMessage };
-        }
-        else {
-            const endpoint = 'http://localhost:8080/product/create';
-            const requestBody = {
-                article: article,
-                packaging: packaging
-            };
-        
-            const response = await apiRequest(endpoint, 'POST', requestBody);
-        
-            if (response.success) {
-                showSnackBar('success', 'Product successfully created.');
-                return { success: true, product:  response.data };
-            } else {
-                showSnackBar('error', response.message);
-                return { success: false, message: response.message };
-            }
+    const createReviewHead = async (product, description, recommended, valueForPrice, purchaseCountry) => {
+        const username = localStorage.getItem('username');
+        const endpoint = 'http://localhost:8080/review-head/create';
+        const requestBody = {
+            username: username,
+            product: product,
+            description: description,
+            recommended: recommended,
+            valueForPrice: parseInt(valueForPrice),
+            purchaseCountry: purchaseCountry
+        };
+    
+        const response = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (response.success) {
+            showSnackBar('success', 'Review successfully created.');
+            return { success: true, product:  response.data };
+        } else {
+            showSnackBar('error', response.message);
+            return { success: false, message: response.message };
         }
     };
 
@@ -322,10 +329,18 @@ export default function ProductTable() {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            width: 200,
+            width: 170,
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 return [
+                <Tooltip title={'Review product'}>
+                    <GridActionsCellItem
+                        icon={<RateReviewIcon />}
+                        label="Review product"
+                        className="textPrimary"
+                        onClick={toggleShowReviewModal(id)}
+                    />
+                </Tooltip>,
                 <Tooltip title={'Show assigned characteristics'}>
                     <GridActionsCellItem
                         icon={<StyleIcon />}
@@ -356,7 +371,7 @@ export default function ProductTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            {characteristicsModalActive && <AssignCharacteristicValue
+            {characteristicsModalActive && <AssignCharacteristicValueModal
                 isOpen={characteristicsModalActive}
                 setIsOpen={setCharacteristicsModalActive}
                 product={product}
@@ -383,6 +398,13 @@ export default function ProductTable() {
                 isOpen={galleryModalActive}
                 setIsOpen={setGalleryModalActive}
                 closeFunction={toggleShowGalleryModal}
+            />}
+            {reviewModalActive && <CreateReviewModal
+                product={product}
+                createReviewFunction={createReviewHead}
+                isOpen={reviewModalActive}
+                setIsOpen={setReviewModalActive}
+                closeFunction={toggleShowReviewModal}
             />}
             <DataGrid
                 autoHeight
