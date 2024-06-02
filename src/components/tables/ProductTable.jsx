@@ -394,6 +394,7 @@ export default function ProductTable() {
                 filterMode="server"
                 sortingMode="server"
                 paginationMode="server"
+                onRowSelectionModelChange={handleRowSelectionModelChange}
                 onFilterModelChange={handleFilterChange}
                 onSortModelChange={handleSortChange}
                 onPaginationModelChange={handlePaginationChange}
