@@ -17,6 +17,7 @@ import Aspects from './pages/Aspects';
 import SignInSide from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Products from './pages/Products';
+import Reviews from './pages/Reviews';
 
 const darkTheme = createTheme({
     palette: {
@@ -149,6 +150,11 @@ const App = () => {
                 <Route path="/products" element={
                     <div>
                         <Products />
+                    </div>
+                } />
+                <Route path="/reviews" element={
+                    <div>
+                        <Reviews />
                     </div>
                 } />
             </Routes>

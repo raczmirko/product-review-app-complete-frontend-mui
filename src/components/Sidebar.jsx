@@ -2,7 +2,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CategoryIcon from '@mui/icons-material/Category';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import CoffeeIcon from '@mui/icons-material/Coffee';
+import ProductIcon from '@mui/icons-material/EmojiSymbols';
 import HomeIcon from '@mui/icons-material/Home';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import LoginIcon from '@mui/icons-material/Login';
@@ -11,8 +11,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PublicIcon from '@mui/icons-material/Public';
 import QuizIcon from '@mui/icons-material/Quiz';
+import RateReviewIcon from '@mui/icons-material/RateReview';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import StyleIcon from '@mui/icons-material/Style';
+import ArticleIcon from '@mui/icons-material/Tune';
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -30,8 +32,6 @@ import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import ProductIcon from '@mui/icons-material/EmojiSymbols';
-import ArticleIcon from '@mui/icons-material/Tune';
 
 const drawerWidth = 240;
 
@@ -160,6 +160,7 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
       { icon: <InventoryIcon />, text: 'Packagings', route: '/packagings', visibleWithoutLogin: false },
       { icon: <QuizIcon />, text: 'Aspects', route: '/aspects', visibleWithoutLogin: false },
       { icon: <ProductIcon />, text: 'Products', route: '/products', visibleWithoutLogin: false },
+      { icon: <RateReviewIcon />, text: 'Reviews', route: '/reviews', visibleWithoutLogin: false },
   ];
 
   return (
