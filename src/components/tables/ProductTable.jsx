@@ -72,7 +72,7 @@ export default function ProductTable() {
 
     useEffect(() => {
         searchEntities();
-    }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
+    }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel, galleryModalActive]);
 
     // --- Modal-related functions --- //
 
@@ -95,13 +95,8 @@ export default function ProductTable() {
     }
 
     const toggleShowGalleryModal = (product) => () => {
-        if(product.productImages.length !== 0){
-            setProduct(product);
-            setGalleryModalActive(!galleryModalActive);
-        }
-        else {
-            showSnackBar('warning', 'WARNING: There are no product images.');
-        }
+        setProduct(product);
+        setGalleryModalActive(!galleryModalActive);
     }
 
     // --- CRUD API calls --- //
