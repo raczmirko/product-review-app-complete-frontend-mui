@@ -35,7 +35,6 @@ export default function ProductTable() {
     const [orderByDirection, setOrderByDirection] = useState('asc');
     const [loading, setLoading] = useState(false);
 
-    const [createProductModalActive, setCreateProductModalActive] = useState(false);
     const [characteristicsModalActive, setCharacteristicsModalActive] = useState(false);
     const [aspectsModalActive, setAspectsModalActive] = useState(false);
     const [galleryModalActive, setGalleryModalActive] = useState(false);
@@ -75,11 +74,6 @@ export default function ProductTable() {
     }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel, galleryModalActive]);
 
     // --- Modal-related functions --- //
-
-    const toggleShowCreateProductModal = (id) => () => {
-        setEntityId(id);
-        setCreateProductModalActive(!createProductModalActive);
-    }
 
     const toggleShowCharacteristicsModal = (id) => () => {
         let product = products.find(product => product.id === id);
@@ -362,15 +356,6 @@ export default function ProductTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            {createProductModalActive && <CreateProductModal
-                isOpen={createProductModalActive}
-                setIsOpen={setCreateProductModalActive}
-                articleId={endtityId}
-                closeFunction={toggleShowCreateProductModal}
-                createFunction={createProduct}
-                uploadImageFunction={uploadProductImages}
-                assignCharacteristicValueFunction={assignCharacteristicValueFunction}
-            />}
             {characteristicsModalActive && <AssignCharacteristicValue
                 isOpen={characteristicsModalActive}
                 setIsOpen={setCharacteristicsModalActive}
