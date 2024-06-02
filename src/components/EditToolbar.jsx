@@ -3,24 +3,27 @@ import { GridToolbarContainer, GridToolbar } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Box from '@mui/material/Box';
 
 function EditToolbar(props) {
     const { setmodalactive, deleterecords, rowselectionmodel, showQuickFilter } = props;
     return (
         <GridToolbarContainer>
             <GridToolbar showQuickFilter={showQuickFilter} />
-            <Button color="primary" 
-                    startIcon={<AddIcon />} 
-                    onClick={() => setmodalactive(true)}
-            >
-                Add record
-            </Button>
-            <Button color="primary" 
-                    startIcon={<DeleteIcon />} 
-                    onClick={() => deleterecords(rowselectionmodel)}
-            >
-                Delete selected
-            </Button>
+            <Box sx={{ marginLeft: 'auto' }}>
+                <Button color="primary" 
+                        startIcon={<AddIcon />} 
+                        onClick={() => setmodalactive(true)}
+                >
+                    Add record
+                </Button>
+                <Button color="primary" 
+                        startIcon={<DeleteIcon />} 
+                        onClick={() => deleterecords(rowselectionmodel)}
+                >
+                    Delete selected
+                </Button>
+            </Box>
         </GridToolbarContainer>
     );
 }
