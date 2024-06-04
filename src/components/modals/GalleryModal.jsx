@@ -228,7 +228,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                                             top: 0, 
                                             width: '100%', 
                                             textAlign: 'center', 
-                                            backgroundColor: 'rgba(255, 255, 255, 0.8)' 
+                                            backgroundColor: 'rgba(0, 0, 0, 0.8)' 
                                         }}
                                     >
                                         Image preview
@@ -252,7 +252,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                                             bottom: 0, 
                                             width: '100%', 
                                             textAlign: 'center', 
-                                            backgroundColor: 'rgba(255, 255, 255, 0.8)' 
+                                            backgroundColor: 'rgba(0, 0, 0, 0.8)' 
                                         }}
                                     >
                                         Zoom by scrolling with the mouse wheel.
