@@ -10,6 +10,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { apiRequest } from '../../services/CrudService';
 import AlertSnackBar from '../AlertSnackBar';
+import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbarNoAdd';
 
 
@@ -69,12 +70,19 @@ export default function ReviewTable() {
         return `${day}/${month}/${year}`;
     }
 
+    const generateUniqueIds = (reviews) => {
+        return reviews.map((review) => ({
+            ...review,
+            id: `${review.user.username}-${review.product.id}`,
+        }));
+    };
+
     // --- CRUD API calls --- //
 
-    const deleteEntity = async (userId, productId) => {
+    const deleteEntity = async (username, productId) => {
         const endpoint = `http://localhost:8080/review-head/delete`;
         const requestBody = {
-            userId: userId,
+            username: username,
             productId: productId
         };
     
@@ -124,7 +132,8 @@ export default function ReviewTable() {
         const result = await apiRequest(endpoint, 'GET', requestBody);
     
         if (result.success) {
-            setReviews(result.data.content);
+            const reviewsWithIds = generateUniqueIds(result.data.content);
+            setReviews(reviewsWithIds);
             setTotalPages(result.data.totalPages);
             setTotalElements(result.data.totalElements);
             setLoading(false);
@@ -180,11 +189,11 @@ export default function ReviewTable() {
     
     // Actions row buttons and their handlers
     
-    const handleDeleteClick = (userId, productId) => () => {
+    const handleDeleteClick = (username, productId) => () => {
         setConfirmationDialogTitle("Are you sure want to delete?");
         setConfirmationDialogDescription("This cannot be reverted.");
         setConfirmationDialogFunction(() => deleteEntity);
-        setConfirmationDialogFunctionParams([userId, productId]);
+        setConfirmationDialogFunctionParams([username, productId]);
         setConfirmationDialogOpen(true);
     };
 
@@ -199,18 +208,14 @@ export default function ReviewTable() {
             field: 'product',
             headerName: 'Product',
             width: 150,
-            valueGetter: (value, row) => {
-                return row.product;
-            },
+            valueGetter: (value, row) => row.product,
             valueFormatter: (value, row) => row.product.article.name
         },
         {
             field: 'user',
             headerName: 'User',
             width: 100,
-            valueGetter: (value, row) => {
-                return row.user;
-            },
+            valueGetter: (value, row) => row.user,
             valueFormatter: (value, row) => row.user.username
         },
         { 
@@ -223,9 +228,7 @@ export default function ReviewTable() {
             field: 'purchaseCountry',
             headerName: 'Bought in',
             width: 100,
-            valueGetter: (value, row) => {
-                return row.purchaseCountry;
-            },
+            valueGetter: (value, row) => row.purchaseCountry,
             valueFormatter: (value, row) => row.purchaseCountry.name
         },
         { 
@@ -254,13 +257,13 @@ export default function ReviewTable() {
             headerName: 'Actions',
             width: 100,
             cellClassName: 'actions',
-            getActions: (value, row) => {
+            getActions: ({ row }) => {
                 return [
                     <Tooltip title={'Delete row'}>
                         <GridActionsCellItem
                             icon={<DeleteIcon />}
                             label="Delete"
-                            onClick={handleDeleteClick(null, null)}
+                            onClick={handleDeleteClick(row.user.username, row.product.id)}
                         />
                     </Tooltip>,
                 ];
@@ -270,6 +273,14 @@ export default function ReviewTable() {
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
             <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
+            {confirmationDialogOpen && <ConfirmationDialog 
+                dialogTitle={confirmationDialogTitle}
+                dialogDescription={confirmationDialogDescription}
+                isOpen={confirmationDialogOpen}
+                setIsOpen={setConfirmationDialogOpen}
+                functionToRunOnConfirm={confirmationDialogFunction}
+                functionParams={confirmationDialogFunctionParams}
+            />}
             <DataGrid
                 autoHeight
                 editMode="row" 
