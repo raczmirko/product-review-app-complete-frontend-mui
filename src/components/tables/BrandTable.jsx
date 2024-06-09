@@ -360,9 +360,9 @@ export default function BrandTable() {
         );
       }
       
-      const renderSelectEditInputCell = (params) => {
+    const renderSelectEditInputCell = (params) => {
         return <SelectEditInputCell {...params} />;
-      };
+    };
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
