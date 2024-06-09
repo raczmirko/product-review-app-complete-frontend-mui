@@ -35,7 +35,7 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
 
     const assignScoreToAspect = (aspectId, score) => {
         setReviewAspects(prevAspects => prevAspects.map(aspect =>
-            aspect.id === aspectId ? { ...aspect, score: score } : aspect
+            aspect.id === aspectId ? { ...aspect, score:score } : aspect
         ));
     }
 
@@ -80,7 +80,7 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                     <Box>
                         <Box sx={{ display: 'block' }}>
                             <Typography variant="h6">Value for price</Typography>
-                            <Rating size="large" value={valueForPrice} onChange={(e) => setValueForPrice(e.target.value)}/>
+                            <Rating size="large" value={valueForPrice} onChange={(e) => setValueForPrice(Number(e.target.value))}/>
                             <Typography variant="h6">Do you recommend the product?</Typography>
                             <ToggleButtonGroup
                                 value={recommended}
