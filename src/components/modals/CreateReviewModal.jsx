@@ -14,30 +14,30 @@ import CountrySelector from '../selectors/CountrySelector';
 import AspectService from '../../services/AspectService';
 
 const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createReviewFunction, createReviewBodyFunction }) => {
-
     const [selectedPage, setSelectedPage] = useState('head');
     const [description, setDescription] = useState('');
     const [recommended, setRecommended] = useState(true);
     const [valueForPrice, setValueForPrice] = useState(5);
     const [purchaseCountry, setPurchaseCountry] = useState('');
     const [reviewAspects, setReviewAspects] = useState([]);
-    
+    const [errors, setErrors] = useState({});
+
     useEffect(() => {
         AspectService.fetchAspectsByCategory(product.article.category.id)
-        .then(response => {
-            setReviewAspects(response.data.map(aspect => ({
-                ...aspect,
-                score: 0
-            })));
-        })
-        .catch(error => console.error('Error fetching review aspects:', error));
+            .then(response => {
+                setReviewAspects(response.data.map(aspect => ({
+                    ...aspect,
+                    score: 0
+                })));
+            })
+            .catch(error => console.error('Error fetching review aspects:', error));
     }, []);
 
     const assignScoreToAspect = (aspectId, score) => {
         setReviewAspects(prevAspects => prevAspects.map(aspect =>
-            aspect.id === aspectId ? { ...aspect, score:score } : aspect
+            aspect.id === aspectId ? { ...aspect, score: score } : aspect
         ));
-    }
+    };
 
     const handlePageChange = (event, newPage) => {
         if (newPage !== null) {
@@ -48,20 +48,22 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
     const handleClose = () => {
         setIsOpen(false);
         closeFunction();
-    }
-
-    function truncateDescription(text) {
-        if (text && text.length > 25) {
-            return text.substring(0, 25) + '...';
-        }
-        return text;
-    }
+    };
 
     const handleAlignment = (event, boolean) => {
         setRecommended(boolean);
     };
 
     const handleCreate = async () => {
+        const newErrors = {};
+        if (!description) newErrors.description = 'Description is required';
+        if (!purchaseCountry) newErrors.purchaseCountry = 'Purchase country is required';
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            return;
+        }
+
         try {
             const response = await createReviewFunction(product, description, recommended, valueForPrice, purchaseCountry);
             if (response.success === true) {
@@ -80,28 +82,39 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                     <Box>
                         <Box sx={{ display: 'block' }}>
                             <Typography variant="h6">Value for price</Typography>
-                            <Rating size="large" value={valueForPrice} onChange={(e) => setValueForPrice(Number(e.target.value))}/>
+                            <Rating
+                                size="large"
+                                value={valueForPrice}
+                                onChange={(e) => setValueForPrice(Number(e.target.value))}
+                            />
                             <Typography variant="h6">Do you recommend the product?</Typography>
                             <ToggleButtonGroup
                                 value={recommended}
                                 exclusive
                                 aria-label="text alignment"
-                                >
+                            >
                                 <ToggleButton value={false} onClick={() => setRecommended(false)}>
-                                    <ThumbDownIcon fontSize="large" color='error'/>
+                                    <ThumbDownIcon fontSize="large" color='error' />
                                     <Box sx={{ ml: 1 }}>
                                         <Typography fontSize="large" variant="overline">NO</Typography>
                                     </Box>
                                 </ToggleButton>
                                 <ToggleButton value={true} onClick={() => setRecommended(true)}>
-                                    <ThumbUpIcon fontSize="large" color='success'/>
+                                    <ThumbUpIcon fontSize="large" color='success' />
                                     <Box sx={{ ml: 1 }}>
                                         <Typography fontSize="large" variant="overline">YES</Typography>
                                     </Box>
                                 </ToggleButton>
                             </ToggleButtonGroup>
                             <Typography variant="h6" sx={{ mb: 2 }}>In what country did you buy this product?</Typography>
-                            <CountrySelector selectedCountry={purchaseCountry} setSelectedCountry={setPurchaseCountry} isRequired='true'/>
+                            <CountrySelector
+                                selectedCountry={purchaseCountry}
+                                setSelectedCountry={setPurchaseCountry}
+                                isRequired={true}
+                            />
+                            {errors.purchaseCountry && (
+                                <Typography variant="body2" color="error">{errors.purchaseCountry}</Typography>
+                            )}
                         </Box>
                         <TextField
                             label="Overall review"
@@ -113,13 +126,17 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                             rows={4}
                             inputProps={{ maxLength: 1000 }}
                             sx={{ mt: 2, mb: 2 }}
+                            required
                         />
+                        {errors.description && (
+                            <Typography variant="body2" color="error">{errors.description}</Typography>
+                        )}
                     </Box>
                 );
             case 'body':
                 return (
                     <Box>
-                        {reviewAspects.length > 0 ? 
+                        {reviewAspects.length > 0 ?
                             <Typography variant="h6" gutterBottom>How would you rate the product's...</Typography>
                             :
                             <Typography variant="h6" gutterBottom>There are no review aspects associated to the parent categories.</Typography>
@@ -127,13 +144,13 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                         {reviewAspects.length > 0 && reviewAspects.map(aspect => (
                             <Box key={aspect.id} sx={{ overflowY: 'auto', maxHeight: '400px' }}>
                                 <Typography variant="h6">{aspect.name}?</Typography>
-                                <Rating size="large" value={aspect.value} onChange={(e, newValue) => assignScoreToAspect(aspect.id, newValue)}/>
+                                <Rating size="large" value={aspect.value} onChange={(e, newValue) => assignScoreToAspect(aspect.id, newValue)} />
                             </Box>
                         ))}
                     </Box>
                 );
         }
-    }
+    };
 
     return (
         <Modal
@@ -158,11 +175,11 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                 }}
             >
                 <Typography variant="h5" component="div" gutterBottom>Create a review of "{product.article.name}"</Typography>
-                <hr/>
+                <hr />
                 <Typography variant="subtitle1" component="div" gutterBottom>
                     Create an overall review additionally with review by aspects. Aspects are inherited from parent categories.
                 </Typography>
-                <hr/>
+                <hr />
                 <ToggleButtonGroup
                     value={selectedPage}
                     exclusive
