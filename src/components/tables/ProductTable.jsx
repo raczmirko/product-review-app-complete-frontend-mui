@@ -160,6 +160,22 @@ export default function ProductTable() {
         }
     };
 
+    const createReviewBody = async (product, reviewAspects) => {
+        const username = localStorage.getItem('username');
+        const endpoint = `http://localhost:8080/review-head/${username}/${product.id}/attach-review-body`;
+        const requestBody = reviewAspects.filter(aspect => aspect.score !== 0);
+
+        const response = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (response.success) {
+            showSnackBar('success', 'Review successfully created.');
+            return { success: true, product:  response.data };
+        } else {
+            showSnackBar('error', response.message);
+            return { success: false, message: response.message };
+        }
+    };
+
     const uploadProductImages = async (productId, images) => {
         
         const response = await ProductImageService.uploadProductImages(productId, images);
@@ -402,6 +418,7 @@ export default function ProductTable() {
             {reviewModalActive && <CreateReviewModal
                 product={product}
                 createReviewFunction={createReviewHead}
+                createReviewBodyFunction={createReviewBody}
                 isOpen={reviewModalActive}
                 setIsOpen={setReviewModalActive}
                 closeFunction={toggleShowReviewModal}

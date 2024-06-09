@@ -9,8 +9,9 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CountrySelector from '../selectors/CountrySelector';
+import AspectService from '../../services/AspectService';
 
 const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createReviewFunction, createReviewBodyFunction }) => {
 
@@ -19,6 +20,24 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
     const [recommended, setRecommended] = useState(true);
     const [valueForPrice, setValueForPrice] = useState(5);
     const [purchaseCountry, setPurchaseCountry] = useState('');
+    const [reviewAspects, setReviewAspects] = useState([]);
+    
+    useEffect(() => {
+        AspectService.fetchAspectsByCategory(product.article.category.id)
+        .then(response => {
+            setReviewAspects(response.data.map(aspect => ({
+                ...aspect,
+                score: 0
+            })));
+        })
+        .catch(error => console.error('Error fetching review aspects:', error));
+    }, []);
+
+    const assignScoreToAspect = (aspectId, score) => {
+        setReviewAspects(prevAspects => prevAspects.map(aspect =>
+            aspect.id === aspectId ? { ...aspect, score: score } : aspect
+        ));
+    }
 
     const handlePageChange = (event, newPage) => {
         if (newPage !== null) {
@@ -44,7 +63,10 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
 
     const handleCreate = async () => {
         try {
-            createReviewFunction(product, description, recommended, valueForPrice, purchaseCountry);
+            const response = await createReviewFunction(product, description, recommended, valueForPrice, purchaseCountry);
+            if (response.success === true) {
+                createReviewBodyFunction(product, reviewAspects);
+            }
             handleClose();
         } catch (error) {
             console.error('Error creating product:', error);
@@ -58,7 +80,7 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                     <Box>
                         <Box sx={{ display: 'block' }}>
                             <Typography variant="h6">Value for price</Typography>
-                            <Rating name="no-value" value={valueForPrice} onChange={(e) => setValueForPrice(e.target.value)}/>
+                            <Rating size="large" value={valueForPrice} onChange={(e) => setValueForPrice(e.target.value)}/>
                             <Typography variant="h6">Do you recommend the product?</Typography>
                             <ToggleButtonGroup
                                 value={recommended}
@@ -66,15 +88,15 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                                 aria-label="text alignment"
                                 >
                                 <ToggleButton value={false} onClick={() => setRecommended(false)}>
-                                    <ThumbDownIcon color='error'/>
+                                    <ThumbDownIcon fontSize="large" color='error'/>
                                     <Box sx={{ ml: 1 }}>
-                                        <Typography variant="overline">NO</Typography>
+                                        <Typography fontSize="large" variant="overline">NO</Typography>
                                     </Box>
                                 </ToggleButton>
                                 <ToggleButton value={true} onClick={() => setRecommended(true)}>
-                                    <ThumbUpIcon color='success'/>
+                                    <ThumbUpIcon fontSize="large" color='success'/>
                                     <Box sx={{ ml: 1 }}>
-                                        <Typography variant="overline">YES</Typography>
+                                        <Typography fontSize="large" variant="overline">YES</Typography>
                                     </Box>
                                 </ToggleButton>
                             </ToggleButtonGroup>
@@ -97,7 +119,17 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
             case 'body':
                 return (
                     <Box>
-                        
+                        {reviewAspects.length > 0 ? 
+                            <Typography variant="h6" gutterBottom>How would you rate the product's...</Typography>
+                            :
+                            <Typography variant="h6" gutterBottom>There are no review aspects associated to the parent categories.</Typography>
+                        }
+                        {reviewAspects.length > 0 && reviewAspects.map(aspect => (
+                            <Box key={aspect.id} sx={{ overflowY: 'auto', maxHeight: '400px' }}>
+                                <Typography variant="h6">{aspect.name}?</Typography>
+                                <Rating size="large" value={aspect.value} onChange={(e, newValue) => assignScoreToAspect(aspect.id, newValue)}/>
+                            </Box>
+                        ))}
                     </Box>
                 );
         }
@@ -116,8 +148,8 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    maxWidth: '75%',
-                    minWidth: '30%',
+                    width: '30%',
+                    minWidth: '400px',
                     bgcolor: 'background.paper',
                     boxShadow: 24,
                     p: 4,
@@ -128,7 +160,7 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                 <Typography variant="h5" component="div" gutterBottom>Create a review of "{product.article.name}"</Typography>
                 <hr/>
                 <Typography variant="subtitle1" component="div" gutterBottom>
-                    lorem ipsum.
+                    Create an overall review additionally with review by aspects. Aspects are inherited from parent categories.
                 </Typography>
                 <hr/>
                 <ToggleButtonGroup
@@ -144,8 +176,7 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                         Review by aspects
                     </ToggleButton>
                 </ToggleButtonGroup>
-                <hr />
-                <Box sx={{ minHeight: 250 }}>
+                <Box sx={{ minHeight: 250, mt: 2 }}>
                     {renderSelectedPage()}
                 </Box>
                 <Box sx={{ textAlign: 'right', mt: 2 }}>
