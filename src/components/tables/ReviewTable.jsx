@@ -1,14 +1,29 @@
+import CancelIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import { Checkbox, FormControlLabel, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import Rating from '@mui/material/Rating';
+import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import {
     DataGrid,
-    GridActionsCellItem
+    GridActionsCellItem,
+    GridRowEditStopReasons,
+    GridRowModes,
+    useGridApiContext,
 } from '@mui/x-data-grid';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import CountryService from '../../services/CountryService';
 import { apiRequest } from '../../services/CrudService';
+import { getModifiedRowDifference } from '../../util/stringUtil';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbarNoAdd';
@@ -41,6 +56,8 @@ export default function ReviewTable() {
     const [filterModel, setFilterModel] = useState({ items: [] });
     const [sortModel, setSortModel] = useState([]); 
     const [rowSelectionModel, setRowSelectionModel] = useState({});
+    const [rowModesModel, setRowModesModel] = useState({});
+    const [updatePromiseArguments, setUpdatePromiseArguments] = useState(null);
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
     
@@ -48,14 +65,20 @@ export default function ReviewTable() {
     const [snackBarText, setSnackBarText] = useState('');
     const [snackBarStatus, setSnackBarStatus] = useState('info');
 
-    const [endtityId, setEntityId] = useState('');
-    const [idOfActionRowCategory, setIdOfActionRowCategory] = useState(undefined);
+    const [countries, setCountries] = useState([]);
 
     function showSnackBar (status, text) {
         setSnackBarOpen(true);
         setSnackBarStatus(status);
         setSnackBarText(text);
     }
+
+    useEffect(() => {
+        // Fetch countries when the component mounts
+        CountryService.fetchCountries()
+            .then(data => setCountries(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
 
     useEffect(() => {
         searchEntities();
@@ -115,6 +138,23 @@ export default function ReviewTable() {
         }
     };
 
+    const modifyEntity = async (newReview, username) => {
+        const endpoint = `http://localhost:8080/review-head/${username}/${newReview.product.id}/modify`;
+        const requestBody = newReview;
+        if (!username) {
+            showSnackBar('error', 'Login username cannot be found, please log in again!')
+        }
+        else {
+            const result = await apiRequest(endpoint, 'PUT', requestBody);
+            if (result.success) {
+                showSnackBar('success', 'Record successfully updated.');
+                searchEntities();
+            } else {
+                showSnackBar('error', result.message);
+            }
+        }
+    };
+
     const searchEntities = async () => {
         if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('date')};
         if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('desc')};
@@ -140,6 +180,186 @@ export default function ReviewTable() {
         } else {
             showSnackBar('error', result.message);
         }
+    };
+
+    // --- Edit-related functionality --- //
+
+    const handleRowEditStop = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            setRowModesModel((prevRowModesModel) => ({
+                ...prevRowModesModel,
+                [params.id]: { mode: GridRowModes.View },
+            }));
+        }
+    };
+
+    const setRowModeToEdit = (id) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    };
+    
+    const setRowModeToView = (id) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    };
+
+    const handleCancelClick = (id) => () => {
+        setRowModesModel({...rowModesModel, [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+    };
+
+    const handleRowModesModelChange = (newRowModesModel) => {
+        setRowModesModel(newRowModesModel);
+    };
+
+    const processRowUpdate = React.useCallback(
+        (newRow, oldRow) =>
+          new Promise((resolve, reject) => {
+            const difference = getModifiedRowDifference(newRow, oldRow);
+            if (difference) {
+              // Save the arguments to resolve or reject the promise later
+              setUpdatePromiseArguments({ resolve, reject, newRow, oldRow });
+            } else {
+              resolve(oldRow); // Nothing was changed, resolve promise with the old row data
+            }
+          }),
+        [],
+    );
+
+    const handleCancelModification = () => {
+        const { oldRow, resolve } = updatePromiseArguments;
+        resolve(oldRow); // Resolve with the old row to not update the internal state
+        setUpdatePromiseArguments(null);
+    };
+    
+    const handleConfirmModification = async () => {
+        const { newRow, oldRow, reject, resolve } = updatePromiseArguments;
+
+        try {
+            const username = localStorage.getItem('username');
+            // Make the HTTP request to save in the backend
+            const response = await modifyEntity(newRow, username);
+            resolve(newRow);
+            setUpdatePromiseArguments(null);
+            searchEntities();
+        } catch (error) {
+            reject(oldRow);
+            setUpdatePromiseArguments(null);
+        }
+    };
+
+    const renderConfirUpdateDialog = () => {
+        if (!updatePromiseArguments) {
+            return null;
+        }
+
+        const { newRow, oldRow } = updatePromiseArguments;
+        const mutation = getModifiedRowDifference(newRow, oldRow);
+
+        return (
+            <Dialog
+            maxWidth="md"
+            open={!!updatePromiseArguments}
+            >
+            <DialogTitle>Are you sure?</DialogTitle>
+            <DialogContent dividers>
+                <Typography variant="h6" component="div">Pressing 'Yes' will change:</Typography>
+                <Typography variant="body1" component="div" sx={{ whiteSpace: 'pre-line' }}>
+                    {mutation}
+                </Typography>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCancelModification}>No</Button>
+                <Button onClick={handleConfirmModification}>Yes</Button>
+            </DialogActions>
+            </Dialog>
+        );
+    };
+
+    function SelectEditCountryInputCell(props) {
+        const { id, value, field, options } = props;
+        const apiRef = useGridApiContext();
+        const [selectedCountry, setSelectedCountry] = useState(value);
+
+        const handleChange = (event) => {
+            let newCountryName = event.target.value;
+            let newCountry = options.find(option => option.name === newCountryName);
+            setSelectedCountry(newCountry);
+            apiRef.current.setEditCellValue({ id, field, value: newCountry });
+            apiRef.current.stopCellEditMode({ id, field });
+        };        
+      
+        return (
+          <Select
+            value={selectedCountry.name}
+            onChange={handleChange}
+            size="small"
+            sx={{ height: 1 }}
+            native
+            autoFocus
+          >
+            {/* Populate options from the countries data */}
+            {options.map(option => (
+              <option key={option.countryCode} value={option.name}>
+                {option.name}
+              </option>
+            ))}
+          </Select>
+        );
+    };
+
+    function SelectEditRecommendedInputCell(props) {
+        const { id, value, field } = props;
+        const apiRef = useGridApiContext();
+        const [recommended, setRecommended] = useState(value);
+    
+        const handleRecommendedChange = (event) => {
+            const newRecommended = event.target.checked;
+            setRecommended(newRecommended);
+            apiRef.current.setEditCellValue({ id, field, value: newRecommended });
+            apiRef.current.stopCellEditMode({ id, field });
+        };        
+    
+        return (
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={recommended}
+                        onChange={handleRecommendedChange}
+                        color="primary"
+                    />
+                }
+                label="Recommended"
+            />
+        );
+    };
+
+    function SelectEditValueForPriceInputCell(props) {
+        const { id, value, field } = props;
+        const apiRef = useGridApiContext();
+        const [valueForPrice, setValueForPrice] = useState(Number(value));
+    
+        const handleValueForPriceChange = (event, newValue) => {
+            setValueForPrice(newValue);
+            apiRef.current.setEditCellValue({ id, field, value: newValue });
+            apiRef.current.stopCellEditMode({ id, field });
+        };        
+    
+        return (
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                <Rating value={valueForPrice} onChange={handleValueForPriceChange}/>
+            </Box>
+        );
+    };
+
+    const renderSelectEditCountryInputCell = (params) => {
+        return <SelectEditCountryInputCell {...params} />;
+    };
+
+    const renderSelectEditRecommendedInputCell = (params) => {
+        return <SelectEditRecommendedInputCell {...params} />;
+    };
+
+    const renderSelectEditValueForPriceInputCell = (params) => {
+        return <SelectEditValueForPriceInputCell {...params} />;
     };
 
     //  --- Pagination, filtering and sorting-related methods --- //
@@ -222,12 +442,16 @@ export default function ReviewTable() {
             field: 'recommended', 
             headerName: 'Recommended?', 
             width: 150 ,
+            editable: true,
+            renderEditCell: (params) => renderSelectEditRecommendedInputCell({ ...params }),
             valueFormatter: (value, row) => row.recommended === true ? 'YES' : 'NO'
         },
         {
             field: 'purchaseCountry',
             headerName: 'Bought in',
             width: 100,
+            editable: true,
+            renderEditCell: (params) => renderSelectEditCountryInputCell({ ...params, options: countries }),
             valueGetter: (value, row) => row.purchaseCountry,
             valueFormatter: (value, row) => row.purchaseCountry.name
         },
@@ -235,9 +459,11 @@ export default function ReviewTable() {
             field: 'valueForPrice', 
             headerName: 'Value For $', 
             width: 150,
+            editable: true,
+            renderEditCell: (params) => renderSelectEditValueForPriceInputCell({ ...params }),
             renderCell: (params) => (
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                    <Rating value={params.value} readOnly />
+                    <Rating value={Number(params.value)} readOnly />
                 </Box>
             ),
         },
@@ -245,6 +471,7 @@ export default function ReviewTable() {
             field: 'description', 
             headerName: 'Description', 
             flex: 1,
+            editable: true,
             renderCell: (params) => (
                 <Box sx={{ display: 'flex', height: '100%' }}>
                     {params.value}
@@ -258,7 +485,35 @@ export default function ReviewTable() {
             width: 100,
             cellClassName: 'actions',
             getActions: ({ row }) => {
+                const isInEditMode = rowModesModel[row.id]?.mode === GridRowModes.Edit;
+                if (isInEditMode) {
+                    return [
+                        <Tooltip title={'Save row'}>
+                            <GridActionsCellItem
+                            icon={<SaveIcon />}
+                            label="Save"
+                            onClick={setRowModeToView(row.id)}
+                            />
+                        </Tooltip>,
+                        <Tooltip title={'Cancel modifications'}>
+                            <GridActionsCellItem
+                            icon={<CancelIcon />}
+                            label="Cancel"
+                            className="textPrimary"
+                            onClick={handleCancelClick(row.id)}
+                            />
+                        </Tooltip>,
+                    ];
+                }
                 return [
+                    <Tooltip title={'Edit row'}>
+                        <GridActionsCellItem
+                            icon={<EditIcon />}
+                            label="Edit"
+                            className="textPrimary"
+                            onClick={setRowModeToEdit(row.id)}
+                        />
+                    </Tooltip>,
                     <Tooltip title={'Delete row'}>
                         <GridActionsCellItem
                             icon={<DeleteIcon />}
@@ -281,9 +536,11 @@ export default function ReviewTable() {
                 functionToRunOnConfirm={confirmationDialogFunction}
                 functionParams={confirmationDialogFunctionParams}
             />}
+            {renderConfirUpdateDialog()}
             <DataGrid
                 autoHeight
                 editMode="row" 
+                rowModesModel={rowModesModel}
                 rows={reviews}
                 rowCount={totalElements}
                 columns={columns}
@@ -292,6 +549,9 @@ export default function ReviewTable() {
                 sortingMode="server"
                 paginationMode="server"
                 onRowSelectionModelChange={handleRowSelectionModelChange}
+                onRowModesModelChange={handleRowModesModelChange}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={processRowUpdate}
                 onFilterModelChange={handleFilterChange}
                 onSortModelChange={handleSortChange}
                 onPaginationModelChange={handlePaginationChange}
