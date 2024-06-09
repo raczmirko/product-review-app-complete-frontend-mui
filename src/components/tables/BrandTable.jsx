@@ -358,7 +358,7 @@ export default function BrandTable() {
             ))}
           </Select>
         );
-      }
+    }
       
     const renderSelectEditInputCell = (params) => {
         return <SelectEditInputCell {...params} />;
