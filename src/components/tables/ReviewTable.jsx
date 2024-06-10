@@ -27,6 +27,8 @@ import { getModifiedRowDifference } from '../../util/stringUtil';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbarNoAdd';
+import PageviewIcon from '@mui/icons-material/Pageview';
+import ViewReviewModal from '../modals/ViewReviewModal';
 
 
 export default function ReviewTable() {
@@ -44,6 +46,8 @@ export default function ReviewTable() {
     const [loading, setLoading] = useState(false);
 
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+    const [viewReviewModalOpen, setViewReviewModalOpen] = useState(false);
+
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
     const [confirmationDialogDescription, setConfirmationDialogDescription] = useState('');
     const [confirmationDialogFunction, setConfirmationDialogFunction] = useState(null);
@@ -66,6 +70,13 @@ export default function ReviewTable() {
     const [snackBarStatus, setSnackBarStatus] = useState('info');
 
     const [countries, setCountries] = useState([]);
+
+    const [reviewToView, setReviewToView] = useState({});
+
+    const toggleReviewModalOpen = (review) => {
+        setReviewToView(review);
+        setViewReviewModalOpen(true);
+    }
 
     function showSnackBar (status, text) {
         setSnackBarOpen(true);
@@ -482,7 +493,7 @@ export default function ReviewTable() {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            width: 100,
+            width: 150,
             cellClassName: 'actions',
             getActions: ({ row }) => {
                 const isInEditMode = rowModesModel[row.id]?.mode === GridRowModes.Edit;
@@ -506,6 +517,14 @@ export default function ReviewTable() {
                     ];
                 }
                 return [
+                    <Tooltip title={'View review'}>
+                        <GridActionsCellItem
+                            icon={<PageviewIcon />}
+                            label="View"
+                            className="textPrimary"
+                            onClick={() => toggleReviewModalOpen(row)}
+                        />
+                    </Tooltip>,
                     <Tooltip title={'Edit row'}>
                         <GridActionsCellItem
                             icon={<EditIcon />}
@@ -535,6 +554,11 @@ export default function ReviewTable() {
                 setIsOpen={setConfirmationDialogOpen}
                 functionToRunOnConfirm={confirmationDialogFunction}
                 functionParams={confirmationDialogFunctionParams}
+            />}
+            {viewReviewModalOpen && <ViewReviewModal 
+                review={reviewToView}
+                isOpen={viewReviewModalOpen}
+                setIsOpen={setViewReviewModalOpen}
             />}
             {renderConfirUpdateDialog()}
             <DataGrid

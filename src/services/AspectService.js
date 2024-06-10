@@ -13,6 +13,19 @@ class AspectService {
             return {success: false};
         }
     }
+
+    static async fetchAspects() {
+        const endpoint = `http://localhost:8080/aspect/all`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+    
+        if (result.success) {
+            return {success: true, data: result.data};
+        } else {
+            return {success: false};
+        }
+    }
 }
 
 export default AspectService;
