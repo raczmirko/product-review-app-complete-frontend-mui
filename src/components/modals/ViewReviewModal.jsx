@@ -96,7 +96,7 @@ const ViewReviewModal = ({ review, isOpen, setIsOpen }) => {
                             </Typography>
                         </Box>
                         <Divider textAlign="left" sx={{ mb: 1 }}><Chip label="Review text" size="small" /></Divider>
-                        <Box sx={{ overflowY: 'auto', }}>
+                        <Box sx={{ overflowY: 'auto', maxHeight: '200px' }}>
                             <Typography variant="subtitle1" component="div" gutterBottom>
                                 {review.description}
                             </Typography>
