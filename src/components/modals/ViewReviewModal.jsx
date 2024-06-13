@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import { useState, useEffect } from 'react';
 import AspectService from '../../services/AspectService';
+import Grid from '@mui/material/Grid';
 
 const ViewReviewModal = ({ review, isOpen, setIsOpen }) => {
 
@@ -49,10 +50,10 @@ const ViewReviewModal = ({ review, isOpen, setIsOpen }) => {
         <>
             {isLoaded &&
                 <Modal
-                    open={isOpen}
-                    onClose={handleClose}
-                    aria-labelledby="view-review-modal"
-                    aria-describedby="modal-view-review"
+                open={isOpen}
+                onClose={handleClose}
+                aria-labelledby="view-review-modal"
+                aria-describedby="modal-view-review"
                 >
                     <Box
                         sx={{
@@ -60,7 +61,7 @@ const ViewReviewModal = ({ review, isOpen, setIsOpen }) => {
                             top: '50%',
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
-                            width: '50%',
+                            width: '60%',
                             bgcolor: 'background.paper',
                             boxShadow: 24,
                             p: 4,
@@ -68,48 +69,59 @@ const ViewReviewModal = ({ review, isOpen, setIsOpen }) => {
                             textAlign: 'center'
                         }}
                     >
-                        <Typography variant="h5" component="div" gutterBottom>
-                            Review of '{review.product.article.name}'
-                        </Typography>
-                        <Divider textAlign="left" sx={{ mb: 1 }}><Chip label="General information" size="small" /></Divider>
-                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Typography variant="subtitle1" component="div" sx={{ mr: 1 }}>
-                                Value for price:
-                            </Typography>
-                            <Rating value={review.valueForPrice} readOnly size='large'></Rating>
-                        </Box>
-                        <Typography variant="subtitle1" component="div" sx={{ mr: 1 }}>
-                            Purchase country: {review.purchaseCountry.name}
-                        </Typography>
-                        <Divider textAlign="left" sx={{ mb: 1 }}><Chip label="Aspects" size="small" /></Divider>
-                        <Box sx={{ overflowY: 'auto', maxHeight: '300px' }}>
-                            <Typography variant="subtitle1" component="div" gutterBottom>
-                            {review.reviewBodyItems.map((item, index) => {
-                                const aspect = aspects.find(aspect => aspect.id === item.id.aspectId);
-                                return (
-                                    <Box key={index} sx={{ overflowY: 'auto', maxHeight: '200px' }}>
-                                        <Typography variant="subtitle1" component="div" gutterBottom>{aspect.name}</Typography>
-                                        <Rating readOnly value={item.score} />
-                                    </Box>
-                                );
-                            })}
-                            </Typography>
-                        </Box>
-                        <Divider textAlign="left" sx={{ mb: 1 }}><Chip label="Review text" size="small" /></Divider>
-                        <Box sx={{ overflowY: 'auto', maxHeight: '200px' }}>
-                            <Typography variant="subtitle1" component="div" gutterBottom>
-                                {review.description}
-                            </Typography>
-                        </Box>
-                        <Divider textAlign="left" sx={{ mb: 1 }} />
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography variant="subtitle1" component="div" gutterBottom>
-                                Written by {review.user.username}
-                            </Typography>
-                            <Typography variant="subtitle1" component="div" gutterBottom>
-                            Last modified on {formatDate(review.date)}.
-                            </Typography>
-                        </Box>
+                        <Grid container spacing={2}>
+                            <Grid item xs={9}>
+                                <Typography variant="h5" component="div">Overall review</Typography>
+                                <Box textAlign="left">
+                                    <Typography variant="subtitle1" component="div">
+                                        Product : {review.product.article.name}
+                                    </Typography>
+                                </Box>
+                                <Box textAlign="left">
+                                    <Typography variant="subtitle1" component="div">
+                                        Reviewed by: {review.user.username}
+                                    </Typography>
+                                </Box>
+                                <Box textAlign="left" sx={{ display: 'flex' }}>
+                                    <Typography variant="subtitle1" component="div" sx={{ alignItems: 'center', mr: 1 }}>
+                                        Value for price:
+                                    </Typography>
+                                    <Rating value={review.valueForPrice} readOnly size='small' />
+                                </Box>
+                                <Box textAlign="left">
+                                    <Typography variant="subtitle1" component="div">
+                                        Purchase country: {review.purchaseCountry.name}
+                                    </Typography>
+                                </Box>
+                                <Box textAlign="left">
+                                    <Typography variant="subtitle1" component="div">
+                                        Last modified on: {formatDate(review.date)}.
+                                    </Typography>
+                                </Box>
+                                <Box textAlign="left" sx={{ overflowY: 'auto', maxHeight: '200px', mt: 3 }}>
+                                    <Typography variant="subtitle1" component="div" gutterBottom>
+                                        {review.description}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Typography variant="h5" component="div">Aspect scores</Typography>
+                                <Box sx={{ overflowY: 'auto', maxHeight: '300px', textAlign: 'left' }}>
+                                    {review.reviewBodyItems.map((item, index) => {
+                                        const aspect = aspects.find(aspect => aspect.id === item.id.aspectId);
+                                        const aspectName = aspect ? aspect.name : 'Unknown Aspect';
+                                        return (
+                                            <Box key={index} sx={{ mb: 2 }}>
+                                                <Typography variant="subtitle1" component="div" gutterBottom>
+                                                    {aspectName}
+                                                </Typography>
+                                                <Rating readOnly value={item.score} />
+                                            </Box>
+                                        );
+                                    })}
+                                </Box>
+                            </Grid>
+                        </Grid>
                         <Box sx={{ textAlign: 'right', mt: 2 }}>
                             <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
                         </Box>
