@@ -29,6 +29,8 @@ import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbarNoAdd';
 import PageviewIcon from '@mui/icons-material/Pageview';
 import ViewReviewModal from '../modals/ViewReviewModal';
+import AssignReviewAspectValueModal from '../modals/AssignReviewAspectValueModal';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
 
 export default function ReviewTable() {
@@ -47,6 +49,7 @@ export default function ReviewTable() {
 
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [viewReviewModalOpen, setViewReviewModalOpen] = useState(false);
+    const [assignAspectValueModalOpen, setAssignAspectValueModalOpen] = useState(false);
 
     const [confirmationDialogTitle, setConfirmationDialogTitle] = useState('Confirm your action!');
     const [confirmationDialogDescription, setConfirmationDialogDescription] = useState('');
@@ -76,6 +79,11 @@ export default function ReviewTable() {
     const toggleReviewModalOpen = (review) => {
         setReviewToView(review);
         setViewReviewModalOpen(true);
+    }
+    
+    const toggleAssignReviewAspectValueOpen = (review) => {
+        setReviewToView(review);
+        setAssignAspectValueModalOpen(true);
     }
 
     function showSnackBar (status, text) {
@@ -190,6 +198,21 @@ export default function ReviewTable() {
             setLoading(false);
         } else {
             showSnackBar('error', result.message);
+        }
+    };
+
+    const createReviewBody = async (product, reviewAspects) => {
+        const username = localStorage.getItem('username');
+        const endpoint = `http://localhost:8080/review-head/${username}/${product.id}/attach-review-body`;
+        const requestBody = reviewAspects.filter(aspect => aspect.updated === true);
+
+        const response = await apiRequest(endpoint, 'POST', requestBody);
+    
+        if (response.success) {
+            showSnackBar('success', 'Review aspect scores successfully saved.');
+            searchEntities();
+        } else {
+            showSnackBar('error', response.message);
         }
     };
 
@@ -493,7 +516,7 @@ export default function ReviewTable() {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            width: 150,
+            width: 180,
             cellClassName: 'actions',
             getActions: ({ row }) => {
                 const isInEditMode = rowModesModel[row.id]?.mode === GridRowModes.Edit;
@@ -517,6 +540,14 @@ export default function ReviewTable() {
                     ];
                 }
                 return [
+                    <Tooltip title={'Change aspect score'}>
+                        <GridActionsCellItem
+                            icon={<StarOutlineIcon />}
+                            label="Change aspect score"
+                            className="textPrimary"
+                            onClick={() => toggleAssignReviewAspectValueOpen(row)}
+                        />
+                    </Tooltip>,
                     <Tooltip title={'View review'}>
                         <GridActionsCellItem
                             icon={<PageviewIcon />}
@@ -559,6 +590,12 @@ export default function ReviewTable() {
                 review={reviewToView}
                 isOpen={viewReviewModalOpen}
                 setIsOpen={setViewReviewModalOpen}
+            />}
+            {assignAspectValueModalOpen && <AssignReviewAspectValueModal 
+                review={reviewToView}
+                isOpen={assignAspectValueModalOpen}
+                setIsOpen={setAssignAspectValueModalOpen}
+                createReviewBody={createReviewBody}
             />}
             {renderConfirUpdateDialog()}
             <DataGrid
