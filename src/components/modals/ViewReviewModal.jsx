@@ -1,13 +1,11 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
-import Chip from '@mui/material/Chip';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AspectService from '../../services/AspectService';
-import Grid from '@mui/material/Grid';
 
 const ViewReviewModal = ({ review, isOpen, setIsOpen }) => {
 
