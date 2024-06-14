@@ -69,7 +69,7 @@ const ViewReviewModal = ({ review, isOpen, setIsOpen }) => {
                     >
                         <Grid container spacing={2}>
                             <Grid item xs={9}>
-                                <Typography variant="h5" component="div">Overall review</Typography>
+                                <Typography variant="h5" component="div" sx={{ mb: 2 }}>Overall review</Typography>
                                 <Box textAlign="left">
                                     <Typography variant="subtitle1" component="div">
                                         Product : {review.product.article.name}
@@ -103,7 +103,7 @@ const ViewReviewModal = ({ review, isOpen, setIsOpen }) => {
                                 </Box>
                             </Grid>
                             <Grid item xs={3}>
-                                <Typography variant="h5" component="div">Aspect scores</Typography>
+                                <Typography variant="h5" component="div" sx={{ mb: 2 }}>Aspect scores</Typography>
                                 <Box sx={{ overflowY: 'auto', maxHeight: '300px', textAlign: 'left' }}>
                                     {review.reviewBodyItems.map((item, index) => {
                                         const aspect = aspects.find(aspect => aspect.id === item.id.aspectId);
