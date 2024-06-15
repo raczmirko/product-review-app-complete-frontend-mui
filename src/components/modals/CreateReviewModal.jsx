@@ -50,10 +50,6 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
         closeFunction();
     };
 
-    const handleAlignment = (event, boolean) => {
-        setRecommended(boolean);
-    };
-
     const handleCreate = async () => {
         const newErrors = {};
         if (!description) newErrors.description = 'Description is required';
@@ -144,7 +140,7 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                         {reviewAspects.length > 0 && reviewAspects.map(aspect => (
                             <Box key={aspect.id} sx={{ overflowY: 'auto', maxHeight: '400px' }}>
                                 <Typography variant="h6">{aspect.name}?</Typography>
-                                <Rating size="large" value={aspect.value} onChange={(e, newValue) => assignScoreToAspect(aspect.id, newValue)} />
+                                <Rating size="large" value={aspect.score} onChange={(e, newValue) => assignScoreToAspect(aspect.id, newValue)} />
                             </Box>
                         ))}
                     </Box>
