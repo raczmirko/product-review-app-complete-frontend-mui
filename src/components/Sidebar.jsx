@@ -13,8 +13,8 @@ import PublicIcon from '@mui/icons-material/Public';
 import QuizIcon from '@mui/icons-material/Quiz';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import StorefrontIcon from '@mui/icons-material/Storefront';
-import StyleIcon from '@mui/icons-material/Style';
-import ArticleIcon from '@mui/icons-material/Tune';
+import CharacteristicsIcon from '@mui/icons-material/DesignServices';
+import ArticleIcon from '@mui/icons-material/BrunchDining';
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -155,7 +155,7 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
       { icon: <StorefrontIcon />, text: 'Brands', route: '/brands', visibleWithoutLogin: false },
       { icon: <PublicIcon />, text: 'Countries', route: '/countries', visibleWithoutLogin: false },
       { icon: <CategoryIcon />, text: 'Categories', route: '/categories', visibleWithoutLogin: false },
-      { icon: <StyleIcon />, text: 'Characteristics', route: '/characteristics', visibleWithoutLogin: false },
+      { icon: <CharacteristicsIcon />, text: 'Characteristics', route: '/characteristics', visibleWithoutLogin: false },
       { icon: <ArticleIcon />, text: 'Articles', route: '/articles', visibleWithoutLogin: false },
       { icon: <InventoryIcon />, text: 'Packagings', route: '/packagings', visibleWithoutLogin: false },
       { icon: <QuizIcon />, text: 'Aspects', route: '/aspects', visibleWithoutLogin: false },
