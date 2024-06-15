@@ -79,16 +79,13 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
         }
     };
 
-    const handleMouseMove = (e) => {
+    const handleWheel = (e) => {
+        const delta = e.deltaY > 0 ? -0.3 : 0.3;
+        setZoomLevel((prevZoomLevel) => Math.min(Math.max(prevZoomLevel + delta, 1), 3));
         const { left, top, width, height } = e.target.getBoundingClientRect();
         const x = ((e.clientX - left) / width) * 100;
         const y = ((e.clientY - top) / height) * 100;
         setZoomPosition({ x, y });
-    };
-
-    const handleWheel = (e) => {
-        const delta = e.deltaY > 0 ? -0.1 : 0.1;
-        setZoomLevel((prevZoomLevel) => Math.min(Math.max(prevZoomLevel + delta, 1), 3));
     };
 
     const renderImageUploadButton = () => {
@@ -207,7 +204,6 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                                 position: 'relative',
                                 overflow: 'hidden',
                             }}
-                            onMouseMove={handleMouseMove}
                             onWheel={handleWheel}
                         >
                             {selectedImage ? (
