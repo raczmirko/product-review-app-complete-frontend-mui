@@ -13,7 +13,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import QuizIcon from '@mui/icons-material/Quiz';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import StorefrontIcon from '@mui/icons-material/Storefront';
-import CharacteristicsIcon from '@mui/icons-material/DesignServices';
+import CharacteristicsIcon from '@mui/icons-material/Style';
 import ArticleIcon from '@mui/icons-material/BrunchDining';
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';

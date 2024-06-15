@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import QuizIcon from '@mui/icons-material/Quiz';
 import SaveIcon from '@mui/icons-material/Save';
-import CharacteristicsIcon from '@mui/icons-material/DesignServices';
+import CharacteristicsIcon from '@mui/icons-material/Style';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
