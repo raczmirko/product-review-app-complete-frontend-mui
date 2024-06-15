@@ -463,7 +463,7 @@ export default function ReviewTable() {
             headerName: 'Product',
             width: 150,
             valueGetter: (value, row) => row.product,
-            valueFormatter: (value, row) => row.product.article.name
+            valueFormatter: (value, row) => row.product.article.name + ` (${row.product.id})`
         },
         {
             field: 'user',
