@@ -84,6 +84,7 @@ const AssignReviewAspectValueModal = ({ review, isOpen, setIsOpen, createReviewB
                         }}
                     >
                         <Typography variant="h5" component="div" gutterBottom>Modify aspect scores for '{review.product.article.name}'</Typography>
+                        <Typography variant="subtitle2" component="div" gutterBottom>Click any star to give a score, click again to remove it.</Typography>
                         <Box sx={{ overflowY: 'auto', maxHeight: '400px' }}>
                             {aspects.length > 0 && aspects.map(aspect => (
                                 <Box key={aspect.id}>
