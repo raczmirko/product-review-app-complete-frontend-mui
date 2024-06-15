@@ -8,36 +8,44 @@ import CountryService from '../../services/CountryService';
 
 const CountrySelector = ({ selectedCountry, setSelectedCountry }) => {
     const [countries, setCountries] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         // Fetch countries when the component mounts
         CountryService.fetchCountries()
             .then(data => setCountries(data))
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error:', error))
+            .finally(() => setIsLoaded(true))
     }, []);
 
     const handleChange = (event) => {
-        setSelectedCountry(event.target.value);
+        //setSelectedCountry(event.target.value);
+        const selected = countries.find(country => country.countryCode === event.target.value);
+        setSelectedCountry(selected);
     };
 
     return (
-        <FormControl fullWidth>
-            <InputLabel id="country-select-label">Country</InputLabel>
-            <Select
-            required
-            labelId="country-select-label"
-            variant='filled'
-            id="country-select"
-            value={selectedCountry}
-            label="Country"
-            onChange={(e) => handleChange(e)}
-            sx={{ mb: 2 }}
-            >
-                {countries.map(country => (
-                    <MenuItem key={country.countryCode} value={country}>{country.name}</MenuItem>
-                ))}
-            </Select>
-      </FormControl>
+        <>
+            {isLoaded && 
+                <FormControl fullWidth>
+                    <InputLabel id="country-select-label">Country</InputLabel>
+                    <Select
+                    required
+                    labelId="country-select-label"
+                    variant='filled'
+                    id="country-select"
+                    value={selectedCountry?.countryCode || ''}
+                    label="Country"
+                    onChange={handleChange}
+                    sx={{ mb: 2 }}
+                    >
+                        {countries.map(country => (
+                            <MenuItem key={country.countryCode} value={country.countryCode}>{country.name}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            }
+        </>
     );
 };
 
