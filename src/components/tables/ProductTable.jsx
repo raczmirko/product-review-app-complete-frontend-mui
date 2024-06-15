@@ -96,10 +96,16 @@ export default function ProductTable() {
         setGalleryModalActive(!galleryModalActive);
     }
 
-    const toggleShowReviewModal = (id) => () => {
+    const toggleShowReviewModal = (id) => async () => {
         let product = products.find(product => product.id === id);
-        setProduct(product);
-        setReviewModalActive(!reviewModalActive);
+        const reviewAlreadyExists = await checkIfReviewExists(product);
+        if(reviewAlreadyExists.reviewIsPossible){
+            setProduct(product);
+            setReviewModalActive(!reviewModalActive);
+        }
+        else {
+            showSnackBar('error', 'You already have a review for this product. Go the the review table to view it!');
+        }
     }
 
     // --- CRUD API calls --- //
@@ -173,6 +179,19 @@ export default function ProductTable() {
         } else {
             showSnackBar('error', response.message);
             return { success: false, message: response.message };
+        }
+    };
+
+    const checkIfReviewExists = async (product) => {
+        const username = localStorage.getItem('username');
+        const endpoint = `http://localhost:8080/review-head/${username}/${product.id}/is-review-possible`;
+
+        const response = await apiRequest(endpoint, 'GET');
+    
+        if (response.success) {
+            return { reviewIsPossible: true };
+        } else {
+            return { reviewIsPossible: false };
         }
     };
 
