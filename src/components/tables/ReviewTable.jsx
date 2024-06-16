@@ -31,6 +31,7 @@ import PageviewIcon from '@mui/icons-material/Pageview';
 import ViewReviewModal from '../modals/ViewReviewModal';
 import AssignReviewAspectValueModal from '../modals/AssignReviewAspectValueModal';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import { South } from '@mui/icons-material';
 
 
 export default function ReviewTable() {
@@ -138,14 +139,14 @@ export default function ReviewTable() {
         }
     };
 
-    const deleteEntities = async (ids) => {
+    const deleteEntities = async () => {
         if (rowSelectionModel === undefined || rowSelectionModel.length === 0) {
             showSnackBar("error", "No records are selected!");
             return;
         }
 
-        const endpoint = `http://localhost:8080/product/multi-delete/${ids}`;
-        const requestBody = undefined;
+        const endpoint = `http://localhost:8080/review-head/multi-delete`;
+        const requestBody = rowSelectionModel;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
