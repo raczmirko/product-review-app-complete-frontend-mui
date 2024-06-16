@@ -39,7 +39,7 @@ const AssignReviewAspectValueModal = ({ review, isOpen, setIsOpen, createReviewB
     };
     
     const handleSave = () => {
-        createReviewBody(review.product, aspects);
+        createReviewBody(review.user.username, review.product, aspects);
         setIsOpen(false);
     };
 

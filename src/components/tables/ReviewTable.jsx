@@ -201,8 +201,7 @@ export default function ReviewTable() {
         }
     };
 
-    const createReviewBody = async (product, reviewAspects) => {
-        const username = localStorage.getItem('username');
+    const createReviewBody = async (username, product, reviewAspects) => {
         const endpoint = `http://localhost:8080/review-head/${username}/${product.id}/attach-review-body`;
         const requestBody = reviewAspects.filter(aspect => aspect.updated === true);
 
