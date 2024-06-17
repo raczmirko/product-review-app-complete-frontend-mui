@@ -259,14 +259,16 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
             </ListItem>
           </Tooltip>
           <ListItem>
-            <Typography variant="overline" 
-              sx={{   wordWrap: 'break-word',
-                      whiteSpace: 'normal',
-                      wordBreak: 'break-all', 
-                      opacity: open ? 1 : 0 }}
-            >
-              Logged in as {username}
-            </Typography>
+            {isLoggedIn &&
+              <Typography variant="overline" 
+                sx={{   wordWrap: 'break-word',
+                        whiteSpace: 'normal',
+                        wordBreak: 'break-all', 
+                        opacity: open ? 1 : 0 }}
+              >
+                Logged in as {username}
+              </Typography>
+            }
           </ListItem>
         </List>
       </Drawer>
