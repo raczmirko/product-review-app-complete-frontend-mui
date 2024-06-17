@@ -49,7 +49,7 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
   }, [rememberMe]);
 
   if (isLoggedIn) {
-    return <Navigate to="/" />;
+    return <Navigate to="/dashboard" />;
   }
 
   function toggleRememberMe () {

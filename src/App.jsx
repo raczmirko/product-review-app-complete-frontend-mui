@@ -11,7 +11,7 @@ import Brands from './pages/Brands';
 import Categories from './pages/Categories';
 import Characteristics from './pages/Characteristics';
 import Countries from './pages/Countries';
-import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
 import Packagings from './pages/Packagings';
 import Aspects from './pages/Aspects';
 import SignInSide from './pages/SignIn';
@@ -94,9 +94,9 @@ const App = () => {
             <CssBaseline />
             <Sidebar isLoggedIn={isLoggedIn} expiryTime={expiryTime} logOut={logOut}/>
             <Routes>
-                <Route path="/" element={
+                <Route path="/dashboard" element={
                     <div>
-                        <Home />
+                        <Dashboard />
                     </div>
                 } />
                 <Route path="/login" element={

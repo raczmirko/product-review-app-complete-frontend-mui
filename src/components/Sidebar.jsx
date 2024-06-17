@@ -3,7 +3,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ProductIcon from '@mui/icons-material/EmojiSymbols';
-import HomeIcon from '@mui/icons-material/Home';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -149,7 +149,7 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
   }, [isLoggedIn, expiryTime, logOut]);
 
   const sidebarOptions = [
-      { icon: <HomeIcon />, text: 'Home', route: '/', visibleWithoutLogin: true},
+      { icon: <DashboardIcon />, text: 'Dashboard', route: '/dashboard', visibleWithoutLogin: true},
       { icon: <LoginIcon />, text: 'Login', route: '/login', visibleWithoutLogin: true },
       { icon: <PersonAddIcon />, text: 'Register', route: '/register', visibleWithoutLogin: true },
       { icon: <StorefrontIcon />, text: 'Brands', route: '/brands', visibleWithoutLogin: false },
