@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useEffect, useState } from 'react';
@@ -17,8 +18,9 @@ const BarChartRecordCounts = () => {
     const valueFormatter = (value) => `${value} records`;
 
     return (
-        <Box sx={{display: 'flex'}}>
-            <Box sx={{width: '100%', justifyContent: 'center' }}>
+        <Box>
+            <Typography variant='h6' sx={{ mb: 1, textAlign: 'center' }}>Number of records in each table</Typography>
+            <Box sx={{ width: '100%' }}>
                 <BarChart
                     xAxis={[{ scaleType: 'band', data: Object.keys(amounts) }]}
                     series={[{  data: Object.values(amounts), label: 'Amount of records', valueFormatter }]}
