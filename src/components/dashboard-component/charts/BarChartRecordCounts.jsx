@@ -17,18 +17,17 @@ const BarChartRecordCounts = () => {
     const valueFormatter = (value) => `${value} records`;
 
     return (
-        isLoaded && Object.keys(amounts).length > 0 &&(
-            <Box sx={{display: 'flex'}}>
-                <Box sx={{width: '100%', justifyContent: 'center' }}>
-                    <BarChart
-                        xAxis={[{ scaleType: 'band', data: Object.keys(amounts) }]}
-                        series={[{  data: Object.values(amounts), label: 'Amount of records', valueFormatter }]}
-                        layout="vertical"
-                        height={400}
-                    />
-                </Box>
+        <Box sx={{display: 'flex'}}>
+            <Box sx={{width: '100%', justifyContent: 'center' }}>
+                <BarChart
+                    xAxis={[{ scaleType: 'band', data: Object.keys(amounts) }]}
+                    series={[{  data: Object.values(amounts), label: 'Amount of records', valueFormatter }]}
+                    layout="vertical"
+                    height={400}
+                    loading={!isLoaded}
+                />
             </Box>
-        )
+        </Box>
     );
 }
 
