@@ -1,9 +1,11 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Grid from '@mui/material/Unstable_Grid2';
+import PropTypes from 'prop-types';
+import * as React from 'react';
 import BarChartRecordCounts from './charts/BarChartRecordCounts';
+import BarChartReviewsThisYear from './charts/BarChartReviewsThisYear';
 import PieChartMostActiveUsers from './charts/PieChartMostActiveUsers';
 
 const ChartsAndStatistics = () => {
@@ -52,10 +54,17 @@ const ChartsAndStatistics = () => {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <BarChartRecordCounts /> 
-                <Box sx={{ width: '50%' }}>
-                    <PieChartMostActiveUsers />
-                </Box>
+                <Grid container spacing={2}>
+                    <Grid xs={12}>
+                        <BarChartRecordCounts />
+                    </Grid>
+                    <Grid xs={6}>
+                        <PieChartMostActiveUsers />
+                    </Grid>
+                    <Grid xs={6}>
+                        <BarChartReviewsThisYear />
+                    </Grid>
+                </Grid>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
                 
