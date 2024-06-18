@@ -10,8 +10,8 @@ class DashboardService {
         return result.data;
     };
 
-    static async getMostActiveUsers() {
-        const endpoint = `http://localhost:8080/dashboard/most-active-users`;
+    static async getMostActiveUsers(userCount) {
+        const endpoint = `http://localhost:8080/dashboard/most-active-users?userCount=${userCount}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
