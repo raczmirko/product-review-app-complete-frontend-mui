@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import EntryAmountsTreeView from './charts/BarChartRecordCounts';
+import BarChartRecordCounts from './charts/BarChartRecordCounts';
+import PieChartMostActiveUsers from './charts/PieChartMostActiveUsers';
 
 const ChartsAndStatistics = () => {
     const [value, setValue] = React.useState(0);
@@ -51,7 +52,10 @@ const ChartsAndStatistics = () => {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <EntryAmountsTreeView />    
+                <BarChartRecordCounts /> 
+                <Box sx={{ width: '50%' }}>
+                    <PieChartMostActiveUsers />
+                </Box>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
                 
