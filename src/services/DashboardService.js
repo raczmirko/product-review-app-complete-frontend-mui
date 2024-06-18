@@ -17,7 +17,16 @@ class DashboardService {
         const result = await apiRequest(endpoint, 'GET', requestBody);
 
         return result.data;
-    }
+    };
+
+    static async getThisYearsReviews() {
+        const endpoint = `http://localhost:8080/dashboard/reviews-this-year`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+
+        return result.data;
+    };
 }
 
 export default DashboardService;
