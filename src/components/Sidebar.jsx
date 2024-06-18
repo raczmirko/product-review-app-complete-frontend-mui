@@ -149,7 +149,7 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
   }, [isLoggedIn, expiryTime, logOut]);
 
   const sidebarOptions = [
-      { icon: <DashboardIcon />, text: 'Dashboard', route: '/dashboard', visibleWithoutLogin: true},
+      { icon: <DashboardIcon />, text: 'Dashboard', route: '/dashboard', visibleWithoutLogin: false},
       { icon: <LoginIcon />, text: 'Login', route: '/login', visibleWithoutLogin: true },
       { icon: <PersonAddIcon />, text: 'Register', route: '/register', visibleWithoutLogin: true },
       { icon: <StorefrontIcon />, text: 'Brands', route: '/brands', visibleWithoutLogin: false },
