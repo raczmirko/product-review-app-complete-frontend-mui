@@ -1,6 +1,7 @@
 import PageHeader from "../components/PageHeader";
 import Container from '@mui/material/Container';
 import ParticleBackground from '../components/ParticleBackground';
+import ChartsAndStatistics from "../components/dashboard-component/ChartsAndStatistics";
 
 const Dashboard = () => {
     return (
@@ -10,6 +11,7 @@ const Dashboard = () => {
             </Container>
             <Container >
                 <PageHeader text="Dashboard" color="#81BE83" textColor="white"/>
+                <ChartsAndStatistics />
              </Container>
         </Container>
     );
