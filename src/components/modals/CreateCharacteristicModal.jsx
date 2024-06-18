@@ -89,7 +89,7 @@ const CreateCharacteristicModal = ({ closeFunction, createEntityFunction, isOpen
                         sx={{ mb: 2 }}
                     />
                     <Box sx={{ textAlign: 'right' }}>
-                        <Button type="submit" variant="contained" color="primary" sx={{ mr: 1 }}>Create</Button>
+                        <Button type="submit" variant="contained" color="success" sx={{ mr: 1 }}>Create</Button>
                         <Button variant="contained" color="secondary" onClick={handleClose}>Cancel</Button>
                     </Box>
                 </form>

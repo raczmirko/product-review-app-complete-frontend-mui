@@ -75,7 +75,7 @@ const CreateCategoryModal = ({ closeFunction, createEntityFunction, isOpen, setI
                         sx={{ mt: 2, mb: 2 }}
                     />
                     <Box sx={{ textAlign: 'right' }}>
-                        <Button type="submit" variant="contained" color="primary" sx={{ mr: 1 }}>Create</Button>
+                        <Button type="submit" variant="contained" color="success" sx={{ mr: 1 }}>Create</Button>
                         <Button variant="contained" color="secondary" onClick={handleClose}>Cancel</Button>
                     </Box>
                 </form>

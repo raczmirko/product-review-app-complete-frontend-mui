@@ -9,8 +9,8 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
     const [name, setName] = useState('');
     const [unitOfMeasure, setUnitOfMeasure] = useState('');
     const [unitOfMeasureName, setUnitOfMeasureName] = useState('');
-    const [size, setSize] = useState(undefined);
-    const [amount, setAmount] = useState(undefined);
+    const [size, setSize] = useState('');
+    const [amount, setAmount] = useState(1);
 
     const handleClose = () => {
         setIsOpen(false);
@@ -103,7 +103,7 @@ const CreatePackagingModal = ({ closeFunction, createEntityFunction, isOpen, set
                         sx={{ mb: 2 }}
                     />
                     <Box sx={{ textAlign: 'right' }}>
-                        <Button type="submit" variant="contained" color="primary" sx={{ mr: 1 }}>Create</Button>
+                        <Button type="submit" variant="contained" color="success" sx={{ mr: 1 }}>Create</Button>
                         <Button variant="contained" color="secondary" onClick={handleClose}>Cancel</Button>
                     </Box>
                 </form>
