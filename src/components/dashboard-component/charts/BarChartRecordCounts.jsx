@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useEffect, useState } from 'react';
 import DashboardService from '../../../services/DashboardService';
+import COLORS from '../../../util/colorUtil';
 
 const BarChartRecordCounts = () => {
     const [amounts, setAmounts] = useState({});
@@ -23,7 +24,7 @@ const BarChartRecordCounts = () => {
             <Box sx={{ width: '100%' }}>
                 <BarChart
                     xAxis={[{ scaleType: 'band', data: Object.keys(amounts) }]}
-                    series={[{  data: Object.values(amounts), label: 'Amount of records', valueFormatter }]}
+                    series={[{  data: Object.values(amounts), label: 'Amount of records', valueFormatter, color: COLORS[2] }]}
                     layout="vertical"
                     height={400}
                     loading={!isLoaded}
