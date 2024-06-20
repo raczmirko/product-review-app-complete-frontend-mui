@@ -27,6 +27,15 @@ class DashboardService {
 
         return result.data;
     };
+
+    static async getUserRatingsPerCategory() {
+        const endpoint = `http://localhost:8080/dashboard/user-reviews-per-category`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+
+        return result.data;
+    };
 }
 
 export default DashboardService;

@@ -7,6 +7,7 @@ import * as React from 'react';
 import BarChartRecordCounts from './charts/BarChartRecordCounts';
 import BarChartReviewsThisYear from './charts/BarChartReviewsThisYear';
 import PieChartMostActiveUsers from './charts/PieChartMostActiveUsers';
+import BarChartUserReviewsPerCategory from './charts/BarChartUserReviewsPerCategory';
 
 const ChartsAndStatistics = () => {
     const [value, setValue] = React.useState(0);
@@ -67,6 +68,15 @@ const ChartsAndStatistics = () => {
                 </Grid>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
+            <Grid container spacing={2}>
+                    <Grid xs={8}>
+                        <BarChartUserReviewsPerCategory />
+                    </Grid>
+                    <Grid xs={6}>
+                    </Grid>
+                    <Grid xs={6}>
+                    </Grid>
+                </Grid>
                 
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
