@@ -8,6 +8,7 @@ import BarChartRecordCounts from './charts/BarChartRecordCounts';
 import BarChartReviewsThisYear from './charts/BarChartReviewsThisYear';
 import PieChartMostActiveUsers from './charts/PieChartMostActiveUsers';
 import BarChartUserReviewsPerCategory from './charts/BarChartUserReviewsPerCategory';
+import ProductCard from './ProductCard';
 
 const ChartsAndStatistics = () => {
     const [value, setValue] = React.useState(0);
@@ -72,7 +73,8 @@ const ChartsAndStatistics = () => {
                     <Grid xs={8}>
                         <BarChartUserReviewsPerCategory />
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid xs={4}>
+                        <ProductCard />
                     </Grid>
                     <Grid xs={6}>
                     </Grid>

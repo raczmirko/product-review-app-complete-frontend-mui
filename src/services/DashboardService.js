@@ -36,6 +36,15 @@ class DashboardService {
 
         return result.data;
     };
+
+    static async getUserBestRatedProducts() {
+        const endpoint = `http://localhost:8080/dashboard/user-best-rated-products`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+
+        return result.data;
+    };
 }
 
 export default DashboardService;
