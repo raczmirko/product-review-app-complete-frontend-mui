@@ -70,11 +70,11 @@ const ChartsAndStatistics = () => {
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
             <Grid container spacing={2}>
-                    <Grid xs={8}>
-                        <BarChartUserReviewsPerCategory />
-                    </Grid>
                     <Grid xs={4}>
                         <ProductCard />
+                    </Grid>
+                    <Grid xs={8}>
+                        <BarChartUserReviewsPerCategory />
                     </Grid>
                     <Grid xs={6}>
                     </Grid>
