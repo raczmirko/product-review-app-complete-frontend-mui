@@ -9,7 +9,7 @@ import BarChartReviewsThisYear from './charts/BarChartReviewsThisYear';
 import PieChartMostActiveUsers from './charts/PieChartMostActiveUsers';
 import BarChartUserReviewsPerCategory from './charts/BarChartUserReviewsPerCategory';
 import ProductCard from './BestRatedProductCard';
-import BestRatedProductsPerBrand from './BestRatedProductsPerBrandTable';
+import BestRatedProductsPerBrand from './BestRatedArticlesPerBrandTable';
 import { Divider } from '@mui/material';
 
 const ChartsAndStatistics = () => {
@@ -86,7 +86,7 @@ const ChartsAndStatistics = () => {
             <CustomTabPanel value={value} index={2}>
             <Grid container spacing={2}>
                     <Grid xs={12}>
-                        <Divider variant="left" sx={{mb:2}}>Each brand's best rated products</Divider>
+                        <Divider variant="left" sx={{mb:2}}>Each brand's best rated articles</Divider>
                         <BestRatedProductsPerBrand />
                     </Grid>
                 </Grid>

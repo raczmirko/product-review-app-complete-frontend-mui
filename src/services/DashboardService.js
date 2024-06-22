@@ -47,7 +47,7 @@ class DashboardService {
     };
 
     static async getBestRatedProductsPerCategory() {
-        const endpoint = `http://localhost:8080/dashboard/view-most-popular-products-per-brand`;
+        const endpoint = `http://localhost:8080/dashboard/view-most-popular-articles-per-brand`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
