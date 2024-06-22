@@ -14,9 +14,9 @@ const ProductCard = () => {
         DashboardService.getUserBestRatedProducts()
             .then(data => {
                 setProducts(data);
-                setIsLoaded(true);
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error:', error))
+            .finally(() => setIsLoaded(true));
     }, []);
 
     const handlePrevious = () => {
@@ -28,7 +28,7 @@ const ProductCard = () => {
     };
 
     const currentProduct = products[currentIndex] || {};
-    const currentImage = currentProduct.product?.productImages?.length > 0
+    const currentImage = currentProduct.product?.productImages?.[0]?.image 
         ? `data:image/png;base64,${currentProduct.product.productImages[0].image}`
         : null;
 
