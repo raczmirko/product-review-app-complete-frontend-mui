@@ -31,7 +31,6 @@ import PageviewIcon from '@mui/icons-material/Pageview';
 import ViewReviewModal from '../modals/ViewReviewModal';
 import AssignReviewAspectValueModal from '../modals/AssignReviewAspectValueModal';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import { South } from '@mui/icons-material';
 
 
 export default function ReviewTable() {
@@ -41,8 +40,8 @@ export default function ReviewTable() {
     const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState('');
     const [totalElements, setTotalElements] = useState(0);
-    const [searchValue, setSearchValue] = useState('');
-    const [searchColumn, setSearchColumn] = useState('');
+    const [searchValue, setSearchValue] = useState(localStorage.getItem('username'));
+    const [searchColumn, setSearchColumn] = useState('user');
     const [searchOperator, setSearchOperator] = useState('');
     const [orderByColumn, setOrderByColumn] = useState('date');
     const [orderByDirection, setOrderByDirection] = useState('desc');
@@ -61,7 +60,7 @@ export default function ReviewTable() {
         page: 0,
         pageSize: 10,
       });
-    const [filterModel, setFilterModel] = useState({ items: [] });
+    const [filterModel, setFilterModel] = useState({ items: [{field: 'user', operator: 'contains', value: localStorage.getItem('username')}] });
     const [sortModel, setSortModel] = useState([]); 
     const [rowSelectionModel, setRowSelectionModel] = useState({});
     const [rowModesModel, setRowModesModel] = useState({});
