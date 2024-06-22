@@ -9,6 +9,8 @@ import BarChartReviewsThisYear from './charts/BarChartReviewsThisYear';
 import PieChartMostActiveUsers from './charts/PieChartMostActiveUsers';
 import BarChartUserReviewsPerCategory from './charts/BarChartUserReviewsPerCategory';
 import ProductCard from './BestRatedProductCard';
+import BestRatedProductsPerBrand from './BestRatedProductsPerBrandTable';
+import { Divider } from '@mui/material';
 
 const ChartsAndStatistics = () => {
     const [value, setValue] = React.useState(0);
@@ -52,7 +54,7 @@ const ChartsAndStatistics = () => {
                 <Tabs value={value} onChange={handleChange} aria-label="charts and statistics">
                 <Tab label="Overview" {...a11yProps(0)} />
                 <Tab label="My statistics" {...a11yProps(1)} />
-                <Tab label="Item Three" {...a11yProps(2)} />
+                <Tab label="Database views" {...a11yProps(2)} />
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
@@ -82,7 +84,12 @@ const ChartsAndStatistics = () => {
                 
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-                
+            <Grid container spacing={2}>
+                    <Grid xs={12}>
+                        <Divider variant="left" sx={{mb:2}}>Each brand's best rated products</Divider>
+                        <BestRatedProductsPerBrand />
+                    </Grid>
+                </Grid>
             </CustomTabPanel>
         </Box>
     );

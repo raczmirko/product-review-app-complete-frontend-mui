@@ -39,7 +39,7 @@ function DataDisplayTable({ data, maxHeight }) {
                     <TableHead>
                         <TableRow>
                             {headers.map((header) => (
-                                <TableCell key={header} align="center">{header.toUpperCase()}</TableCell>
+                                <TableCell key={header} align="left">{header.toUpperCase()}</TableCell>
                             ))}
                         </TableRow>
                     </TableHead>
@@ -47,7 +47,7 @@ function DataDisplayTable({ data, maxHeight }) {
                         {displayedRows.map((row, rowIndex) => (
                             <TableRow key={rowIndex} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                 {headers.map((header) => (
-                                    <TableCell key={header} align="center">
+                                    <TableCell key={header} align="left">
                                         {typeof row[header] === 'object' && row[header] !== null
                                             ? row[header].name
                                             : row[header]}
