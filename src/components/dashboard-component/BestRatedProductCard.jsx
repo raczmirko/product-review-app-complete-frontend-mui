@@ -49,14 +49,17 @@ const ProductCard = () => {
                         <Typography variant="h4" component="div">{currentProduct?.rank ? `N#${currentProduct.rank}` : 'N/A'}</Typography>
                     </Box>
                     <CardContent>
-                    <Typography variant="subtitle2" component="div">
+                        <Typography variant="subtitle2" component="div">
                             ID: {currentProduct.product?.id || 'N/A'}
                         </Typography>
                         <Typography variant="h5" component="div">
                             {currentProduct.product?.article?.name || 'No favourite yet'}
                         </Typography>
+                        <Typography variant="subtitle2" component="div" color="text.secondary">
+                            Packaging option: {currentProduct.product?.packaging.name || 'N/A'}
+                        </Typography>
                         <Typography variant="body2" color="text.secondary">
-                        Overall rating average: {currentProduct?.scoreAverage ? `${currentProduct.scoreAverage}/10` : 'N/A'}
+                            Overall rating average: {currentProduct?.scoreAverage ? `${currentProduct.scoreAverage}/10` : 'N/A'}
                         </Typography>
                     </CardContent>
                     <Box display="flex" justifyContent="space-between" p={2}>
