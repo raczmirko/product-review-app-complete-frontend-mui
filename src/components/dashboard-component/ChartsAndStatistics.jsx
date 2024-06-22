@@ -8,7 +8,7 @@ import BarChartRecordCounts from './charts/BarChartRecordCounts';
 import BarChartReviewsThisYear from './charts/BarChartReviewsThisYear';
 import PieChartMostActiveUsers from './charts/PieChartMostActiveUsers';
 import BarChartUserReviewsPerCategory from './charts/BarChartUserReviewsPerCategory';
-import ProductCard from './ProductCard';
+import ProductCard from './BestRatedProductCard';
 
 const ChartsAndStatistics = () => {
     const [value, setValue] = React.useState(0);
