@@ -54,6 +54,15 @@ class DashboardService {
 
         return result.data;
     };
+
+    static async getBestRatedProductsPerCategory() {
+        const endpoint = `http://localhost:8080/dashboard/view-most-popular-articles-per-category`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+
+        return result.data;
+    };
 }
 
 export default DashboardService;
