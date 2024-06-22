@@ -43,17 +43,17 @@ const ProductCard = () => {
                     >
                         {!currentImage && <ImageNotSupportedIcon />}
                     </Avatar>
-                    <Typography variant="h4" component="div">N#{currentProduct.rank}</Typography>
+                    <Typography variant="h4" component="div">{currentProduct?.rank ? `N#${currentProduct.rank}` : 'N/A'}</Typography>
                 </Box>
                 <CardContent>
                 <Typography variant="subtitle2" component="div">
-                        ID: {currentProduct.product?.id}
+                        ID: {currentProduct.product?.id || 'N/A'}
                     </Typography>
                     <Typography variant="h5" component="div">
-                        {currentProduct.product?.article?.name || 'Unknown Product'}
+                        {currentProduct.product?.article?.name || 'No favourite yet'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Overall rating average: {currentProduct.scoreAverage || 'N/A'}/10
+                    Overall rating average: {currentProduct?.scoreAverage ? `${currentProduct.scoreAverage}/10` : 'N/A'}
                     </Typography>
                 </CardContent>
                 <Box display="flex" justifyContent="space-between" p={2}>
