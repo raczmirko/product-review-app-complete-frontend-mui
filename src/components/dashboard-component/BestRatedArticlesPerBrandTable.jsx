@@ -7,7 +7,7 @@ const BestRatedProductsPerBrand = () => {
     const [isLoaded, setIsLoaded] = useState([]);
 
     useEffect(() => {
-        DashboardService.getBestRatedProductsPerCategory()
+        DashboardService.getBestRatedProductsPerBrand()
         .then(data => {setData(data)})
         .catch(error => console.error('Error:', error))
         .finally(() => setIsLoaded(true));
