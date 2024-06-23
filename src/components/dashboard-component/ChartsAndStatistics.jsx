@@ -12,6 +12,7 @@ import ProductCard from './BestRatedProductCard';
 import BestRatedProductsPerBrand from './BestRatedArticlesPerBrandTable';
 import { Divider } from '@mui/material';
 import BestRatedProductsPerCategory from './BestRatedProductsPerCategory';
+import UserDomesticProductsGauge from './UserDomesticProductsGauge';
 
 const ChartsAndStatistics = () => {
     const [value, setValue] = React.useState(0);
@@ -56,6 +57,7 @@ const ChartsAndStatistics = () => {
                 <Tab label="Overview" {...a11yProps(0)} />
                 <Tab label="My statistics" {...a11yProps(1)} />
                 <Tab label="Database views" {...a11yProps(2)} />
+                <Tab label="User-to-user stats" {...a11yProps(3)} />
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
@@ -79,7 +81,8 @@ const ChartsAndStatistics = () => {
                     <Grid xs={8}>
                         <BarChartUserReviewsPerCategory />
                     </Grid>
-                    <Grid xs={6}>
+                    <Grid xs={4}>
+                        <UserDomesticProductsGauge />
                     </Grid>
                 </Grid>
                 
@@ -93,6 +96,14 @@ const ChartsAndStatistics = () => {
                     <Grid xs={12}>
                         <Divider variant="left" sx={{mb:2}}>Each category's best rated articles</Divider>
                         <BestRatedProductsPerCategory />
+                    </Grid>
+                </Grid>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={3}>
+            <Grid container spacing={2}>
+                    <Grid xs={12}>
+                    </Grid>
+                    <Grid xs={12}>
                     </Grid>
                 </Grid>
             </CustomTabPanel>
