@@ -72,6 +72,15 @@ class DashboardService {
 
         return result.data;
     };
+    
+    static async getWeakAspectsOfMostPopularProducts() {
+        const endpoint = `http://localhost:8080/dashboard/weak-aspects-of-popular-products`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+
+        return result.data;
+    };
 }
 
 export default DashboardService;

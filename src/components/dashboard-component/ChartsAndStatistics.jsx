@@ -13,6 +13,7 @@ import BestRatedProductsPerBrand from './BestRatedArticlesPerBrandTable';
 import { Divider } from '@mui/material';
 import BestRatedProductsPerCategory from './BestRatedProductsPerCategory';
 import UserDomesticProductsGauge from './UserDomesticProductsGauge';
+import WeakAspectsOfMostPopularProductsTable from './WeakAspectsOfMostPopularProductsTable';
 
 const ChartsAndStatistics = () => {
     const [value, setValue] = React.useState(0);
@@ -96,6 +97,10 @@ const ChartsAndStatistics = () => {
                     <Grid xs={12}>
                         <Divider variant="left" sx={{mb:2}}>Each category's best rated articles</Divider>
                         <BestRatedProductsPerCategory />
+                    </Grid>
+                    <Grid xs={12}>
+                        <Divider variant="left" sx={{mb:2}}>Weak aspects of the most popular products</Divider>
+                        <WeakAspectsOfMostPopularProductsTable />
                     </Grid>
                 </Grid>
             </CustomTabPanel>
