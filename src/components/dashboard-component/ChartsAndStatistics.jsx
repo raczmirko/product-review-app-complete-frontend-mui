@@ -14,6 +14,7 @@ import { Divider } from '@mui/material';
 import BestRatedProductsPerCategory from './BestRatedProductsPerCategory';
 import UserDomesticProductsGauge from './UserDomesticProductsGauge';
 import WeakAspectsOfMostPopularProductsTable from './WeakAspectsOfMostPopularProductsTable';
+import PieChartUserFavBrandProdDist from './charts/PieChartUserFavBrandProdDist';
 
 const ChartsAndStatistics = () => {
     const [value, setValue] = React.useState(0);
@@ -84,6 +85,9 @@ const ChartsAndStatistics = () => {
                     </Grid>
                     <Grid xs={4}>
                         <UserDomesticProductsGauge />
+                    </Grid>
+                    <Grid xs={8}>
+                        <PieChartUserFavBrandProdDist />
                     </Grid>
                 </Grid>
                 

@@ -81,6 +81,15 @@ class DashboardService {
 
         return result.data;
     };
+
+    static async getFavouriteBrandProductDistribution() {
+        const endpoint = `http://localhost:8080/dashboard/favourite-brand-product-distribution`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+
+        return result.data;
+    };
 }
 
 export default DashboardService;

@@ -12,8 +12,8 @@ const AssignAspectModal = ({ categoryId, closeFunction, createEntityFunction, is
     const [category, setCategory] = useState('');
 
     useEffect(() => {
-        setCategory(undefined);
-        if (categoryId !== undefined) {
+        setCategory(null);
+        if (categoryId !== null) {
             CategoryService.getCategory(categoryId)
             .then(data => {
                 setCategory(data);
@@ -23,7 +23,7 @@ const AssignAspectModal = ({ categoryId, closeFunction, createEntityFunction, is
     }, [isOpen]);
 
     useEffect(() => {
-        if(name !== undefined && name !== ''){
+        if(name !== null && name !== ''){
             setQuestion(`How would you rate the product's ${name.toLowerCase()}?`);
         }
     }, [name]);
@@ -31,12 +31,9 @@ const AssignAspectModal = ({ categoryId, closeFunction, createEntityFunction, is
     const handleClose = () => {
         setIsOpen(false);
         closeFunction();
-        setName(undefined);
-        setQuestion(undefined);
     }
 
-    const handleCreate = (e) => {
-        e.preventDefault();
+    const handleCreate = () => {
         createEntityFunction(name, question, category);
         handleClose();
     }
