@@ -1,4 +1,5 @@
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ImageList from '@mui/material/ImageList';
@@ -10,7 +11,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { apiRequest } from '../../services/CrudService';
 import ProductImageService from '../../services/ProductImageService';
-import SearchIcon from '@mui/icons-material/Search';
+import ModalButton from '../buttons/ModalButton';
 
 export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen }) {
     
@@ -262,7 +263,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                     </Box>
                 <Box sx={{ textAlign: 'right', mt: 1, display: 'flex', justifyContent: 'flex-end' }}>
                     {renderImageUploadButton()}
-                    <Button variant="contained" color="error" onClick={handleClose}>Close</Button>
+                    <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                 </Box>
             </Box>
         </Modal>

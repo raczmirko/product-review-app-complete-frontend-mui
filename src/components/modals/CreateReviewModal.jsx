@@ -1,7 +1,6 @@
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Rating from '@mui/material/Rating';
 import TextField from '@mui/material/TextField';
@@ -9,9 +8,10 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { useState, useEffect } from 'react';
-import CountrySelector from '../selectors/CountrySelector';
+import { useEffect, useState } from 'react';
 import AspectService from '../../services/AspectService';
+import ModalButton from '../buttons/ModalButton';
+import CountrySelector from '../selectors/CountrySelector';
 
 const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createReviewFunction, createReviewBodyFunction }) => {
     const [selectedPage, setSelectedPage] = useState('head');
@@ -193,8 +193,8 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                     {renderSelectedPage()}
                 </Box>
                 <Box sx={{ textAlign: 'right', mt: 2 }}>
-                    <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={handleCreate}>Save</Button>
-                    <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                    <ModalButton buttonText='save' colorParam='success' onClickParam={handleCreate} />
+                    <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                 </Box>
             </Box>
         </Modal>

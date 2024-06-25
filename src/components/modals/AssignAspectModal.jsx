@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import React, { useEffect, useState } from 'react';
 import CategoryService from '../../services/CategoryService';
+import ModalButton from '../buttons/ModalButton';
 
 const AssignAspectModal = ({ categoryId, closeFunction, createEntityFunction, isOpen, setIsOpen }) => {
     const [name, setName] = useState('');
@@ -62,7 +62,6 @@ const AssignAspectModal = ({ categoryId, closeFunction, createEntityFunction, is
                 }}
             >
                 <Typography variant="h5" component="div" gutterBottom>Create new aspect for '{category && category.name}'</Typography>
-                <form onSubmit={handleCreate}>
                     <TextField
                         label="Name"
                         value={name}
@@ -88,10 +87,9 @@ const AssignAspectModal = ({ categoryId, closeFunction, createEntityFunction, is
                         sx={{ mb: 2 }}
                     />
                     <Box sx={{ textAlign: 'right' }}>
-                        <Button type="submit" variant="contained" color="success" sx={{ mr: 1 }}>Create</Button>
-                        <Button variant="contained" color="secondary" onClick={handleClose}>Cancel</Button>
+                        <ModalButton buttonText='save' colorParam='success' onClickParam={handleCreate} />
+                        <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                     </Box>
-                </form>
             </Box>
         </Modal>
     );

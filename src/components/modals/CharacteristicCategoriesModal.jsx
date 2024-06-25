@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import CharacteristicService from '../../services/CharacteristicService';
 import renderAssignedCategoryTree from '../CharacteristicCategoryTreeRenderer';
+import ModalButton from '../buttons/ModalButton';
 
 
 const ShowCharacteristicCategoriesModal = ({ characteristicId, closeFunction, isOpen, setIsOpen }) => {
@@ -62,7 +62,7 @@ const ShowCharacteristicCategoriesModal = ({ characteristicId, closeFunction, is
                         {renderAssignedCategoryTree(assignedCategoryTrees)}
                     </Box>
                     <Box sx={{ textAlign: 'right' }}>
-                        <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                        <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                     </Box>
                 </Box>
             </Modal>

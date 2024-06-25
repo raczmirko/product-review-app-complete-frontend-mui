@@ -16,6 +16,7 @@ import React, { useEffect, useState } from 'react';
 import CategoryService from '../../services/CategoryService';
 import CharacteristicService from '../../services/CharacteristicService';
 import NotificationService from '../../services/NotificationService';
+import ModalButton from '../buttons/ModalButton';
 
 const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
     const [category, setCategory] = useState([]);
@@ -306,8 +307,8 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
                             <Button variant="contained" color="error" sx={{ ml: 1 }} onClick={(e) => resetFilter()}>Clear</Button>
                         </Box>
                         <Box sx={{ textAlign: 'right' }}>
-                            <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={handleSave}>Save</Button>
-                            <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                            <ModalButton buttonText='save' colorParam='success' onClickParam={handleSave} />
+                            <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                         </Box>
                     </Box>
                 </Box>

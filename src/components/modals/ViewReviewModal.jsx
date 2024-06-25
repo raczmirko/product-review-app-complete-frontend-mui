@@ -6,6 +6,7 @@ import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 import AspectService from '../../services/AspectService';
+import ModalButton from '../buttons/ModalButton';
 
 const ViewReviewModal = ({ review, isOpen, setIsOpen }) => {
 
@@ -121,7 +122,7 @@ const ViewReviewModal = ({ review, isOpen, setIsOpen }) => {
                             </Grid>
                         </Grid>
                         <Box sx={{ textAlign: 'right', mt: 2 }}>
-                            <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                            <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                         </Box>
                     </Box>
                 </Modal>

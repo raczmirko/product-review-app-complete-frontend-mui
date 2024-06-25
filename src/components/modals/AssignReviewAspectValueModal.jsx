@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 import AspectService from '../../services/AspectService';
+import ModalButton from '../buttons/ModalButton';
 
 const AssignReviewAspectValueModal = ({ review, isOpen, setIsOpen, createReviewBody }) => {
 
@@ -94,8 +94,8 @@ const AssignReviewAspectValueModal = ({ review, isOpen, setIsOpen, createReviewB
                             ))}
                         </Box>
                         <Box sx={{ textAlign: 'right', mt: 2 }}>
-                            <Button type="submit" variant="contained" color="success" sx={{ mr: 1 }} onClick={handleSave}>Save</Button>
-                            <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                            <ModalButton buttonText='save' colorParam='success' onClickParam={handleSave} />
+                            <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                         </Box>
                     </Box>
                 </Modal>

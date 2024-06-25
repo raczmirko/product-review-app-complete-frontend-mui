@@ -1,16 +1,16 @@
 import QuizIcon from '@mui/icons-material/Quiz';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
 import React, { useEffect, useState } from 'react';
 import AspectService from '../../services/AspectService';
 import CategoryService from '../../services/CategoryService';
+import ModalButton from '../buttons/ModalButton';
 
 const ListAspectsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
     const [aspects, setAspects] = useState([]);
@@ -86,8 +86,8 @@ const ListAspectsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
                         )
                     }
                 </Box>
-                <Box sx={{ textAlign: 'right' }}>
-                    <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                <Box sx={{ textAlign: 'right', mt: 2 }}>
+                    <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                 </Box>
             </Box>
         </Modal>

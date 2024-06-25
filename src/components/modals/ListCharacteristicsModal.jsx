@@ -1,6 +1,5 @@
 import StyleIcon from '@mui/icons-material/Style';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -10,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import ArticleService from '../../services/ArticleService';
 import CharacteristicService from '../../services/CharacteristicService';
+import ModalButton from '../buttons/ModalButton';
 
 
 const ListCharacteristicsModal = ({ articleId, closeFunction, isOpen, setIsOpen }) => {
@@ -78,8 +78,8 @@ const ListCharacteristicsModal = ({ articleId, closeFunction, isOpen, setIsOpen 
                         <Typography>No characteristics are inherited.</Typography>
                     }
                 </Box>
-                <Box sx={{ textAlign: 'right' }}>
-                    <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                <Box sx={{ textAlign: 'right', mt: 2 }}>
+                    <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                 </Box>
             </Box>
         </Modal>

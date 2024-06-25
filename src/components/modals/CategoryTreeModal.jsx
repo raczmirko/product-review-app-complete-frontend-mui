@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import CategoryService from '../../services/CategoryService';
 import CategoryTreeRenderer from '../CategoryTreeRenderer';
+import ModalButton from '../buttons/ModalButton';
 
 
 const CategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpen }) => {
@@ -61,7 +61,7 @@ const CategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpen })
                     {CategoryTreeRenderer(categoryTree)}
                 </Box>
                 <Box sx={{ textAlign: 'right' }}>
-                    <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                    <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                 </Box>
             </Box>
         </Modal>

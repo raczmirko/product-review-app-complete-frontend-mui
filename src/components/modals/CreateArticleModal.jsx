@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
+import ModalButton from '../buttons/ModalButton';
 import BrandSelector from '../selectors/BrandSelector';
 import CategorySelector from "../selectors/CategorySelector";
 
@@ -57,7 +57,6 @@ const CreateArticleModal = ({ closeFunction, createEntityFunction, isOpen, setIs
                 }}
             >
                 <Typography variant="h5" component="div" gutterBottom>New article</Typography>
-                <form onSubmit={handleCreate}>
                     <TextField
                         label="Name"
                         value={name}
@@ -83,10 +82,9 @@ const CreateArticleModal = ({ closeFunction, createEntityFunction, isOpen, setIs
                         sx={{ mt: 2, mb: 2 }}
                     />
                     <Box sx={{ textAlign: 'right' }}>
-                        <Button type="submit" variant="contained" color="success" sx={{ mr: 1 }}>Create</Button>
-                        <Button variant="contained" color="secondary" onClick={handleClose}>Cancel</Button>
+                        <ModalButton buttonText='save' colorParam='success' onClickParam={handleCreate} />
+                        <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                     </Box>
-                </form>
             </Box>
         </Modal>
     );

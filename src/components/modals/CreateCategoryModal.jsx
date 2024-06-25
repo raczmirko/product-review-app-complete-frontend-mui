@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import Modal from '@mui/material/Modal';
-import CategorySelector from "../selectors/CategorySelector";
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import React, { useState } from 'react';
+import ModalButton from '../buttons/ModalButton';
+import CategorySelector from "../selectors/CategorySelector";
 
 const CreateCategoryModal = ({ closeFunction, createEntityFunction, isOpen, setIsOpen }) => {
     const [name, setName] = useState('');
@@ -50,7 +50,6 @@ const CreateCategoryModal = ({ closeFunction, createEntityFunction, isOpen, setI
                 }}
             >
                 <Typography variant="h5" component="div" gutterBottom>New category</Typography>
-                <form onSubmit={handleCreate}>
                     <TextField
                         label="Name"
                         value={name}
@@ -75,10 +74,9 @@ const CreateCategoryModal = ({ closeFunction, createEntityFunction, isOpen, setI
                         sx={{ mt: 2, mb: 2 }}
                     />
                     <Box sx={{ textAlign: 'right' }}>
-                        <Button type="submit" variant="contained" color="success" sx={{ mr: 1 }}>Create</Button>
-                        <Button variant="contained" color="secondary" onClick={handleClose}>Cancel</Button>
+                        <ModalButton buttonText='save' colorParam='success' onClickParam={handleCreate} />
+                        <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                     </Box>
-                </form>
             </Box>
         </Modal>
     );

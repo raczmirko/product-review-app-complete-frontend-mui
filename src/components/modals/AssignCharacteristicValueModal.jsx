@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
@@ -9,8 +9,8 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import CharacteristicService from '../../services/CharacteristicService';
-import CircularProgress from '@mui/material/CircularProgress';
 import ProductCharacteristicValueService from '../../services/ProductCharacteristicValueService';
+import ModalButton from '../buttons/ModalButton';
 
 const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, assignCharacteristicValueFunction }) => {
 
@@ -128,8 +128,8 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, assignC
                         </Box>
                     }
                     <Box sx={{ textAlign: 'right', mt: 2 }}>
-                        <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={handleCreate}>Save</Button>
-                        <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                        <ModalButton buttonText='save' colorParam='success' onClickParam={handleCreate} />
+                        <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                     </Box>
                 </Box>
             </Box>

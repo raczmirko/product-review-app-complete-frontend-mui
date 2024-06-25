@@ -3,23 +3,23 @@ import LinkIcon from '@mui/icons-material/Link';
 import { Card, CardContent, Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import InputAdornment from '@mui/material/InputAdornment';
+import InputLabel from '@mui/material/InputLabel';
 import Modal from '@mui/material/Modal';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import ToggleButton from '@mui/material/ToggleButton';
-import TextField from '@mui/material/TextField';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import ArticleService from '../../services/ArticleService';
-import PackagingService from '../../services/PackagingService';
 import CharacteristicService from '../../services/CharacteristicService';
+import PackagingService from '../../services/PackagingService';
+import ModalButton from '../buttons/ModalButton';
 import PackagingSelector from '../selectors/PackagingSelector';
 import PackagingTable from '../tables/PackagingTable';
-import InputAdornment from '@mui/material/InputAdornment';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 
 const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, createFunction, uploadImageFunction, assignCharacteristicValueFunction }) => {
 
@@ -346,8 +346,8 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
                 <Box sx={{ textAlign: 'right', mt: 2 }}>
                     {renderImageUploadButton()}
                     {renderPackagingToggleButton()}
-                    <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={handleCreate}>Save</Button>
-                    <Button variant="contained" color="secondary" onClick={handleClose}>Close</Button>
+                    <ModalButton buttonText='save' colorParam='success' onClickParam={handleCreate} />
+                    <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                 </Box>
             </Box>
         </Modal>

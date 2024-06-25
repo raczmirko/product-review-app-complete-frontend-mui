@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import React, { useState } from 'react';
+import ModalButton from '../buttons/ModalButton';
 
 const CreateCharacteristicModal = ({ closeFunction, createEntityFunction, isOpen, setIsOpen }) => {
     const [name, setName] = useState('');
@@ -14,14 +14,9 @@ const CreateCharacteristicModal = ({ closeFunction, createEntityFunction, isOpen
     const handleClose = () => {
         setIsOpen(false);
         closeFunction();
-        setName(undefined);
-        setUnitOfMeasure(undefined);
-        setUnitOfMeasureName(undefined);
-        setDescription(undefined);
     }
 
-    const handleCreate = (e) => {
-        e.preventDefault();
+    const handleCreate = () => {
         createEntityFunction(name, unitOfMeasure, unitOfMeasureName, description);
         handleClose();
     }
@@ -47,7 +42,6 @@ const CreateCharacteristicModal = ({ closeFunction, createEntityFunction, isOpen
                 }}
             >
                 <Typography variant="h5" component="div" gutterBottom>New characteristic</Typography>
-                <form onSubmit={handleCreate}>
                     <TextField
                         label="Name"
                         value={name}
@@ -89,10 +83,9 @@ const CreateCharacteristicModal = ({ closeFunction, createEntityFunction, isOpen
                         sx={{ mb: 2 }}
                     />
                     <Box sx={{ textAlign: 'right' }}>
-                        <Button type="submit" variant="contained" color="success" sx={{ mr: 1 }}>Create</Button>
-                        <Button variant="contained" color="secondary" onClick={handleClose}>Cancel</Button>
+                        <ModalButton buttonText='save' colorParam='success' onClickParam={handleCreate} />
+                        <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                     </Box>
-                </form>
             </Box>
         </Modal>
     );
