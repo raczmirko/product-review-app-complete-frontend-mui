@@ -98,7 +98,7 @@ export default function CharacteristicTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully deleted.');
+            showNotification('success', 'SUCCESS: Characteristic deleted.');
             searchEntities();
         } else {
             showNotification('error', result.message);
@@ -113,7 +113,7 @@ export default function CharacteristicTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully deleted.');
+            showNotification('success', 'SUCCESS: Characteristic deleted.');
             searchEntities();
         } else {
             showNotification('error', result.message);
@@ -152,7 +152,7 @@ export default function CharacteristicTable() {
     
         if (result.success) {
             searchEntities();
-            showNotification('success', 'Record successfully created.');
+            showNotification('success', 'SUCCESS: Characteristic created.');
         } else {
             showNotification('error', result.message);
         }
@@ -165,7 +165,7 @@ export default function CharacteristicTable() {
         const result = await apiRequest(endpoint, 'PUT', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully updated.');
+            showNotification('success', 'SUCCESS: Characteristic updated.');
             searchEntities();
         } else {
             showNotification('error', result.message);

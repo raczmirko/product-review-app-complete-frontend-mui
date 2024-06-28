@@ -109,7 +109,7 @@ export default function ProductTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully deleted.');
+            showNotification('success', 'SUCCESS: Product deleted.');
             searchEntities();
         } else {
             showNotification('error', result.message);
@@ -150,7 +150,7 @@ export default function ProductTable() {
         const response = await apiRequest(endpoint, 'POST', requestBody);
     
         if (response.success) {
-            showNotification('success', 'Review successfully created.');
+            showNotification('success', 'SUCCESS: Product created.');
             return { success: true, product:  response.data };
         } else {
             showNotification('error', response.message);
@@ -166,7 +166,7 @@ export default function ProductTable() {
         const response = await apiRequest(endpoint, 'POST', requestBody);
     
         if (response.success) {
-            showNotification('success', 'Review successfully created.');
+            showNotification('success', 'SUCCESS: Product created.');
             return { success: true, product:  response.data };
         } else {
             showNotification('error', response.message);
@@ -192,7 +192,7 @@ export default function ProductTable() {
         const response = await ProductImageService.uploadProductImages(productId, images);
     
         if (response.success) {
-            showNotification('success', 'Product images successfully uploaded.');
+            showNotification('success', 'SUCCESS: Product image(s) uploaded.');
         } else {
             showNotification('error', 'Error during image upload.');
         }
@@ -209,7 +209,7 @@ export default function ProductTable() {
         const response = await apiRequest(endpoint, 'POST', requestBody);
     
         if (response.success) {
-            showNotification('success', 'Product successfully created.');
+            showNotification('success', 'SUCCESS: Product created.');
             return { success: true, productId:  response.data };
         } else {
             showNotification('error', response.message);

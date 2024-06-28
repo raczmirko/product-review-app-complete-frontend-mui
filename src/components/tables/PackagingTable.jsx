@@ -79,7 +79,7 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully deleted.');
+            showNotification('success', 'SUCCESS: Packaging deleted.');
             searchEntities();
         } else {
             showNotification('error', result.message);
@@ -119,7 +119,7 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
     
         if (result.success) {
             searchEntities();
-            showNotification('success', 'Record successfully created.');
+            showNotification('success', 'SUCCESS: Packaging created.');
         } else {
             showNotification('error', result.message);
         }
@@ -132,7 +132,7 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
         const result = await apiRequest(endpoint, 'PUT', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully updated.');
+            showNotification('success', 'SUCCESS: Packaging updated.');
             searchEntities();
         } else {
             showNotification('error', result.message);

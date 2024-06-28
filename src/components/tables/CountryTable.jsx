@@ -79,7 +79,7 @@ export default function CountriesTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully deleted.');
+            showNotification('success', 'SUCCESS: Country deleted.');
             searchEntities();
         } else {
             showNotification('error', result.message);
@@ -116,7 +116,7 @@ export default function CountriesTable() {
     
         if (result.success) {
             searchEntities();
-            showNotification('success', 'Record successfully created.');
+            showNotification('success', 'SUCCESS: Country created.');
         } else {
             showNotification('error', result.message);
         }
@@ -129,7 +129,7 @@ export default function CountriesTable() {
         const result = await apiRequest(endpoint, 'PUT', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully updated.');
+            showNotification('success', 'SUCCESS: Country updated.');
             searchEntities();
         } else {
             showNotification('error', result.message);

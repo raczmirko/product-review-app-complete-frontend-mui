@@ -122,7 +122,7 @@ export default function ReviewTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully deleted.');
+            showNotification('success', 'SUCCESS: Review deleted.');
             searchEntities();
         } else {
             showNotification('error', result.message);
@@ -157,7 +157,7 @@ export default function ReviewTable() {
         else {
             const result = await apiRequest(endpoint, 'PUT', requestBody);
             if (result.success) {
-                showNotification('success', 'Record successfully updated.');
+                showNotification('success', 'SUCCESS: Review updated.');
                 searchEntities();
             } else {
                 showNotification('error', result.message);
@@ -199,7 +199,7 @@ export default function ReviewTable() {
         const response = await apiRequest(endpoint, 'POST', requestBody);
     
         if (response.success) {
-            showNotification('success', 'Review aspect scores successfully saved.');
+            showNotification('success', 'SUCCESS: Review aspect scores saved.');
             searchEntities();
         } else {
             showNotification('error', response.message);

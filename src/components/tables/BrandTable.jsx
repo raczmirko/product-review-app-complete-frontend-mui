@@ -91,7 +91,7 @@ export default function BrandTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully deleted.');
+            showNotification('success', 'SUCCESS: Brand deleted.');
             searchEntities();
         } else {
             showNotification('error', result.message);
@@ -129,7 +129,7 @@ export default function BrandTable() {
     
         if (result.success) {
             searchEntities();
-            showNotification('success', 'Record successfully created.');
+            showNotification('success', 'SUCCESS: Brand created.');
         } else {
             showNotification('error', result.message);
         }
@@ -142,7 +142,7 @@ export default function BrandTable() {
         const result = await apiRequest(endpoint, 'PUT', requestBody);
     
         if (result.success) {
-            showNotification('success', 'Record successfully updated.');
+            showNotification('success', 'SUCCESS: Brand updated.');
             searchEntities();
         } else {
             showNotification('error', result.message);
