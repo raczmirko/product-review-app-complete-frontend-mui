@@ -1,4 +1,4 @@
-import NotificationService from './NotificationService';
+import notificationUtil from '../util/notificationUtil';
 
 export const apiRequest = async (endpoint, method, requestBody) => {
     const token = localStorage.getItem('token');
@@ -15,7 +15,7 @@ export const apiRequest = async (endpoint, method, requestBody) => {
         });
 
         if (!response.ok) {
-            const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
+            const errorMessage = notificationUtil.getCustomNotification(response.status, await response.text());
             throw new Error(errorMessage);
         }
 
