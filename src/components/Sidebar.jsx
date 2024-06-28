@@ -1,9 +1,10 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ArticleIcon from '@mui/icons-material/BrunchDining';
 import CategoryIcon from '@mui/icons-material/Category';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ProductIcon from '@mui/icons-material/EmojiSymbols';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import ProductIcon from '@mui/icons-material/EmojiSymbols';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -14,7 +15,6 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import CharacteristicsIcon from '@mui/icons-material/Style';
-import ArticleIcon from '@mui/icons-material/BrunchDining';
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -32,6 +32,7 @@ import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { useNotification } from '../services/NotificationService';
 
 const drawerWidth = 240;
 
@@ -105,6 +106,7 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
   const [open, setOpen] = React.useState(false);
   const [formattedTime, setFormattedTime] = useState("");
   const [username, setUsername] = useState("");
+  const showNotification = useNotification();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -112,6 +114,11 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+  
+  const handleLogout = () => {
+    showNotification('info', 'INFO: You have been logged out.');
+    logOut();
   };
 
   useEffect(() => {
@@ -138,8 +145,8 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
 
               // If remainingSeconds is 0, call logOut and clear the interval
               if (remainingSeconds === 0) {
-                  logOut();
-                  clearInterval(timer);
+                handleLogout();
+                clearInterval(timer);
               }
           }, 1000);
       }
@@ -237,7 +244,7 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
             <ListItem key={"Logout"} disablePadding sx={{ display: 'block' }}>
               {
                   isLoggedIn && 
-                  <ListItemButton onClick={logOut}
+                  <ListItemButton onClick={handleLogout}
                   sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',

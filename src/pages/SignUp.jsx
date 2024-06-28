@@ -12,9 +12,9 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CopyrightTypography from '../components/CopyrightTypography';
 import CountrySelector from '../components/selectors/CountrySelector';
 import { useNotification } from '../services/NotificationService';
-import CopyrightTypography from '../components/CopyrightTypography';
 
 const defaultTheme = createTheme();
 
@@ -37,25 +37,25 @@ export default function SignUp() {
     const checkPasswordValidity = (e) => {
         e.preventDefault();
         if(password !== passwordAgain) {
-            const errorText = "The two passwords do not match!";
+            const errorText = "ERROR: The two passwords do not match!";
             console.error(errorText);
             showNotification('error', errorText);
             return;
         }
         if(!/[A-Z]/.test(password)) {
-            const errorText = "The password must contain at least one capital letter!";
+            const errorText = "ERROR: The password must contain at least one capital letter!";
             console.error(errorText);
             showNotification('error', errorText);
             return;
         }
         if(!/[0-9]/.test(password)) {
-            const errorText = "The password must contain at least one number!";
+            const errorText = "ERROR: The password must contain at least one number!";
             console.error(errorText);
             showNotification('error', errorText);
             return;
         }
          if (!/[^A-Za-z0-9]/.test(password)) {
-            const errorText = "The password must contain at least one special character!";
+            const errorText = "ERROR: The password must contain at least one special character!";
             console.error(errorText);
             showNotification('error', errorText);
             return;

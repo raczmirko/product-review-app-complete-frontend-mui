@@ -3,36 +3,32 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import AlertSnackBar from './components/AlertSnackBar';
 import ParticleBackground from './components/ParticleBackground';
 import Sidebar from './components/Sidebar';
 import Articles from './pages/Articles';
+import Aspects from './pages/Aspects';
 import Brands from './pages/Brands';
 import Categories from './pages/Categories';
 import Characteristics from './pages/Characteristics';
 import Countries from './pages/Countries';
 import Dashboard from './pages/Dashboard';
 import Packagings from './pages/Packagings';
-import Aspects from './pages/Aspects';
-import SignInSide from './pages/SignIn';
-import SignUp from './pages/SignUp';
 import Products from './pages/Products';
 import Reviews from './pages/Reviews';
+import SignInSide from './pages/SignIn';
+import SignUp from './pages/SignUp';
 import { NotificationProvider } from './services/NotificationService';
 
 const darkTheme = createTheme({
     palette: {
       mode: 'dark',
     },
-  });
+});
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
     const [expiryTime, setExpiryTime] = useState(null);
-    const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackBarText, setSnackBarText] = useState('');
-    const [snackBarStatus, setSnackBarStatus] = useState('info');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -48,13 +44,6 @@ const App = () => {
     const handleLogin = async () => {
         await fetchSessionLengthAndUsername();
         setIsLoggedIn(true);
-        showSnackBar('success', 'You have logged in successfully.');
-    }
-
-    function showSnackBar (status, text) {
-        setSnackBarOpen(true);
-        setSnackBarStatus(status);
-        setSnackBarText(text);
     }
 
     const fetchSessionLengthAndUsername = async () => {
@@ -85,7 +74,6 @@ const App = () => {
             localStorage.removeItem('username');}
         localStorage.removeItem('sessionExpiryTime');
         setIsLoggedIn(false);
-        showSnackBar('info', 'You have been logged out.');
         navigate('/login');
     }
 

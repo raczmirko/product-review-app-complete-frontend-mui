@@ -12,26 +12,25 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useNotification } from '../services/NotificationService';
-import { getCopyrightText } from '../util/stringUtil'; 
 import CopyrightTypography from '../components/CopyrightTypography';
+import { useNotification } from '../services/NotificationService';
 
 const defaultTheme = createTheme();
 
-export default function SignInSide({ onLogin, isLoggedIn }) {
+const SignInSide = ({ onLogin, isLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState();
   const [isUsernameLoaded, setIsUsernameLoaded] = useState(false);
-  const { showNotification } = useNotification();
+  const showNotification = useNotification();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if(!isLoggedIn){checkIfUsernameIsRemembered();}
   }, [isLoggedIn]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     sessionStorage.setItem('rememberMe', rememberMe);
   }, [rememberMe]);
 
@@ -97,6 +96,7 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
             throw new Error('Login failed');
         }
         onLogin();
+        showNotification('success', 'SUCCESS: You have been logged in.');
         return;
     })
     .catch(error => {
@@ -104,7 +104,6 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
             const error = 'Network error. The server might be down.';
             console.error(error);
             showNotification('error', error);
-            
         } else {
             console.error('Error during login:', error);
         }
@@ -203,3 +202,5 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
     </ThemeProvider>
   );
 }
+
+export default SignInSide;
