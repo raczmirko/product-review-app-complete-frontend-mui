@@ -13,8 +13,8 @@ import {
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { apiRequest } from '../../services/CrudService';
+import { useNotification } from '../../services/NotificationService';
 import ProductImageService from '../../services/ProductImageService';
-import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbarNoAdd';
 import AssignCharacteristicValueModal from '../modals/AssignCharacteristicValueModal';
@@ -58,19 +58,11 @@ export default function ProductTable() {
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
     
-    const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackBarText, setSnackBarText] = useState('');
-    const [snackBarStatus, setSnackBarStatus] = useState('info');
-
     const [endtityId, setEntityId] = useState('');
     const [idOfActionRowCategory, setIdOfActionRowCategory] = useState(undefined);
     const [product, setProduct] = useState(undefined);
 
-    function showSnackBar (status, text) {
-        setSnackBarOpen(true);
-        setSnackBarStatus(status);
-        setSnackBarText(text);
-    }
+    const showNotification = useNotification();
 
     useEffect(() => {
         searchEntities();
@@ -104,7 +96,7 @@ export default function ProductTable() {
             setReviewModalActive(!reviewModalActive);
         }
         else {
-            showSnackBar('error', 'You already have a review for this product. Go the the review table to view it!');
+            showNotification('error', 'ERROR: You already have a review for this product. Go the the review table to view it!');
         }
     }
 
@@ -117,16 +109,16 @@ export default function ProductTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'Record successfully deleted.');
+            showNotification('success', 'Record successfully deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
     const deleteEntities = async (ids) => {
         if (rowSelectionModel === undefined || rowSelectionModel.length === 0) {
-            showSnackBar("error", "No records are selected!");
+            showNotification("error", "No records are selected!");
             return;
         }
 
@@ -136,10 +128,10 @@ export default function ProductTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'All records have been successfully deleted.');
+            showNotification('success', 'All records have been successfully deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -158,10 +150,10 @@ export default function ProductTable() {
         const response = await apiRequest(endpoint, 'POST', requestBody);
     
         if (response.success) {
-            showSnackBar('success', 'Review successfully created.');
+            showNotification('success', 'Review successfully created.');
             return { success: true, product:  response.data };
         } else {
-            showSnackBar('error', response.message);
+            showNotification('error', response.message);
             return { success: false, message: response.message };
         }
     };
@@ -174,10 +166,10 @@ export default function ProductTable() {
         const response = await apiRequest(endpoint, 'POST', requestBody);
     
         if (response.success) {
-            showSnackBar('success', 'Review successfully created.');
+            showNotification('success', 'Review successfully created.');
             return { success: true, product:  response.data };
         } else {
-            showSnackBar('error', response.message);
+            showNotification('error', response.message);
             return { success: false, message: response.message };
         }
     };
@@ -200,9 +192,9 @@ export default function ProductTable() {
         const response = await ProductImageService.uploadProductImages(productId, images);
     
         if (response.success) {
-            showSnackBar('success', 'Product images successfully uploaded.');
+            showNotification('success', 'Product images successfully uploaded.');
         } else {
-            showSnackBar('error', 'Error during image upload.');
+            showNotification('error', 'Error during image upload.');
         }
     };
 
@@ -217,10 +209,10 @@ export default function ProductTable() {
         const response = await apiRequest(endpoint, 'POST', requestBody);
     
         if (response.success) {
-            showSnackBar('success', 'Product successfully created.');
+            showNotification('success', 'Product successfully created.');
             return { success: true, productId:  response.data };
         } else {
-            showSnackBar('error', response.message);
+            showNotification('error', response.message);
             return { success: false, message: response.message };
         }
     }
@@ -247,7 +239,7 @@ export default function ProductTable() {
             setTotalElements(result.data.totalElements);
             setLoading(false);
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -405,7 +397,6 @@ export default function ProductTable() {
 
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
-            <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             {characteristicsModalActive && <AssignCharacteristicValueModal
                 isOpen={characteristicsModalActive}
                 setIsOpen={setCharacteristicsModalActive}

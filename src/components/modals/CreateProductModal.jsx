@@ -1,6 +1,6 @@
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import LinkIcon from '@mui/icons-material/Link';
-import { Card, CardContent, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -16,13 +16,14 @@ import { useEffect, useState } from 'react';
 import ArticleService from '../../services/ArticleService';
 import CharacteristicService from '../../services/CharacteristicService';
 import PackagingService from '../../services/PackagingService';
+import VisuallyHiddenInput from '../VisuallyHiddenInput';
 import ModalButton from '../buttons/ModalButton';
+import ArticleCard from '../cards/ArticleCard';
 import PackagingSelector from '../selectors/PackagingSelector';
 import PackagingTable from '../tables/PackagingTable';
-import ArticleCard from '../cards/ArticleCard';
-import VisuallyHiddenInput from '../VisuallyHiddenInput';
+import ProductService from '../../services/ProductService';
 
-const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, createFunction, uploadImageFunction, assignCharacteristicValueFunction }) => {
+const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showNotification }) => {
 
     const [article, setArticle] = useState('');
     const [packaging, setPackaging] = useState('');
@@ -65,6 +66,16 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
         setIsOpen(false);
         closeFunction();
     }
+    
+    const handleCreate = async () => {
+        const result = await ProductService.createProductFull(article, packaging, characteristicAndValue, images);
+        if (result.success) {
+            showNotification('success', result.message);
+        } else {
+            showNotification('error', result.message);
+        }
+        handleClose();
+    }
 
     const togglePackagingComponent = () => {
         setShowPackagingTable((prevShow) => !prevShow);
@@ -104,32 +115,6 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
             );
         });
     }
-
-    const handleCreate = async () => {
-        try {
-            // Create the product and get the product
-            const response = await createFunction(article, packaging);
-            
-            if (response.success === true) {
-                if(images.length > 0){
-                    // Create Product API returns the created product as message
-                    uploadImageFunction(response.product.id, images);
-                }
-                characteristicAndValue.forEach((characteristic, index) => {
-                    if(characteristic.value !== ''){
-                        let product = response.product;
-                        let char = inheritedCharacteristics.find(c => c.id === characteristic.id);
-                        let value = characteristic.value;
-                        assignCharacteristicValueFunction(product, char, value);
-                    }
-                });
-            }
-            handleClose();
-        } catch (error) {
-            // Handle errors
-            console.error('Error creating product:', error);
-        }
-    };
 
     const renderPackagingToggleButton = () => {
         if (selectedPage === 'structure') {
@@ -171,9 +156,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
             case 'structure':
                 return (
                     <Box>
-                        <Typography variant="subtitle2" component="div" gutterBottom>
-                            Product structure:
-                        </Typography>
+                        <Typography variant="subtitle2" component="div" gutterBottom>Product structure:</Typography>
                         <Grid container spacing={2} alignItems="center" justifyContent="center" direction={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}>
                             <Grid item xs={12} md={5}>
                                 <ArticleCard article={article} />

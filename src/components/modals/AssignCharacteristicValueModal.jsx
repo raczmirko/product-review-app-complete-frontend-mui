@@ -11,12 +11,15 @@ import { useEffect, useState } from 'react';
 import CharacteristicService from '../../services/CharacteristicService';
 import ProductCharacteristicValueService from '../../services/ProductCharacteristicValueService';
 import ModalButton from '../buttons/ModalButton';
+import ProductService from '../../services/ProductService';
+import { useNotification } from '../../services/NotificationService';
 
-const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, assignCharacteristicValueFunction }) => {
+const AssignCharacteristicValueModal = ({ product, closeFunction, isOpen, setIsOpen }) => {
 
     const [inheritedCharacteristics, setInheritedCharacteristics] = useState([]);
     const [characteristicsAndValues, setCharacteristicsAndValues] = useState([]);
     const [loading, setLoading] = useState(false);
+    const showNotification = useNotification();
 
     const handleClose = () => {
         setIsOpen(false);
@@ -62,18 +65,11 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, assignC
     }
 
     const handleCreate = async () => {
-        try {
-            characteristicsAndValues.forEach((characteristic, index) => {
-                if(characteristic.value !== ''){
-                    let char = inheritedCharacteristics.find(c => c.id === characteristic.id);
-                    let value = characteristic.value;
-                    assignCharacteristicValueFunction(product, char, value);
-                }
-            });
-            handleClose();
-        } catch (error) {
-            // Handle errors
-            console.error('Error assigning characteristic values:', error);
+        const response = await ProductService.assignProductCharacteristicValues(product, characteristicsAndValues);
+        if (response.success) {
+            
+        } else {
+            return {success: false};
         }
     }
 
@@ -137,4 +133,4 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, assignC
     );
 };
 
-export default CreateProductModal;
+export default AssignCharacteristicValueModal;

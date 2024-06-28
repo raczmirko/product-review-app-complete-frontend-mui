@@ -14,25 +14,18 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
-import {
-    DataGrid,
-    GridActionsCellItem,
-    GridRowEditStopReasons,
-    GridRowModes,
-    useGridApiContext
-} from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridRowEditStopReasons, GridRowModes, useGridApiContext } from '@mui/x-data-grid';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import EditToolbar from '../../components/EditToolbar';
 import BrandService from '../../services/BrandService';
 import CategoryService from '../../services/CategoryService';
 import { apiRequest } from '../../services/CrudService';
-import ProductImageService from '../../services/ProductImageService';
 import { getModifiedRowDifference } from '../../util/stringUtil';
 import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreateArticleModal from '../modals/CreateArticleModal';
-import AssignPackagingModal from '../modals/CreateProductModal';
+import CreateProductModal from '../modals/CreateProductModal';
 import ListAspectsModal from '../modals/ListAspectsModal';
 import ListCharacteristicsModal from '../modals/ListCharacteristicsModal';
 
@@ -63,10 +56,7 @@ export default function ArticleTable() {
     const [confirmationDialogFunction, setConfirmationDialogFunction] = useState(null);
     const [confirmationDialogFunctionParams, setConfirmationDialogFunctionParams] = useState([]);
 
-    const [paginationModel, setPaginationModel] = useState({
-        page: 0,
-        pageSize: 10,
-      });
+    const [paginationModel, setPaginationModel] = useState({page: 0, pageSize: 10});
     const [filterModel, setFilterModel] = useState({ items: [] });
     const [sortModel, setSortModel] = useState([]); 
     const [rowModesModel, setRowModesModel] = useState({});
@@ -180,61 +170,6 @@ export default function ArticleTable() {
             showSnackBar('error', result.message);
         }
     };
-
-    const createProduct = async (article, packaging) => {
-        if (packaging === '') {
-            let errorMessage = 'ERROR: Packaging cannot be empty.';
-            showSnackBar('error', errorMessage);
-            return { success: false, message: errorMessage };
-        }
-        else {
-            const endpoint = 'http://localhost:8080/product/create';
-            const requestBody = {
-                article: article,
-                packaging: packaging
-            };
-        
-            const response = await apiRequest(endpoint, 'POST', requestBody);
-        
-            if (response.success) {
-                showSnackBar('success', 'Product successfully created.');
-                return { success: true, product:  response.data };
-            } else {
-                showSnackBar('error', response.message);
-                return { success: false, message: response.message };
-            }
-        }
-    };
-
-    const uploadProductImages = async (productId, images) => {
-        
-        const response = await ProductImageService.uploadProductImages(productId, images);
-    
-        if (response.success) {
-            showSnackBar('success', 'Product images successfully uploaded.');
-        } else {
-            showSnackBar('error', 'Error during image upload.');
-        }
-    };
-
-    const assignCharacteristicValueFunction = async (product, characteristic, value) => {
-        const endpoint = 'http://localhost:8080/product-characteristic-value/create';
-        const requestBody = {
-            product: product,
-            characteristic: characteristic,
-            value: value
-        };
-    
-        const response = await apiRequest(endpoint, 'POST', requestBody);
-    
-        if (response.success) {
-            showSnackBar('success', 'Product successfully created.');
-            return { success: true, productId:  response.data };
-        } else {
-            showSnackBar('error', response.message);
-            return { success: false, message: response.message };
-        }
-    }
 
     const modifyEntity = async (newArticle) => {
         const endpoint = `http://localhost:8080/article/${newArticle.id}/modify`;
@@ -602,14 +537,12 @@ export default function ArticleTable() {
                 closeFunction={toggleShowCreationModal}
                 createEntityFunction={createArticle}
             />}
-            {createProductModalActive && <AssignPackagingModal
+            {createProductModalActive && <CreateProductModal
                 isOpen={createProductModalActive}
                 setIsOpen={setCreateProductModalActive}
                 articleId={idOfActionRow}
                 closeFunction={toggleShowCreateProductModal}
-                createFunction={createProduct}
-                uploadImageFunction={uploadProductImages}
-                assignCharacteristicValueFunction={assignCharacteristicValueFunction}
+                showNotification={showSnackBar}
             />}
             {characteristicsModalActive && <ListCharacteristicsModal
                 isOpen={characteristicsModalActive}

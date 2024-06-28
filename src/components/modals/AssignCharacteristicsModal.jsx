@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import CategoryService from '../../services/CategoryService';
 import CharacteristicService from '../../services/CharacteristicService';
-import NotificationService from '../../services/NotificationService';
+import { useNotification } from '../../services/NotificationService';
 import ModalButton from '../buttons/ModalButton';
 
 const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
@@ -28,6 +28,7 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
     const [filter, setFilter] = useState('');
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
+    const showNotification = useNotification();
     
     const modifyEntity = async (newCategory) => {
         const token = localStorage.getItem('token');
@@ -44,8 +45,9 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
             });
 
             if (!response.ok) {
-                const errorMessage = NotificationService.getCustomNotification(response.status, await response.text());
-                throw new Error('Failed to update category.');
+                let message = 'Failed to update category.';
+                showNotification('error', message)
+                throw new Error(message);
             }
         } catch (error) {
             console.error('Error modifying category:', error);
