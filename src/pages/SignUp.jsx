@@ -12,8 +12,8 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AlertSnackBar from '../components/AlertSnackBar';
 import CountrySelector from '../components/selectors/CountrySelector';
+import { useNotification } from '../services/NotificationService';
 
 function Copyright(props) {
   return (
@@ -35,16 +35,8 @@ export default function SignUp() {
     const [password, setPassword] = useState('');
     const [passwordAgain, setPasswordAgain] = useState('');
     const [selectedCountry, setSelectedCountry] = useState('');
-    const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackBarText, setSnackBarText] = useState('');
-    const [snackBarStatus, setSnackBarStatus] = useState('info');
     const navigate = useNavigate();
-
-    function showSnackBar (status, text) {
-        setSnackBarOpen(true);
-        setSnackBarStatus(status);
-        setSnackBarText(text);
-    }
+    const showNotification = useNotification();
 
     const getNotificationTextByStatusCode = (code) => {
         let text = code + ": An error occurred, please try again later!";
@@ -59,25 +51,25 @@ export default function SignUp() {
         if(password !== passwordAgain) {
             const errorText = "The two passwords do not match!";
             console.error(errorText);
-            showSnackBar('error', errorText);
+            showNotification('error', errorText);
             return;
         }
         if(!/[A-Z]/.test(password)) {
             const errorText = "The password must contain at least one capital letter!";
             console.error(errorText);
-            showSnackBar('error', errorText);
+            showNotification('error', errorText);
             return;
         }
         if(!/[0-9]/.test(password)) {
             const errorText = "The password must contain at least one number!";
             console.error(errorText);
-            showSnackBar('error', errorText);
+            showNotification('error', errorText);
             return;
         }
          if (!/[^A-Za-z0-9]/.test(password)) {
             const errorText = "The password must contain at least one special character!";
             console.error(errorText);
-            showSnackBar('error', errorText);
+            showNotification('error', errorText);
             return;
         }
         else {
@@ -103,7 +95,7 @@ export default function SignUp() {
         })
         .then(response => {
             if (!response.ok) {
-                showSnackBar('error', getNotificationTextByStatusCode(response.status));
+                showNotification('error', getNotificationTextByStatusCode(response.status));
                 throw new Error('Registration failed');
             }
             else {
@@ -115,21 +107,20 @@ export default function SignUp() {
 
     const redirectToLoginPage = () => {
         let time = 3;
-        showSnackBar('success', `Registration successful, redirecting to login page in ${time}...`);
+        showNotification('success', `Registration successful, redirecting to login page in ${time}...`);
         const intervalId = setInterval(() => {
             if (time === 0) {
                 clearInterval(intervalId);
                 navigate('/login');
             } else {
                 time--;
-                showSnackBar('success', `Registration successful, redirecting to login page in ${time}...`);
+                showNotification('success', `Registration successful, redirecting to login page in ${time}...`);
             }
         }, 1000);
     };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-        <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
         <Box sx={{
             display: 'flex',
             alignItems: 'center',

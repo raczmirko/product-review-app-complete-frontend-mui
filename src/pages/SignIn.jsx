@@ -1,20 +1,20 @@
-import * as React from 'react';
-import { useState } from 'react';
-import  { Navigate } from 'react-router-dom'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import CssBaseline from '@mui/material/CssBaseline';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import AlertSnackBar from '../components/AlertSnackBar';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
+import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useNotification } from '../services/NotificationService';
 
 function Copyright(props) {  
   return (
@@ -36,9 +36,7 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState();
   const [isUsernameLoaded, setIsUsernameLoaded] = useState(false);
-  const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const [snackBarText, setSnackBarText] = useState('');
-  const [snackBarStatus, setSnackBarStatus] = useState('info');
+  const { showNotification } = useNotification();
 
   React.useEffect(() => {
     if(!isLoggedIn){checkIfUsernameIsRemembered();}
@@ -66,12 +64,6 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
       setRememberMe(false);
     }
     setIsUsernameLoaded(true);
-  }
-
-  function showSnackBar (status, text) {
-    setSnackBarOpen(true);
-    setSnackBarStatus(status);
-    setSnackBarText(text);
   }
 
   function alertTextByStatusCode (code) {
@@ -112,7 +104,7 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
         }
 
         if (!response.ok) {
-            showSnackBar('error', alertTextByStatusCode(response.status));
+            showNotification('error', alertTextByStatusCode(response.status));
             throw new Error('Login failed');
         }
         onLogin();
@@ -122,7 +114,7 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
         if (error instanceof TypeError) {
             const error = 'Network error. The server might be down.';
             console.error(error);
-            showSnackBar('error', error);
+            showNotification('error', error);
             
         } else {
             console.error('Error during login:', error);
@@ -132,7 +124,6 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
