@@ -11,7 +11,6 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import ArticleService from '../../services/ArticleService';
@@ -21,6 +20,7 @@ import ModalButton from '../buttons/ModalButton';
 import PackagingSelector from '../selectors/PackagingSelector';
 import PackagingTable from '../tables/PackagingTable';
 import ArticleCard from '../cards/ArticleCard';
+import VisuallyHiddenInput from '../VisuallyHiddenInput';
 
 const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, createFunction, uploadImageFunction, assignCharacteristicValueFunction }) => {
 
@@ -32,18 +32,6 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
     const [selectedPage, setSelectedPage] = useState('structure');
     const [showPackagingTable, setShowPackagingTable] = useState(false);
     const [images, setImages] = React.useState([]);
-
-    const VisuallyHiddenInput = styled('input')({
-        clip: 'rect(0 0 0 0)',
-        clipPath: 'inset(50%)',
-        height: 1,
-        overflow: 'hidden',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        whiteSpace: 'nowrap',
-        width: 1,
-    });
 
     const handlePageChange = (event, newPage) => {
         if (newPage !== null) {
