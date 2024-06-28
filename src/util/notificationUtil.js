@@ -1,4 +1,4 @@
-class NotificationService {
+class NotificationUtil {
     static getCustomNotification = (code, message) => {
         let text = code + ": " + message;
         if(code === 400 && (message === undefined || message.length === 0 || message === null)) {
@@ -20,4 +20,4 @@ class NotificationService {
     }
 }
 
-export default NotificationService;
+export default NotificationUtil;
