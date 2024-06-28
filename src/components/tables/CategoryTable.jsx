@@ -1,5 +1,6 @@
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import AddLinkIcon from '@mui/icons-material/AddLink';
+import AddAspectIcon from '@mui/icons-material/AddToPhotos';
 import CancelIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
@@ -12,6 +13,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Select from '@mui/material/Select';
+import Tooltip from '@mui/material/Tooltip';
 import {
     DataGrid,
     GridActionsCellItem,
@@ -24,15 +26,13 @@ import { useEffect, useState } from 'react';
 import EditToolbar from '../../components/EditToolbar';
 import CategoryService from '../../services/CategoryService';
 import { apiRequest } from '../../services/CrudService';
+import { useNotification } from '../../services/NotificationService';
 import { getModifiedRowDifference } from '../../util/stringUtil';
-import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
+import AssignAspectModal from '../modals/AssignAspectModal';
 import AssignCharacteristicsModal from '../modals/AssignCharacteristicsModal';
 import CategoryTreeModal from '../modals/CategoryTreeModal';
 import CreateCategoryModal from '../modals/CreateCategoryModal';
-import Tooltip from '@mui/material/Tooltip';
-import AddAspectIcon from '@mui/icons-material/AddToPhotos';
-import AssignAspectModal from '../modals/AssignAspectModal';
 
 export default function CategoryTable() {
 
@@ -75,15 +75,7 @@ export default function CategoryTable() {
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
     
-    const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackBarText, setSnackBarText] = useState('');
-    const [snackBarStatus, setSnackBarStatus] = useState('info');
-
-    function showSnackBar (status, text) {
-        setSnackBarOpen(true);
-        setSnackBarStatus(status);
-        setSnackBarText(text);
-    }
+    const showNotification = useNotification();
 
     useEffect(() => {
         // Fetch categories when the component mounts
@@ -134,16 +126,16 @@ export default function CategoryTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'Record successfully deleted.');
+            showNotification('success', 'SUCCESS: Category deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
     const deleteEntities = async (ids) => {
         if (rowSelectionModel === undefined || rowSelectionModel.length === 0) {
-            showSnackBar("error", "No records are selected!");
+            showNotification("error", "No records are selected!");
             return;
         }
 
@@ -153,10 +145,10 @@ export default function CategoryTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'All records have been successfully deleted.');
+            showNotification('success', 'All records have been successfully deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -172,9 +164,9 @@ export default function CategoryTable() {
     
         if (result.success) {
             searchEntities();
-            showSnackBar('success', 'Record successfully created.');
+            showNotification('success', 'SUCCESS: Category created.');
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -190,9 +182,9 @@ export default function CategoryTable() {
     
         if (result.success) {
             searchEntities();
-            showSnackBar('success', 'Aspect successfully created.');
+            showNotification('success', 'SUCCESS: Aspect assigned.');
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -203,10 +195,10 @@ export default function CategoryTable() {
         const result = await apiRequest(endpoint, 'PUT', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'Record successfully updated.');
+            showNotification('success', 'SUCCESS: Category updated.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -232,7 +224,7 @@ export default function CategoryTable() {
             setTotalElements(result.data.totalElements);
             setLoading(false);
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -516,12 +508,11 @@ export default function CategoryTable() {
 
     const handleProcessRowUpdateError = (error) => {
         console.error('Error updating row:', error);
-        showSnackBar('error', error.message)
+        showNotification('error', error.message)
     };
 
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
-            <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             {creationModalActive && <CreateCategoryModal
                 isOpen={creationModalActive}
                 setIsOpen={setCreationModalActive}

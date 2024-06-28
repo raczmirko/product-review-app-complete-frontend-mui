@@ -21,8 +21,8 @@ import EditToolbar from '../../components/EditToolbar';
 import BrandService from '../../services/BrandService';
 import CategoryService from '../../services/CategoryService';
 import { apiRequest } from '../../services/CrudService';
+import { useNotification } from '../../services/NotificationService';
 import { getModifiedRowDifference } from '../../util/stringUtil';
-import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreateArticleModal from '../modals/CreateArticleModal';
 import CreateProductModal from '../modals/CreateProductModal';
@@ -64,21 +64,13 @@ export default function ArticleTable() {
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
     
-    const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackBarText, setSnackBarText] = useState('');
-    const [snackBarStatus, setSnackBarStatus] = useState('info');
-
     const [leafCategories, setLeafCategories] = useState([]);
     const [brands, setBrands] = useState([]);
 
     const [idOfActionRow, setIdOfActionRow] = useState('');
     const [idOfActionRowCategory, setIdOfActionRowCategory] = useState(undefined);
 
-    function showSnackBar (status, text) {
-        setSnackBarOpen(true);
-        setSnackBarStatus(status);
-        setSnackBarText(text);
-    }
+    const showNotification = useNotification();
 
     useEffect(() => {
         // Fetch categories and brands when the component mounts
@@ -126,16 +118,16 @@ export default function ArticleTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'Record successfully deleted.');
+            showNotification('success', 'SUCCESS: Article deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
     const deleteEntities = async (ids) => {
         if (rowSelectionModel === undefined || rowSelectionModel.length === 0) {
-            showSnackBar("error", "No records are selected!");
+            showNotification("error", "No records are selected!");
             return;
         }
 
@@ -145,10 +137,10 @@ export default function ArticleTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'All records have been successfully deleted.');
+            showNotification('success', 'All records have been successfully deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -165,9 +157,9 @@ export default function ArticleTable() {
     
         if (result.success) {
             searchEntities();
-            showSnackBar('success', 'Record successfully created.');
+            showNotification('success', 'SUCCESS: Article created.');
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -178,10 +170,10 @@ export default function ArticleTable() {
         const result = await apiRequest(endpoint, 'PUT', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'Record successfully updated.');
+            showNotification('success', 'SUCCESS: Article updated.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -207,7 +199,7 @@ export default function ArticleTable() {
             setTotalElements(result.data.totalElements);
             setLoading(false);
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -529,7 +521,6 @@ export default function ArticleTable() {
 
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
-            <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             {creationModalActive && <CreateArticleModal
                 isOpen={creationModalActive}
                 setIsOpen={setCreationModalActive}
@@ -542,7 +533,7 @@ export default function ArticleTable() {
                 setIsOpen={setCreateProductModalActive}
                 articleId={idOfActionRow}
                 closeFunction={toggleShowCreateProductModal}
-                showNotification={showSnackBar}
+                showNotification={showNotification}
             />}
             {characteristicsModalActive && <ListCharacteristicsModal
                 isOpen={characteristicsModalActive}

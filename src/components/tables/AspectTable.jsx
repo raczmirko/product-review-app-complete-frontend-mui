@@ -21,13 +21,12 @@ import {
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import EditToolbar from '../../components/EditToolbar';
-import CountryService from '../../services/CountryService';
+import CategoryService from '../../services/CategoryService';
 import { apiRequest } from '../../services/CrudService';
+import { useNotification } from '../../services/NotificationService';
 import { getModifiedRowDifference } from '../../util/stringUtil';
-import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreateAspectModal from '../modals/CreateAspectModal';
-import CategoryService from '../../services/CategoryService';
 
 export default function AspectTable() {
 
@@ -64,17 +63,9 @@ export default function AspectTable() {
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
     
-    const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackBarText, setSnackBarText] = useState('');
-    const [snackBarStatus, setSnackBarStatus] = useState('info');
-
     const [categories, setCategories] = useState([]);
 
-    function showSnackBar (status, text) {
-        setSnackBarOpen(true);
-        setSnackBarStatus(status);
-        setSnackBarText(text);
-    }
+    const showNotification = useNotification();
 
     useEffect(() => {
         // Fetch countries when the component mounts
@@ -100,16 +91,16 @@ export default function AspectTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'Record successfully deleted.');
+            showNotification('success', 'SUCCESS: Aspect deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
     const deleteEntities = async (ids) => {
         if (rowSelectionModel === undefined || rowSelectionModel.length === 0) {
-            showSnackBar("error", "No records are selected!");
+            showNotification("error", "No records are selected!");
             return;
         }
 
@@ -119,10 +110,10 @@ export default function AspectTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'All records have been successfully deleted.');
+            showNotification('success', 'All aspects have been successfully deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -138,9 +129,9 @@ export default function AspectTable() {
     
         if (result.success) {
             searchEntities();
-            showSnackBar('success', 'Record successfully created.');
+            showNotification('success', 'SUCCESS: Aspect created.');
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -151,10 +142,10 @@ export default function AspectTable() {
         const result = await apiRequest(endpoint, 'PUT', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'Record successfully updated.');
+            showNotification('success', 'SUCCESS: Aspect updated.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -180,7 +171,7 @@ export default function AspectTable() {
             setTotalElements(result.data.totalElements);
             setLoading(false);
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -440,7 +431,6 @@ export default function AspectTable() {
 
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
-            <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             {creationModalActive && <CreateAspectModal
                 isOpen={creationModalActive}
                 setIsOpen={setModalActive}

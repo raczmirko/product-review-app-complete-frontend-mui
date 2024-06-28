@@ -18,6 +18,7 @@ import SignInSide from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Products from './pages/Products';
 import Reviews from './pages/Reviews';
+import { NotificationProvider } from './services/NotificationService';
 
 const darkTheme = createTheme({
     palette: {
@@ -90,74 +91,75 @@ const App = () => {
 
     return (
         <ThemeProvider theme={darkTheme}>
-            <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
-            <CssBaseline />
-            <Sidebar isLoggedIn={isLoggedIn} expiryTime={expiryTime} logOut={logOut}/>
-            <Routes>
-                <Route path="/dashboard" element={
-                    <div>
-                        <Dashboard />
-                    </div>
-                } />
-                <Route path="/login" element={
-                    <div>
-                        <SignInSide onLogin={handleLogin} isLoggedIn={isLoggedIn} />
-                    </div>
-                } />
-                <Route path="/register" element={
-                    <div>
-                        <Container sx={{position: 'absolute', zIndex:-1}}>
-                            <ParticleBackground/>
-                        </Container>
-                        <SignUp />
-                    </div>
-                } />
-                <Route path="/brands" element={
-                    <div>
-                        <Brands />
-                    </div>
-                } />
-                <Route path="/countries" element={
-                    <div>
-                        <Countries />
-                    </div>
-                } />
-                <Route path="/categories" element={
-                    <div>
-                        <Categories />
-                    </div>
-                } />
-                <Route path="/characteristics" element={
-                    <div>
-                        <Characteristics />
-                    </div>
-                } />
-                <Route path="/articles" element={
-                    <div>
-                        <Articles />
-                    </div>
-                } />
-                <Route path="/packagings" element={
-                    <div>
-                        <Packagings />
-                    </div>
-                } />
-                <Route path="/aspects" element={
-                    <div>
-                        <Aspects />
-                    </div>
-                } />
-                <Route path="/products" element={
-                    <div>
-                        <Products />
-                    </div>
-                } />
-                <Route path="/reviews" element={
-                    <div>
-                        <Reviews />
-                    </div>
-                } />
-            </Routes>
+            <NotificationProvider>
+                <CssBaseline />
+                <Sidebar isLoggedIn={isLoggedIn} expiryTime={expiryTime} logOut={logOut}/>
+                <Routes>
+                    <Route path="/dashboard" element={
+                        <div>
+                            <Dashboard />
+                        </div>
+                    } />
+                    <Route path="/login" element={
+                        <div>
+                            <SignInSide onLogin={handleLogin} isLoggedIn={isLoggedIn} />
+                        </div>
+                    } />
+                    <Route path="/register" element={
+                        <div>
+                            <Container sx={{position: 'absolute', zIndex:-1}}>
+                                <ParticleBackground/>
+                            </Container>
+                            <SignUp />
+                        </div>
+                    } />
+                    <Route path="/brands" element={
+                        <div>
+                            <Brands />
+                        </div>
+                    } />
+                    <Route path="/countries" element={
+                        <div>
+                            <Countries />
+                        </div>
+                    } />
+                    <Route path="/categories" element={
+                        <div>
+                            <Categories />
+                        </div>
+                    } />
+                    <Route path="/characteristics" element={
+                        <div>
+                            <Characteristics />
+                        </div>
+                    } />
+                    <Route path="/articles" element={
+                        <div>
+                            <Articles />
+                        </div>
+                    } />
+                    <Route path="/packagings" element={
+                        <div>
+                            <Packagings />
+                        </div>
+                    } />
+                    <Route path="/aspects" element={
+                        <div>
+                            <Aspects />
+                        </div>
+                    } />
+                    <Route path="/products" element={
+                        <div>
+                            <Products />
+                        </div>
+                    } />
+                    <Route path="/reviews" element={
+                        <div>
+                            <Reviews />
+                        </div>
+                    } />
+                </Routes>
+            </NotificationProvider>
         </ThemeProvider>
     )
 }

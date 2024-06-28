@@ -1,7 +1,9 @@
 import CancelIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
+import PageviewIcon from '@mui/icons-material/Pageview';
 import SaveIcon from '@mui/icons-material/Save';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import { Checkbox, FormControlLabel, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -23,15 +25,12 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import CountryService from '../../services/CountryService';
 import { apiRequest } from '../../services/CrudService';
+import { useNotification } from '../../services/NotificationService';
 import { getModifiedRowDifference } from '../../util/stringUtil';
-import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbarNoAdd';
-import PageviewIcon from '@mui/icons-material/Pageview';
-import ViewReviewModal from '../modals/ViewReviewModal';
 import AssignReviewAspectValueModal from '../modals/AssignReviewAspectValueModal';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
-
+import ViewReviewModal from '../modals/ViewReviewModal';
 
 export default function ReviewTable() {
 
@@ -68,13 +67,11 @@ export default function ReviewTable() {
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
     
-    const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackBarText, setSnackBarText] = useState('');
-    const [snackBarStatus, setSnackBarStatus] = useState('info');
-
     const [countries, setCountries] = useState([]);
 
     const [reviewToView, setReviewToView] = useState({});
+
+    const showNotification = useNotification();
 
     const toggleReviewModalOpen = (review) => {
         setReviewToView(review);
@@ -84,12 +81,6 @@ export default function ReviewTable() {
     const toggleAssignReviewAspectValueOpen = (review) => {
         setReviewToView(review);
         setAssignAspectValueModalOpen(true);
-    }
-
-    function showSnackBar (status, text) {
-        setSnackBarOpen(true);
-        setSnackBarStatus(status);
-        setSnackBarText(text);
     }
 
     useEffect(() => {
@@ -131,16 +122,16 @@ export default function ReviewTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'Record successfully deleted.');
+            showNotification('success', 'Record successfully deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
     const deleteEntities = async () => {
         if (rowSelectionModel === undefined || rowSelectionModel.length === 0) {
-            showSnackBar("error", "No records are selected!");
+            showNotification("error", "No records are selected!");
             return;
         }
 
@@ -150,10 +141,10 @@ export default function ReviewTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'All records have been successfully deleted.');
+            showNotification('success', 'All records have been successfully deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -161,15 +152,15 @@ export default function ReviewTable() {
         const endpoint = `http://localhost:8080/review-head/${username}/${newReview.product.id}/modify`;
         const requestBody = newReview;
         if (!username) {
-            showSnackBar('error', 'Login username cannot be found, please log in again!')
+            showNotification('error', 'Login username cannot be found, please log in again!')
         }
         else {
             const result = await apiRequest(endpoint, 'PUT', requestBody);
             if (result.success) {
-                showSnackBar('success', 'Record successfully updated.');
+                showNotification('success', 'Record successfully updated.');
                 searchEntities();
             } else {
-                showSnackBar('error', result.message);
+                showNotification('error', result.message);
             }
         }
     };
@@ -197,7 +188,7 @@ export default function ReviewTable() {
             setTotalElements(result.data.totalElements);
             setLoading(false);
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -208,10 +199,10 @@ export default function ReviewTable() {
         const response = await apiRequest(endpoint, 'POST', requestBody);
     
         if (response.success) {
-            showSnackBar('success', 'Review aspect scores successfully saved.');
+            showNotification('success', 'Review aspect scores successfully saved.');
             searchEntities();
         } else {
-            showSnackBar('error', response.message);
+            showNotification('error', response.message);
         }
     };
 
@@ -576,7 +567,6 @@ export default function ReviewTable() {
 
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
-            <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             {confirmationDialogOpen && <ConfirmationDialog 
                 dialogTitle={confirmationDialogTitle}
                 dialogDescription={confirmationDialogDescription}

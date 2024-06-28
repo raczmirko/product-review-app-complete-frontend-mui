@@ -9,6 +9,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Tooltip from '@mui/material/Tooltip';
 import {
     DataGrid,
     GridActionsCellItem,
@@ -19,11 +20,10 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import EditToolbar from '../../components/EditToolbar';
 import { apiRequest } from '../../services/CrudService';
+import { useNotification } from '../../services/NotificationService';
 import { getModifiedRowDifference } from '../../util/stringUtil';
-import AlertSnackBar from '../AlertSnackBar';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreateCountryModal from '../modals/CreateCountryModal';
-import Tooltip from '@mui/material/Tooltip';
 
 export default function CountriesTable() {
 
@@ -60,15 +60,7 @@ export default function CountriesTable() {
 
     const [quickFilterValues, setQuickFilterValues] = useState('');
     
-    const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackBarText, setSnackBarText] = useState('');
-    const [snackBarStatus, setSnackBarStatus] = useState('info');
-
-    function showSnackBar (status, text) {
-        setSnackBarOpen(true);
-        setSnackBarStatus(status);
-        setSnackBarText(text);
-    }
+    const showNotification = useNotification();
 
     useEffect(() => {
         searchEntities();
@@ -87,16 +79,16 @@ export default function CountriesTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'Record successfully deleted.');
+            showNotification('success', 'Record successfully deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
     const deleteEntities = async (ids) => {
         if (rowSelectionModel === undefined || rowSelectionModel.length === 0) {
-            showSnackBar("error", "No records are selected!");
+            showNotification("error", "No records are selected!");
             return;
         }
 
@@ -106,10 +98,10 @@ export default function CountriesTable() {
         const result = await apiRequest(endpoint, 'POST', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'All records have been successfully deleted.');
+            showNotification('success', 'All records have been successfully deleted.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -124,9 +116,9 @@ export default function CountriesTable() {
     
         if (result.success) {
             searchEntities();
-            showSnackBar('success', 'Record successfully created.');
+            showNotification('success', 'Record successfully created.');
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -137,10 +129,10 @@ export default function CountriesTable() {
         const result = await apiRequest(endpoint, 'PUT', requestBody);
     
         if (result.success) {
-            showSnackBar('success', 'Record successfully updated.');
+            showNotification('success', 'Record successfully updated.');
             searchEntities();
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -166,7 +158,7 @@ export default function CountriesTable() {
             setTotalElements(result.data.totalElements);
             setLoading(false);
         } else {
-            showSnackBar('error', result.message);
+            showNotification('error', result.message);
         }
     };
 
@@ -368,7 +360,6 @@ export default function CountriesTable() {
 
     return (
         <Box sx={{ height: '100%', width: '100%', bgcolor:'black' }}>
-            <AlertSnackBar alertType={snackBarStatus} alertText={snackBarText} isOpen={snackBarOpen} setIsOpen={setSnackBarOpen}/>
             {creationModalActive && <CreateCountryModal
                 isOpen={creationModalActive}
                 setIsOpen={setCreationModalActive}
