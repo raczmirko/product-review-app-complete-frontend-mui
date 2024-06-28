@@ -20,6 +20,7 @@ import PackagingService from '../../services/PackagingService';
 import ModalButton from '../buttons/ModalButton';
 import PackagingSelector from '../selectors/PackagingSelector';
 import PackagingTable from '../tables/PackagingTable';
+import ArticleCard from '../cards/ArticleCard';
 
 const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, createFunction, uploadImageFunction, assignCharacteristicValueFunction }) => {
 
@@ -108,13 +109,6 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
         }
     }, [isOpen]);
 
-    function truncateDescription(text) {
-        if (text && text.length > 25) {
-            return text.substring(0, 25) + '...';
-        }
-        return text;
-    }
-
     const modifyCharacteristicValue = (characteristicId, value) => {
         setCharacteristicAndValue((prevCharacteristics) => {
             return prevCharacteristics.map(char => 
@@ -194,17 +188,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, creat
                         </Typography>
                         <Grid container spacing={2} alignItems="center" justifyContent="center" direction={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}>
                             <Grid item xs={12} md={5}>
-                                {article && (
-                                    <Card sx={{ minWidth: 275, backgroundColor: '#81BE83', padding: 2, overflow: 'auto' }}>
-                                        <CardContent>
-                                            <Typography variant="h5" color="black" gutterBottom>{article.name}</Typography>
-                                            <Typography variant="body2" color="black">ID: {article.id}</Typography>
-                                            <Typography variant="body2" color="black">Brand: {article.brand.name}</Typography>
-                                            <Typography variant="body2" color="black">Category: {article.category.name}</Typography>
-                                            <Typography variant="body2" color="black">Description: {truncateDescription(article.description)}</Typography>
-                                        </CardContent>
-                                    </Card>
-                                )}
+                                <ArticleCard article={article} />
                             </Grid>
                             <Grid item xs={12} md={1} container justifyContent="center">
                                 <LinkIcon fontSize="large" />
