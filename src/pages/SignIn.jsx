@@ -15,19 +15,8 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useNotification } from '../services/NotificationService';
-
-function Copyright(props) {  
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Product Review Application by Mirkó Rácz
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { getCopyrightText } from '../util/stringUtil'; 
+import CopyrightTypography from '../components/CopyrightTypography';
 
 const defaultTheme = createTheme();
 
@@ -204,7 +193,7 @@ export default function SignInSide({ onLogin, isLoggedIn }) {
                       </Link>
                     </Grid>
                   </Grid>
-                  <Copyright sx={{ mt: 5 }} />
+                  <CopyrightTypography/>
                 </>
               )}
             </Box>

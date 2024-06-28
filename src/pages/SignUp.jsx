@@ -14,19 +14,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CountrySelector from '../components/selectors/CountrySelector';
 import { useNotification } from '../services/NotificationService';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Product Review Application by Mirkó Rácz
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import CopyrightTypography from '../components/CopyrightTypography';
 
 const defaultTheme = createTheme();
 
@@ -196,7 +184,7 @@ export default function SignUp() {
                             </Grid>
                         </Grid>
                     </Box>
-                    <Copyright sx={{ mt: 5 }} />
+                    <CopyrightTypography/>
                 </Box>
             </Container>
         </Box>
