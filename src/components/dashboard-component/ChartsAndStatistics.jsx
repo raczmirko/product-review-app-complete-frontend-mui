@@ -1,19 +1,19 @@
+import { Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Grid from '@mui/material/Unstable_Grid2';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import BarChartRecordCounts from './charts/BarChartRecordCounts';
-import BarChartReviewsThisYear from './charts/BarChartReviewsThisYear';
-import PieChartMostActiveUsers from './charts/PieChartMostActiveUsers';
-import BarChartUserReviewsPerCategory from './charts/BarChartUserReviewsPerCategory';
-import ProductCard from './BestRatedProductCard';
 import BestRatedProductsPerBrand from './BestRatedArticlesPerBrandTable';
-import { Divider } from '@mui/material';
+import ProductCard from './BestRatedProductCard';
 import BestRatedProductsPerCategory from './BestRatedProductsPerCategory';
 import UserDomesticProductsGauge from './UserDomesticProductsGauge';
 import WeakAspectsOfMostPopularProductsTable from './WeakAspectsOfMostPopularProductsTable';
+import BarChartRecordCounts from './charts/BarChartRecordCounts';
+import BarChartReviewsThisYear from './charts/BarChartReviewsThisYear';
+import BarChartUserReviewsPerCategory from './charts/BarChartUserReviewsPerCategory';
+import PieChartMostActiveUsers from './charts/PieChartMostActiveUsers';
 import PieChartUserFavBrandProdDist from './charts/PieChartUserFavBrandProdDist';
 
 const ChartsAndStatistics = () => {

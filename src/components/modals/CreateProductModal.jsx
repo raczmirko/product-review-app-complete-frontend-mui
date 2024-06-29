@@ -1,4 +1,3 @@
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import LinkIcon from '@mui/icons-material/Link';
 import { Grid } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -16,13 +15,12 @@ import { useEffect, useState } from 'react';
 import ArticleService from '../../services/ArticleService';
 import CharacteristicService from '../../services/CharacteristicService';
 import PackagingService from '../../services/PackagingService';
-import VisuallyHiddenInput from '../VisuallyHiddenInput';
+import ProductService from '../../services/ProductService';
+import ImageUploadButton from '../buttons/ImageUploadButton';
 import ModalButton from '../buttons/ModalButton';
 import ArticleCard from '../cards/ArticleCard';
 import PackagingSelector from '../selectors/PackagingSelector';
 import PackagingTable from '../tables/PackagingTable';
-import ProductService from '../../services/ProductService';
-import ImageUploadButton from '../buttons/ImageUploadButton';
 
 const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showNotification }) => {
 

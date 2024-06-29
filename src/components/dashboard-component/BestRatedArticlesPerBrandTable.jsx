@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import DashboardService from '../../services/DashboardService';
 import DataDisplayTable from '../tables/DataDisplayTable';
 

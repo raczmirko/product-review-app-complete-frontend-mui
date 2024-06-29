@@ -1,10 +1,9 @@
-import { Typography } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useEffect, useState } from 'react';
 import DashboardService from '../../../services/DashboardService';
 import COLORS from '../../../util/colorUtil';
-import { Tooltip } from '@mui/material';
 
 const PieChartUserFavBrandProdDist = () => {
     const [pieChartData, setPieChartData] = useState([]);

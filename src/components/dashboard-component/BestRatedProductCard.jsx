@@ -1,9 +1,9 @@
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 import { Box, Button, Card, CardContent, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useState } from 'react';
 import DashboardService from '../../services/DashboardService';
-import CircularProgress from '@mui/material/CircularProgress';
 
 const ProductCard = () => {
     const [products, setProducts] = useState([]);

@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import * as React from 'react';
+import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import CountryService from '../../services/CountryService';
 
 const CountrySelector = ({ selectedCountry, setSelectedCountry }) => {

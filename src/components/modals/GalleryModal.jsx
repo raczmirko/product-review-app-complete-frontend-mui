@@ -1,4 +1,3 @@
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -6,14 +5,12 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { apiRequest } from '../../services/CrudService';
 import ProductImageService from '../../services/ProductImageService';
-import ModalButton from '../buttons/ModalButton';
-import VisuallyHiddenInput from '../VisuallyHiddenInput';
 import ImageUploadButton from '../buttons/ImageUploadButton';
+import ModalButton from '../buttons/ModalButton';
 
 export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen }) {
     

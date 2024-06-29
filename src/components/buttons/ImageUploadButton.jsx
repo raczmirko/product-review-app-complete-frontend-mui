@@ -1,6 +1,6 @@
-import VisuallyHiddenInput from "../VisuallyHiddenInput";
-import { Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { Button } from "@mui/material";
+import VisuallyHiddenInput from "../VisuallyHiddenInput";
 
 const ImageUploadButton = ({ handleFileChange }) => {
     return (
