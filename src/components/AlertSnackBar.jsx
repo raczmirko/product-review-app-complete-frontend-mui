@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import * as React from 'react';
@@ -20,7 +21,7 @@ export default function AlertSnackBar({ alertType, alertText, isOpen, setIsOpen 
           variant="filled"
           sx={{ width: '100%' }}
         >
-          {alertText}
+          <Typography color='white'>{alertText}</Typography>
         </Alert>
       </Snackbar>
     </div>
