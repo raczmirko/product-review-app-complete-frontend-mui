@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import PackagingService from '../../services/PackagingService';
 
-const PackagingSelector = ({ selectedPackaging, setSelectedPackaging, articleId }) => {
+const PackagingSelector = ({ selectedPackaging, setSelectedPackaging, articleId, refreshFlag }) => {
     const [packagings, setPackagings] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -18,7 +18,7 @@ const PackagingSelector = ({ selectedPackaging, setSelectedPackaging, articleId 
                 setIsLoaded(true);
             })
             .catch(error => console.error('Error:', error));
-    }, []);
+    }, [refreshFlag]);
 
     const handleChange = (event) => {
         const selectedId = event.target.value;

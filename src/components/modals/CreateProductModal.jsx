@@ -33,6 +33,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
     const [selectedPage, setSelectedPage] = useState('structure');
     const [showPackagingTable, setShowPackagingTable] = useState(false);
     const [images, setImages] = React.useState([]);
+    const [refreshSelector, setRefreshSelector] = useState(false);
 
     const handlePageChange = (event, newPage) => {
         if (newPage !== null) {
@@ -149,6 +150,10 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
             );
         }
         return null;
+    }; 
+    
+    const refreshPackagingSelector = () => {
+        setRefreshSelector(prev => !prev);
     };    
 
     const renderSelectedPage = () => {
@@ -165,7 +170,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
                                 <LinkIcon fontSize="large" />
                             </Grid>
                             <Grid item xs={12} md={5}>
-                                <PackagingSelector selectedPackaging={packaging} setSelectedPackaging={setPackaging} articleId={articleId}/>
+                            <PackagingSelector selectedPackaging={packaging} setSelectedPackaging={setPackaging} articleId={articleId} refreshFlag={refreshSelector}/>
                             </Grid>
                         </Grid>
                     </Box>
@@ -301,6 +306,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
                 <Box sx={{ textAlign: 'right', mt: 2 }}>
                     {renderImageUploadButton()}
                     {renderPackagingToggleButton()}
+                    <ModalButton buttonText='reload packagings' colorParam='info' onClickParam={refreshPackagingSelector} />
                     <ModalButton buttonText='save' colorParam='success' onClickParam={handleCreate} />
                     <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                 </Box>
