@@ -24,3 +24,17 @@ export const  getModifiedRowDifference = (newRow, oldRow) => {
 
         return changes.trim(); // Remove the trailing newline
 }
+
+export const getLoginErrorByStatus = (statusCode) => {
+    let text = statusCode + ": An error occurred, please try again later!";
+    if(statusCode === 400) {
+        text = statusCode + ": Bad request.";
+    }
+    if(statusCode === 401) {
+        text = statusCode + ": You provided an incorrect password.";
+    }
+    if(statusCode === 404) {
+        text = statusCode + ": This user does not exist.";
+    }
+    return text;
+}

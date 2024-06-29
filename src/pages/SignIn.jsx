@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import CopyrightTypography from '../components/CopyrightTypography';
 import { useNotification } from '../services/NotificationService';
+import { getLoginErrorByStatus } from '../util/stringUtil';
 
 const defaultTheme = createTheme();
 
@@ -54,20 +55,6 @@ const SignInSide = ({ onLogin, isLoggedIn }) => {
     setIsUsernameLoaded(true);
   }
 
-  function alertTextByStatusCode (code) {
-    let text = code + ": An error occurred, please try again later!";
-    if(code === 400) {
-        text = code + ": Bad request.";
-    }
-    if(code === 401) {
-        text = code + ": You provided an incorrect password.";
-    }
-    if(code === 404) {
-        text = code + ": This user does not exist.";
-    }
-    return text;
-  }
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -92,7 +79,7 @@ const SignInSide = ({ onLogin, isLoggedIn }) => {
         }
 
         if (!response.ok) {
-            showNotification('error', alertTextByStatusCode(response.status));
+            showNotification('error', getLoginErrorByStatus(response.status));
             throw new Error('Login failed');
         }
         onLogin();
