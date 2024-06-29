@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { apiRequest } from '../../services/CrudService';
 import ProductImageService from '../../services/ProductImageService';
 import ModalButton from '../buttons/ModalButton';
+import VisuallyHiddenInput from '../VisuallyHiddenInput';
 
 export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen }) {
     
@@ -19,18 +20,6 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
     const [selectedImage, setSelectedImage] = useState(null);
     const [zoomLevel, setZoomLevel] = useState(1);
     const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
-
-    const VisuallyHiddenInput = styled('input')({
-        clip: 'rect(0 0 0 0)',
-        clipPath: 'inset(50%)',
-        height: 1,
-        overflow: 'hidden',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        whiteSpace: 'nowrap',
-        width: 1,
-    });
 
     useEffect(() => {
         setImages(product.productImages);
@@ -93,12 +82,11 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
         return (
             <Button
                 component="label"
-                role={undefined}
                 variant="contained"
                 color="success"
                 tabIndex={-1}
                 startIcon={<CloudUploadIcon />}
-                sx={{ mr: 1 }}
+                sx={{ mr: 1, height: '100%' }}
             >
                 Upload file
                 <VisuallyHiddenInput type="file" multiple onChange={(e) => handleFileChange(e)} />
@@ -120,6 +108,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     maxHeight: '75%',
+                    minHeight: '50%',
                     maxWidth: '80%',
                     bgcolor: 'background.paper',
                     boxShadow: 24,
@@ -261,7 +250,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                         </Box>
                     }
                     </Box>
-                <Box sx={{ textAlign: 'right', mt: 1, display: 'flex', justifyContent: 'flex-end' }}>
+                <Box sx={{ textAlign: 'right', mt: 2, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                     {renderImageUploadButton()}
                     <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                 </Box>
