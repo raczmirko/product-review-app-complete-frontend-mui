@@ -22,6 +22,7 @@ import ArticleCard from '../cards/ArticleCard';
 import PackagingSelector from '../selectors/PackagingSelector';
 import PackagingTable from '../tables/PackagingTable';
 import ProductService from '../../services/ProductService';
+import ImageUploadButton from '../buttons/ImageUploadButton';
 
 const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showNotification }) => {
 
@@ -133,25 +134,6 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
         return null;
     };    
 
-    const renderImageUploadButton = () => {
-        if (selectedPage === 'images') {
-            return (
-                <Button
-                    component="label"
-                    role={undefined}
-                    variant="contained"
-                    tabIndex={-1}
-                    startIcon={<CloudUploadIcon />}
-                    sx={{ mr: 1 }}
-                >
-                    Upload file
-                    <VisuallyHiddenInput type="file" multiple onChange={(e) => handleFileChange(e)} />
-                </Button>
-            );
-        }
-        return null;
-    }; 
-    
     const refreshPackagingSelector = () => {
         setRefreshSelector(prev => !prev);
     };    
@@ -304,7 +286,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
                     </Box>
                 }
                 <Box sx={{ textAlign: 'right', mt: 2 }}>
-                    {renderImageUploadButton()}
+                    <ImageUploadButton handleFileChange={handleFileChange} />
                     {renderPackagingToggleButton()}
                     <ModalButton buttonText='reload packagings' colorParam='info' onClickParam={refreshPackagingSelector} />
                     <ModalButton buttonText='save' colorParam='success' onClickParam={handleCreate} />

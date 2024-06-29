@@ -13,6 +13,7 @@ import { apiRequest } from '../../services/CrudService';
 import ProductImageService from '../../services/ProductImageService';
 import ModalButton from '../buttons/ModalButton';
 import VisuallyHiddenInput from '../VisuallyHiddenInput';
+import ImageUploadButton from '../buttons/ImageUploadButton';
 
 export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen }) {
     
@@ -77,22 +78,6 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
         const y = ((e.clientY - top) / height) * 100;
         setZoomPosition({ x, y });
     };
-
-    const renderImageUploadButton = () => {
-        return (
-            <Button
-                component="label"
-                variant="contained"
-                color="success"
-                tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
-                sx={{ mr: 1, height: '100%' }}
-            >
-                Upload file
-                <VisuallyHiddenInput type="file" multiple onChange={(e) => handleFileChange(e)} />
-            </Button>
-        );
-    };    
 
     return (
         <Modal
@@ -251,7 +236,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
                     }
                     </Box>
                 <Box sx={{ textAlign: 'right', mt: 2, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                    {renderImageUploadButton()}
+                    <ImageUploadButton handleFileChange={handleFileChange} />
                     <ModalButton buttonText='close' colorParam='secondary' onClickParam={handleClose} />
                 </Box>
             </Box>
