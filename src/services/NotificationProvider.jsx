@@ -1,5 +1,3 @@
-// src/services/NotificationService.js
-
 import React, { createContext, useContext, useState } from 'react';
 import AlertSnackBar from '../components/AlertSnackBar';
 

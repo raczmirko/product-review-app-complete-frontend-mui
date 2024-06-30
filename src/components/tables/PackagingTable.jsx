@@ -20,7 +20,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import EditToolbar from '../../components/EditToolbar';
 import { apiRequest } from '../../services/CrudService';
-import { useNotification } from '../../services/NotificationService';
+import { useNotification } from '../../services/NotificationProvider';
 import { getModifiedRowDifference } from '../../util/stringUtil';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreatePackagingModal from '../modals/CreatePackagingModal';

@@ -15,7 +15,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import CopyrightTypography from '../components/CopyrightTypography';
-import { useNotification } from '../services/NotificationService';
+import { useNotification } from '../services/NotificationProvider';
 import { getLoginErrorByStatus } from '../util/stringUtil';
 
 const defaultTheme = createTheme();

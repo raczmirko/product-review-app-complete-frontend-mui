@@ -25,7 +25,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import CountryService from '../../services/CountryService';
 import { apiRequest } from '../../services/CrudService';
-import { useNotification } from '../../services/NotificationService';
+import { useNotification } from '../../services/NotificationProvider';
 import { getModifiedRowDifference } from '../../util/stringUtil';
 import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbarNoAdd';

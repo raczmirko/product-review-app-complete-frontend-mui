@@ -17,7 +17,7 @@ import Products from './pages/Products';
 import Reviews from './pages/Reviews';
 import SignInSide from './pages/SignIn';
 import SignUp from './pages/SignUp';
-import { NotificationProvider } from './services/NotificationService';
+import { NotificationProvider } from './services/NotificationProvider';
 
 const darkTheme = createTheme({
     palette: {

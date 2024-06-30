@@ -13,7 +13,7 @@ import {
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { apiRequest } from '../../services/CrudService';
-import { useNotification } from '../../services/NotificationService';
+import { useNotification } from '../../services/NotificationProvider';
 import ProductImageService from '../../services/ProductImageService';
 import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbarNoAdd';

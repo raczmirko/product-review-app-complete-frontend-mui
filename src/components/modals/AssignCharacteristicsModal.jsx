@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import CategoryService from '../../services/CategoryService';
 import CharacteristicService from '../../services/CharacteristicService';
-import { useNotification } from '../../services/NotificationService';
+import { useNotification } from '../../services/NotificationProvider';
 import ModalButton from '../buttons/ModalButton';
 
 const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {

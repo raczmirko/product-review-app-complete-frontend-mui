@@ -21,7 +21,7 @@ import EditToolbar from '../../components/EditToolbar';
 import BrandService from '../../services/BrandService';
 import CategoryService from '../../services/CategoryService';
 import { apiRequest } from '../../services/CrudService';
-import { useNotification } from '../../services/NotificationService';
+import { useNotification } from '../../services/NotificationProvider';
 import { getModifiedRowDifference } from '../../util/stringUtil';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreateArticleModal from '../modals/CreateArticleModal';

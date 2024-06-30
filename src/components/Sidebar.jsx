@@ -32,7 +32,7 @@ import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useNotification } from '../services/NotificationService';
+import { useNotification } from '../services/NotificationProvider';
 
 const drawerWidth = 240;
 

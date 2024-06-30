@@ -26,7 +26,7 @@ import { useEffect, useState } from 'react';
 import EditToolbar from '../../components/EditToolbar';
 import CategoryService from '../../services/CategoryService';
 import { apiRequest } from '../../services/CrudService';
-import { useNotification } from '../../services/NotificationService';
+import { useNotification } from '../../services/NotificationProvider';
 import { getModifiedRowDifference } from '../../util/stringUtil';
 import ConfirmationDialog from '../ConfirmationDialog';
 import AssignAspectModal from '../modals/AssignAspectModal';

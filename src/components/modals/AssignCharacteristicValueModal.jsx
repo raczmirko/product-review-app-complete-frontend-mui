@@ -12,7 +12,7 @@ import CharacteristicService from '../../services/CharacteristicService';
 import ProductCharacteristicValueService from '../../services/ProductCharacteristicValueService';
 import ModalButton from '../buttons/ModalButton';
 import ProductService from '../../services/ProductService';
-import { useNotification } from '../../services/NotificationService';
+import { useNotification } from '../../services/NotificationProvider';
 
 const AssignCharacteristicValueModal = ({ product, closeFunction, isOpen, setIsOpen }) => {
 

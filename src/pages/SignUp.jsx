@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CopyrightTypography from '../components/CopyrightTypography';
 import CountrySelector from '../components/selectors/CountrySelector';
-import { useNotification } from '../services/NotificationService';
+import { useNotification } from '../services/NotificationProvider';
 
 const defaultTheme = createTheme();
 
