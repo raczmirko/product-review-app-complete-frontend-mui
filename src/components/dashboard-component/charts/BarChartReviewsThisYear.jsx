@@ -11,7 +11,7 @@ const BarChartReviewsThisYear = () => {
 
     useEffect(() => {
         DashboardService.getThisYearsReviews()
-        .then(data => setChartData(data))
+        .then(data => setChartData(data || []))
         .catch(error => console.error('Error:', error))
         .finally(() => setIsLoaded(true));
     }, [])

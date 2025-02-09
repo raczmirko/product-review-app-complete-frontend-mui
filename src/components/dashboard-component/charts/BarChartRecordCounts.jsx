@@ -11,7 +11,7 @@ const BarChartRecordCounts = () => {
 
     useEffect(() => {
         DashboardService.getRecordAmounts()
-        .then(data => setAmounts(data))
+        .then(data => setAmounts(data || {}))
         .catch(error => console.error('Error:', error))
         .finally(() => setIsLoaded(true));
     }, [])
