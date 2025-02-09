@@ -70,7 +70,7 @@ const CreateBrandModal = ({ closeFunction, createEntityFunction, isOpen, setIsOp
                         fullWidth
                         multiline
                         rows={4}
-                        inputProps={{ maxLength: 100 }}
+                        inputProps={{ maxLength: 1000 }}
                         sx={{ mt: 2, mb: 2 }}
                     />
                     <Box sx={{ textAlign: 'right' }}>
