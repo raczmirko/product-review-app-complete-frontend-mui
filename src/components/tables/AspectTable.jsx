@@ -120,7 +120,7 @@ export default function AspectTable() {
     };
 
     const createEntity = async (name, question, category) => {
-        const endpoint = '${API_BASE_URL}/aspect/create';
+        const endpoint = `${API_BASE_URL}/aspect/create`;
         const requestBody = {
             name: name,
             question: question,

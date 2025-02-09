@@ -147,7 +147,7 @@ export default function ArticleTable() {
     };
 
     const createArticle = async (name, category, brand, description) => {
-        const endpoint = '${API_BASE_URL}/article/create';
+        const endpoint = `${API_BASE_URL}/article/create`;
         const requestBody = {
             name: name,
             category: category,
