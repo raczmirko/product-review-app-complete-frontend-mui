@@ -29,6 +29,8 @@ import CreateCharacteristicModal from '../modals/CreateCharacteristicModal';
 
 export default function CharacteristicTable() {
 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [characteristics, setCharacteristics] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -92,7 +94,7 @@ export default function CharacteristicTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
-        const endpoint = `http://localhost:8080/characteristic/${id}/delete`;
+        const endpoint = `${API_BASE_URL}/characteristic/${id}/delete`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -107,7 +109,7 @@ export default function CharacteristicTable() {
     };
 
     const cascadeDeleteEntity = async (id) => {
-        const endpoint = `http://localhost:8080/characteristic/${id}/cascade-delete`;
+        const endpoint = `${API_BASE_URL}/characteristic/${id}/cascade-delete`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -126,7 +128,7 @@ export default function CharacteristicTable() {
             return;
         }
 
-        const endpoint = `http://localhost:8080/characteristic/multi-delete/${ids}`;
+        const endpoint = `${API_BASE_URL}/characteristic/multi-delete/${ids}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -140,7 +142,7 @@ export default function CharacteristicTable() {
     };
 
     const createEntity = async (name, unitOfMeasure, unitOfMeasureName, description) => {
-        const endpoint = 'http://localhost:8080/characteristic/create';
+        const endpoint = `${API_BASE_URL}/characteristic/create`;
         const requestBody = {
             name: name,
             unitOfMeasure: unitOfMeasure,
@@ -159,7 +161,7 @@ export default function CharacteristicTable() {
     };
 
     const modifyEntity = async (newCharacteristic) => {
-        const endpoint = `http://localhost:8080/characteristic/${newCharacteristic.id}/modify`;
+        const endpoint = `${API_BASE_URL}/characteristic/${newCharacteristic.id}/modify`;
         const requestBody = newCharacteristic;
     
         const result = await apiRequest(endpoint, 'PUT', requestBody);
@@ -183,7 +185,7 @@ export default function CharacteristicTable() {
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        const endpoint = `http://localhost:8080/characteristic/search${queryParams}`;
+        const endpoint = `${API_BASE_URL}/characteristic/search${queryParams}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);

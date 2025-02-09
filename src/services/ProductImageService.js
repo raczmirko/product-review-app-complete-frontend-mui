@@ -1,3 +1,5 @@
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
 class ProductImageService {
     static async uploadProductImages(productId, images) {       
         const formData = new FormData();
@@ -19,7 +21,7 @@ class ProductImageService {
             'Authorization': `Bearer ${token}`
         };
         try {
-            const endpoint = `http://localhost:8080/product-image/${productId}/upload`;
+            const endpoint = `${API_BASE_URL}/product-image/${productId}/upload`;
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers,

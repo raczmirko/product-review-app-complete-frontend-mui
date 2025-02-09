@@ -25,6 +25,8 @@ import ListAspectsModal from '../modals/ListAspectsModal';
 
 export default function ProductTable() {
 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [products, setProducts] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -103,7 +105,7 @@ export default function ProductTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
-        const endpoint = `http://localhost:8080/product/${id}/delete`;
+        const endpoint = `${API_BASE_URL}/product/${id}/delete`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -122,7 +124,7 @@ export default function ProductTable() {
             return;
         }
 
-        const endpoint = `http://localhost:8080/product/multi-delete/${ids}`;
+        const endpoint = `${API_BASE_URL}/product/multi-delete/${ids}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -137,7 +139,7 @@ export default function ProductTable() {
 
     const createReviewHead = async (product, description, recommended, valueForPrice, purchaseCountry) => {
         const username = localStorage.getItem('username');
-        const endpoint = 'http://localhost:8080/review-head/create';
+        const endpoint = `${API_BASE_URL}/review-head/create`;
         const requestBody = {
             username: username,
             product: product,
@@ -160,7 +162,7 @@ export default function ProductTable() {
 
     const createReviewBody = async (product, reviewAspects) => {
         const username = localStorage.getItem('username');
-        const endpoint = `http://localhost:8080/review-head/${username}/${product.id}/attach-review-body`;
+        const endpoint = `${API_BASE_URL}/review-head/${username}/${product.id}/attach-review-body`;
         const requestBody = reviewAspects.filter(aspect => aspect.score !== 0);
 
         const response = await apiRequest(endpoint, 'POST', requestBody);
@@ -176,7 +178,7 @@ export default function ProductTable() {
 
     const checkIfReviewExists = async (product) => {
         const username = localStorage.getItem('username');
-        const endpoint = `http://localhost:8080/review-head/${username}/${product.id}/is-review-possible`;
+        const endpoint = `${API_BASE_URL}/review-head/${username}/${product.id}/is-review-possible`;
 
         const response = await apiRequest(endpoint, 'GET');
     
@@ -199,7 +201,7 @@ export default function ProductTable() {
     };
 
     const assignCharacteristicValueFunction = async (product, characteristic, value) => {
-        const endpoint = 'http://localhost:8080/product-characteristic-value/create';
+        const endpoint = `${API_BASE_URL}/product-characteristic-value/create`;
         const requestBody = {
             product: product,
             characteristic: characteristic,
@@ -228,7 +230,7 @@ export default function ProductTable() {
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        const endpoint = `http://localhost:8080/product/search${queryParams}`;
+        const endpoint = `${API_BASE_URL}/product/search${queryParams}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);

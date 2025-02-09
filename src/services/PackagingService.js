@@ -1,3 +1,5 @@
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
 class PackagingService {
     static async fetchPackagings() {
         const token = localStorage.getItem('token');
@@ -6,7 +8,7 @@ class PackagingService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`http://localhost:8080/packaging/all`, {headers});
+            const response = await fetch(`${API_BASE_URL}/packaging/all`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch packagings.');
             }
@@ -29,7 +31,7 @@ class PackagingService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`http://localhost:8080/packaging/${articleId}/available-options`, {headers});
+            const response = await fetch(`${API_BASE_URL}/packaging/${articleId}/available-options`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch available packagings.');
             }

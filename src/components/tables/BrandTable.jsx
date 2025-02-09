@@ -30,6 +30,8 @@ import CreateBrandModal from '../modals/CreateBrandModal';
 
 export default function BrandTable() {
 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [brands, setBrands] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -85,7 +87,7 @@ export default function BrandTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
-        const endpoint = `http://localhost:8080/brand/${id}/delete`;
+        const endpoint = `${API_BASE_URL}/brand/${id}/delete`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -104,7 +106,7 @@ export default function BrandTable() {
             return;
         }
 
-        const endpoint = `http://localhost:8080/brand/multi-delete/${ids}`;
+        const endpoint = `${API_BASE_URL}/brand/multi-delete/${ids}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -118,7 +120,7 @@ export default function BrandTable() {
     };
 
     const createEntity = async (name, country, description) => {
-        const endpoint = 'http://localhost:8080/brand/create';
+        const endpoint = `${API_BASE_URL}/brand/create`;
         const requestBody = {
             name: name,
             countryOfOrigin: country,
@@ -136,7 +138,7 @@ export default function BrandTable() {
     };
 
     const modifyEntity = async (newBrand) => {
-        const endpoint = `http://localhost:8080/brand/${newBrand.id}/modify`;
+        const endpoint = `${API_BASE_URL}/brand/${newBrand.id}/modify`;
         const requestBody = newBrand;
     
         const result = await apiRequest(endpoint, 'PUT', requestBody);
@@ -160,7 +162,7 @@ export default function BrandTable() {
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        const endpoint = `http://localhost:8080/brand/search${queryParams}`;
+        const endpoint = `${API_BASE_URL}/brand/search${queryParams}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);

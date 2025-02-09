@@ -1,8 +1,10 @@
 import { apiRequest } from "./CrudService";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
 class DashboardService {
     static async getRecordAmounts() {
-        const endpoint = `http://localhost:8080/dashboard/record-amounts`;
+        const endpoint = `${API_BASE_URL}/dashboard/record-amounts`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
@@ -11,7 +13,7 @@ class DashboardService {
     };
 
     static async getMostActiveUsers(userCount) {
-        const endpoint = `http://localhost:8080/dashboard/most-active-users?userCount=${userCount}`;
+        const endpoint = `${API_BASE_URL}/dashboard/most-active-users?userCount=${userCount}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
@@ -20,7 +22,7 @@ class DashboardService {
     };
 
     static async getThisYearsReviews() {
-        const endpoint = `http://localhost:8080/dashboard/reviews-this-year`;
+        const endpoint = `${API_BASE_URL}/dashboard/reviews-this-year`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
@@ -29,7 +31,7 @@ class DashboardService {
     };
 
     static async getUserRatingsPerCategory() {
-        const endpoint = `http://localhost:8080/dashboard/user-reviews-per-category`;
+        const endpoint = `${API_BASE_URL}/dashboard/user-reviews-per-category`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
@@ -38,7 +40,7 @@ class DashboardService {
     };
 
     static async getUserBestRatedProducts() {
-        const endpoint = `http://localhost:8080/dashboard/user-best-rated-products`;
+        const endpoint = `${API_BASE_URL}/dashboard/user-best-rated-products`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
@@ -47,7 +49,7 @@ class DashboardService {
     };
 
     static async getBestRatedProductsPerBrand() {
-        const endpoint = `http://localhost:8080/dashboard/view-most-popular-articles-per-brand`;
+        const endpoint = `${API_BASE_URL}/dashboard/view-most-popular-articles-per-brand`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
@@ -56,7 +58,7 @@ class DashboardService {
     };
 
     static async getBestRatedProductsPerCategory() {
-        const endpoint = `http://localhost:8080/dashboard/view-most-popular-articles-per-category`;
+        const endpoint = `${API_BASE_URL}/dashboard/view-most-popular-articles-per-category`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
@@ -65,7 +67,7 @@ class DashboardService {
     };
     
     static async getUserDomesticProductPercentage() {
-        const endpoint = `http://localhost:8080/dashboard/user-domestic-product-percentage`;
+        const endpoint = `${API_BASE_URL}/dashboard/user-domestic-product-percentage`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
@@ -74,7 +76,7 @@ class DashboardService {
     };
     
     static async getWeakAspectsOfMostPopularProducts() {
-        const endpoint = `http://localhost:8080/dashboard/weak-aspects-of-popular-products`;
+        const endpoint = `${API_BASE_URL}/dashboard/weak-aspects-of-popular-products`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
@@ -83,7 +85,7 @@ class DashboardService {
     };
 
     static async getFavouriteBrandProductDistribution() {
-        const endpoint = `http://localhost:8080/dashboard/favourite-brand-product-distribution`;
+        const endpoint = `${API_BASE_URL}/dashboard/favourite-brand-product-distribution`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);

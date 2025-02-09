@@ -1,3 +1,5 @@
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
 class ArticleService {
     static async fetchArticleById(id) {
         const token = localStorage.getItem('token');
@@ -6,7 +8,7 @@ class ArticleService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`http://localhost:8080/article/${id}`, {headers});
+            const response = await fetch(`${API_BASE_URL}/article/${id}`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch article.');
             }
@@ -29,7 +31,7 @@ class ArticleService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`http://localhost:8080/article/all`, {headers});
+            const response = await fetch(`${API_BASE_URL}/article/all`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch articles.');
             }

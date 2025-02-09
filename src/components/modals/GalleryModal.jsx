@@ -13,6 +13,8 @@ import ImageUploadButton from '../buttons/ImageUploadButton';
 import ModalButton from '../buttons/ModalButton';
 
 export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen }) {
+
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
     
     const [images, setImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -29,7 +31,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
     }
 
     const fetchProduct = async (productId) => {
-        const endpoint = `http://localhost:8080/product/${productId}`;
+        const endpoint = `${API_BASE_URL}/product/${productId}`;
         const requestBody = undefined;
         const result = await apiRequest(endpoint, 'GET', requestBody);
         if(result.success) setImages(result.data.productImages);
@@ -37,7 +39,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
 
     const deleteProductImage = async (imageIndex) => {
         let imageId = images[imageIndex].id;
-        const endpoint = `http://localhost:8080/product-image/${imageId}/delete`;
+        const endpoint = `${API_BASE_URL}/product-image/${imageId}/delete`;
         const requestBody = undefined;
         const result = await apiRequest(endpoint, 'POST', requestBody);
         // Manually remove the image so that re-fetching all images is not neccessary

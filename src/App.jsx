@@ -26,6 +26,9 @@ const darkTheme = createTheme({
 });
 
 const App = () => {
+    
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
     const [expiryTime, setExpiryTime] = useState(null);
@@ -53,7 +56,7 @@ const App = () => {
             'Authorization': `Bearer ${token}`
         };
         try {
-            const response = await fetch('http://localhost:8080/security/session-second', { headers });
+            const response = await fetch(`${API_BASE_URL}/security/session-second`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch session expiry time.');
             }

@@ -21,6 +21,9 @@ import { getLoginErrorByStatus } from '../util/stringUtil';
 const defaultTheme = createTheme();
 
 const SignInSide = ({ onLogin, isLoggedIn }) => {
+
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState();
@@ -63,7 +66,7 @@ const SignInSide = ({ onLogin, isLoggedIn }) => {
         password: password
     };    
 
-    fetch('http://localhost:8080/authenticate', {
+    fetch(`${API_BASE_URL}/authenticate`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

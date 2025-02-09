@@ -30,6 +30,8 @@ import CreateAspectModal from '../modals/CreateAspectModal';
 
 export default function AspectTable() {
 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [aspects, setAspects] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -85,7 +87,7 @@ export default function AspectTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
-        const endpoint = `http://localhost:8080/aspect/${id}/delete`;
+        const endpoint = `${API_BASE_URL}/aspect/${id}/delete`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -104,7 +106,7 @@ export default function AspectTable() {
             return;
         }
 
-        const endpoint = `http://localhost:8080/aspect/multi-delete/${ids}`;
+        const endpoint = `${API_BASE_URL}/aspect/multi-delete/${ids}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -118,7 +120,7 @@ export default function AspectTable() {
     };
 
     const createEntity = async (name, question, category) => {
-        const endpoint = 'http://localhost:8080/aspect/create';
+        const endpoint = '${API_BASE_URL}/aspect/create';
         const requestBody = {
             name: name,
             question: question,
@@ -136,7 +138,7 @@ export default function AspectTable() {
     };
 
     const modifyEntity = async (newEntity) => {
-        const endpoint = `http://localhost:8080/aspect/${newEntity.id}/modify`;
+        const endpoint = `${API_BASE_URL}/aspect/${newEntity.id}/modify`;
         const requestBody = newEntity;
     
         const result = await apiRequest(endpoint, 'PUT', requestBody);
@@ -160,7 +162,7 @@ export default function AspectTable() {
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        const endpoint = `http://localhost:8080/aspect/search${queryParams}`;
+        const endpoint = `${API_BASE_URL}/aspect/search${queryParams}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);

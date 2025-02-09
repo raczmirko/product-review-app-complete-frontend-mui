@@ -1,3 +1,5 @@
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
 class BrandService {
     static async fetchBrands() {
         const token = localStorage.getItem('token');
@@ -6,7 +8,7 @@ class BrandService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch('http://localhost:8080/brand/all', {headers});
+            const response = await fetch(`${API_BASE_URL}/brand/all`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch brands');
             }

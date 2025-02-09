@@ -31,6 +31,8 @@ import ListCharacteristicsModal from '../modals/ListCharacteristicsModal';
 
 export default function ArticleTable() {
 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [articles, setArticles] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -112,7 +114,7 @@ export default function ArticleTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
-        const endpoint = `http://localhost:8080/article/${id}/delete`;
+        const endpoint = `${API_BASE_URL}/article/${id}/delete`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -131,7 +133,7 @@ export default function ArticleTable() {
             return;
         }
 
-        const endpoint = `http://localhost:8080/article/multi-delete/${ids}`;
+        const endpoint = `${API_BASE_URL}/article/multi-delete/${ids}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -145,7 +147,7 @@ export default function ArticleTable() {
     };
 
     const createArticle = async (name, category, brand, description) => {
-        const endpoint = 'http://localhost:8080/article/create';
+        const endpoint = '${API_BASE_URL}/article/create';
         const requestBody = {
             name: name,
             category: category,
@@ -164,7 +166,7 @@ export default function ArticleTable() {
     };
 
     const modifyEntity = async (newArticle) => {
-        const endpoint = `http://localhost:8080/article/${newArticle.id}/modify`;
+        const endpoint = `${API_BASE_URL}/article/${newArticle.id}/modify`;
         const requestBody = newArticle;
     
         const result = await apiRequest(endpoint, 'PUT', requestBody);
@@ -188,7 +190,7 @@ export default function ArticleTable() {
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        const endpoint = `http://localhost:8080/article/search${queryParams}`;
+        const endpoint = `${API_BASE_URL}/article/search${queryParams}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);

@@ -19,6 +19,9 @@ import { useNotification } from '../../services/NotificationProvider';
 import ModalButton from '../buttons/ModalButton';
 
 const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOpen }) => {
+
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [category, setCategory] = useState([]);
     const [inheritedCharacteristics, setInheritedCharacteristics] = useState([]);
     const [checked, setChecked] = useState([]);
@@ -38,7 +41,7 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
         };
 
         try {
-            const response = await fetch(`http://localhost:8080/category/${newCategory.id}/modify`, {
+            const response = await fetch(`${API_BASE_URL}/category/${newCategory.id}/modify`, {
                 method: 'PUT',
                 headers,
                 body: JSON.stringify(newCategory)

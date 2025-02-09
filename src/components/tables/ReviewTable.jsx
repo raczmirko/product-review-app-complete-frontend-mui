@@ -34,6 +34,8 @@ import ViewReviewModal from '../modals/ViewReviewModal';
 
 export default function ReviewTable() {
 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [reviews, setReviews] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -113,7 +115,7 @@ export default function ReviewTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (username, productId) => {
-        const endpoint = `http://localhost:8080/review-head/delete`;
+        const endpoint = `${API_BASE_URL}/review-head/delete`;
         const requestBody = {
             username: username,
             productId: productId
@@ -135,7 +137,7 @@ export default function ReviewTable() {
             return;
         }
 
-        const endpoint = `http://localhost:8080/review-head/multi-delete`;
+        const endpoint = `${API_BASE_URL}/review-head/multi-delete`;
         const requestBody = rowSelectionModel;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -149,7 +151,7 @@ export default function ReviewTable() {
     };
 
     const modifyEntity = async (newReview, username) => {
-        const endpoint = `http://localhost:8080/review-head/${username}/${newReview.product.id}/modify`;
+        const endpoint = `${API_BASE_URL}/review-head/${username}/${newReview.product.id}/modify`;
         const requestBody = newReview;
         if (!username) {
             showNotification('error', 'Login username cannot be found, please log in again!')
@@ -176,7 +178,7 @@ export default function ReviewTable() {
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        const endpoint = `http://localhost:8080/review-head/search${queryParams}`;
+        const endpoint = `${API_BASE_URL}/review-head/search${queryParams}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
@@ -193,7 +195,7 @@ export default function ReviewTable() {
     };
 
     const createReviewBody = async (username, product, reviewAspects) => {
-        const endpoint = `http://localhost:8080/review-head/${username}/${product.id}/attach-review-body`;
+        const endpoint = `${API_BASE_URL}/review-head/${username}/${product.id}/attach-review-body`;
         const requestBody = reviewAspects.filter(aspect => aspect.updated === true);
 
         const response = await apiRequest(endpoint, 'POST', requestBody);

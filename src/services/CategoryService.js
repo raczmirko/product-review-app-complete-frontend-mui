@@ -1,3 +1,5 @@
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
 class CategoryService {
     static async fetchCategories() {
         const token = localStorage.getItem('token');
@@ -6,7 +8,7 @@ class CategoryService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch('http://localhost:8080/category/all', {headers});
+            const response = await fetch(`${API_BASE_URL}/category/all`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch categories');
             }
@@ -29,7 +31,7 @@ class CategoryService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch('http://localhost:8080/category/available-parent-categories', {headers});
+            const response = await fetch(`${API_BASE_URL}/category/available-parent-categories`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch available parent categories');
             }
@@ -52,7 +54,7 @@ class CategoryService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch('http://localhost:8080/category/leaf-categories', {headers});
+            const response = await fetch(`${API_BASE_URL}/category/leaf-categories`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch leaf categories');
             }
@@ -75,7 +77,7 @@ class CategoryService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`http://localhost:8080/category/${id}`, {headers});
+            const response = await fetch(`${API_BASE_URL}/category/${id}`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch category');
             } else {
@@ -95,7 +97,7 @@ class CategoryService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`http://localhost:8080/category-hierarchy/${id}`, {headers});
+            const response = await fetch(`${API_BASE_URL}/category-hierarchy/${id}`, {headers});
             if (!response.ok) {
                 throw new Error('Failed to fetch category tree');
             }

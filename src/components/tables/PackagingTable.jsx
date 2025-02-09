@@ -27,6 +27,8 @@ import CreatePackagingModal from '../modals/CreatePackagingModal';
 
 export default function PackagingTable( {defPageSize, defDensity} ) {
 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [packagings, setPackagings] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(defPageSize);
@@ -92,7 +94,7 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
             return;
         }
 
-        const endpoint = `http://localhost:8080/packaging/multi-delete/${ids}`;
+        const endpoint = `${API_BASE_URL}/packaging/multi-delete/${ids}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -106,7 +108,7 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
     };
 
     const createEntity = async (name, unitOfMeasure, unitOfMeasureName, size, amount) => {
-        const endpoint = 'http://localhost:8080/packaging/create';
+        const endpoint = `${API_BASE_URL}/packaging/create`;
         const requestBody = {
             name: name,
             unitOfMeasure: unitOfMeasure,
@@ -126,7 +128,7 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
     };
 
     const modifyEntity = async (newPackaging) => {
-        const endpoint = `http://localhost:8080/packaging/${newPackaging.id}/modify`;
+        const endpoint = `${API_BASE_URL}/packaging/${newPackaging.id}/modify`;
         const requestBody = newPackaging;
     
         const result = await apiRequest(endpoint, 'PUT', requestBody);
@@ -150,7 +152,7 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        const endpoint = `http://localhost:8080/packaging/search${queryParams}`;
+        const endpoint = `${API_BASE_URL}/packaging/search${queryParams}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);

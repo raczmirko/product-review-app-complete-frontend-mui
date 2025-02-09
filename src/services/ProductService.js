@@ -1,6 +1,8 @@
 import { apiRequest } from "./CrudService";
 import ProductImageService from "./ProductImageService";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
 class ProductService {
     static async createProductFull(article, packaging, characteristics, images) {
         if (packaging === '') {
@@ -28,7 +30,7 @@ class ProductService {
     };
 
     static async createProduct(article, packaging) {
-        const endpoint = 'http://localhost:8080/product/create';
+        const endpoint = `${API_BASE_URL}/product/create`;
         const requestBody = {
             article: article,
             packaging: packaging
@@ -45,7 +47,7 @@ class ProductService {
     };
 
     static async assignProductCharacteristicValue (product, characteristic, value) {
-        const endpoint = 'http://localhost:8080/product-characteristic-value/create';
+        const endpoint = `${API_BASE_URL}/product-characteristic-value/create`;
         const requestBody = {
             product: product,
             characteristic: characteristic,

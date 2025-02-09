@@ -36,6 +36,8 @@ import CreateCategoryModal from '../modals/CreateCategoryModal';
 
 export default function CategoryTable() {
 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [categories, setCategories] = useState([]);
     const [availableParentCaregories, setAvailableParentCategories] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
@@ -120,7 +122,7 @@ export default function CategoryTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
-        const endpoint = `http://localhost:8080/category/${id}/delete`;
+        const endpoint = `${API_BASE_URL}/category/${id}/delete`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -139,7 +141,7 @@ export default function CategoryTable() {
             return;
         }
 
-        const endpoint = `http://localhost:8080/category/multi-delete/${ids}`;
+        const endpoint = `${API_BASE_URL}/category/multi-delete/${ids}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -153,7 +155,7 @@ export default function CategoryTable() {
     };
 
     const createEntity = async (name, parentCategory, description) => {
-        const endpoint = 'http://localhost:8080/category/create';
+        const endpoint = `${API_BASE_URL}/category/create`;
         const requestBody = {
             name: name,
             parentCategory: parentCategory ? parentCategory : undefined,
@@ -171,7 +173,7 @@ export default function CategoryTable() {
     };
 
     const createAssignedAspect = async (name, question, category) => {
-        const endpoint = 'http://localhost:8080/aspect/create';
+        const endpoint = `${API_BASE_URL}/aspect/create`;
         const requestBody = {
             name: name,
             question: question,
@@ -189,7 +191,7 @@ export default function CategoryTable() {
     };
 
     const modifyEntity = async (newCategory) => {
-        const endpoint = `http://localhost:8080/category/${newCategory.id}/modify`;
+        const endpoint = `${API_BASE_URL}/category/${newCategory.id}/modify`;
         const requestBody = newCategory;
     
         const result = await apiRequest(endpoint, 'PUT', requestBody);
@@ -213,7 +215,7 @@ export default function CategoryTable() {
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        const endpoint = `http://localhost:8080/category/search${queryParams}`;
+        const endpoint = `${API_BASE_URL}/category/search${queryParams}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);

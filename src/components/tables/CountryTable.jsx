@@ -27,6 +27,8 @@ import CreateCountryModal from '../modals/CreateCountryModal';
 
 export default function CountriesTable() {
 
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
     const [countries, setCountries] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -73,7 +75,7 @@ export default function CountriesTable() {
     // --- CRUD API calls --- //
 
     const deleteEntity = async (id) => {
-        const endpoint = `http://localhost:8080/country/${id}/delete`;
+        const endpoint = `${API_BASE_URL}/country/${id}/delete`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -92,7 +94,7 @@ export default function CountriesTable() {
             return;
         }
 
-        const endpoint = `http://localhost:8080/country/multi-delete/${ids}`;
+        const endpoint = `${API_BASE_URL}/country/multi-delete/${ids}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'POST', requestBody);
@@ -106,7 +108,7 @@ export default function CountriesTable() {
     };
 
     const createEntity = async (countryCode, name) => {
-        const endpoint = 'http://localhost:8080/country/create';
+        const endpoint = `${API_BASE_URL}/country/create`;
         const requestBody = {
             countryCode: countryCode,
             name: name
@@ -123,7 +125,7 @@ export default function CountriesTable() {
     };
 
     const modifyEntity = async (newCountry) => {
-        const endpoint = `http://localhost:8080/country/${newCountry.countryCode}/modify`;
+        const endpoint = `${API_BASE_URL}/country/${newCountry.countryCode}/modify`;
         const requestBody = newCountry;
     
         const result = await apiRequest(endpoint, 'PUT', requestBody);
@@ -147,7 +149,7 @@ export default function CountriesTable() {
         if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
         if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
 
-        const endpoint = `http://localhost:8080/country/search${queryParams}`;
+        const endpoint = `${API_BASE_URL}/country/search${queryParams}`;
         const requestBody = undefined;
     
         const result = await apiRequest(endpoint, 'GET', requestBody);
