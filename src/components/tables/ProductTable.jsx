@@ -11,10 +11,9 @@ import {
     GridActionsCellItem
 } from '@mui/x-data-grid';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiRequest } from '../../services/CrudService';
 import { useNotification } from '../../services/NotificationProvider';
-import ProductImageService from '../../services/ProductImageService';
 import ConfirmationDialog from '../ConfirmationDialog';
 import EditToolbar from '../EditToolbarNoAdd';
 import AssignCharacteristicValueModal from '../modals/AssignCharacteristicValueModal';
@@ -30,11 +29,9 @@ export default function ProductTable() {
     const [products, setProducts] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const [totalPages, setTotalPages] = useState('');
     const [totalElements, setTotalElements] = useState(0);
     const [searchValue, setSearchValue] = useState('');
     const [searchColumn, setSearchColumn] = useState('');
-    const [searchOperator, setSearchOperator] = useState('');
     const [orderByColumn, setOrderByColumn] = useState('id');
     const [orderByDirection, setOrderByDirection] = useState('asc');
     const [loading, setLoading] = useState(false);
@@ -66,9 +63,34 @@ export default function ProductTable() {
 
     const showNotification = useNotification();
 
+    const searchEntities = useCallback(async () => {
+        if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('id')};
+        if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('asc')};
+
+        setLoading(true);
+
+        let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
+        if (searchValue) queryParams += `&searchText=${searchValue}`;
+        if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
+        if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
+
+        const endpoint = `${API_BASE_URL}/product/search${queryParams}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+    
+        if (result.success) {
+            setProducts(result.data.content);
+            setTotalElements(result.data.totalElements);
+            setLoading(false);
+        } else {
+            showNotification('error', result.message);
+        }
+    }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, API_BASE_URL, showNotification]);
+
     useEffect(() => {
         searchEntities();
-    }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel, galleryModalActive]);
+    }, [searchEntities]);
 
     // --- Modal-related functions --- //
 
@@ -189,17 +211,6 @@ export default function ProductTable() {
         }
     };
 
-    const uploadProductImages = async (productId, images) => {
-        
-        const response = await ProductImageService.uploadProductImages(productId, images);
-    
-        if (response.success) {
-            showNotification('success', 'SUCCESS: Product image(s) uploaded.');
-        } else {
-            showNotification('error', 'Error during image upload.');
-        }
-    };
-
     const assignCharacteristicValueFunction = async (product, characteristic, value) => {
         const endpoint = `${API_BASE_URL}/product-characteristic-value/create`;
         const requestBody = {
@@ -219,32 +230,6 @@ export default function ProductTable() {
         }
     }
 
-    const searchEntities = async () => {
-        if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('id')};
-        if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('asc')};
-
-        setLoading(true);
-
-        let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
-        if (searchValue) queryParams += `&searchText=${searchValue}`;
-        if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
-        if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
-
-        const endpoint = `${API_BASE_URL}/product/search${queryParams}`;
-        const requestBody = undefined;
-    
-        const result = await apiRequest(endpoint, 'GET', requestBody);
-    
-        if (result.success) {
-            setProducts(result.data.content);
-            setTotalPages(result.data.totalPages);
-            setTotalElements(result.data.totalElements);
-            setLoading(false);
-        } else {
-            showNotification('error', result.message);
-        }
-    };
-
     //  --- Pagination, filtering and sorting-related methods --- //
 
     const handleFilterChange = (filterModel) => {
@@ -263,7 +248,6 @@ export default function ProductTable() {
         else {
             setSearchColumn('');
         }
-        if(filterModel.items[0]?.operator){setSearchOperator(filterModel.items[0].operator);}
         if(filterModel.quickFilterValues){setQuickFilterValues(filterModel.quickFilterValues);}
     };
 

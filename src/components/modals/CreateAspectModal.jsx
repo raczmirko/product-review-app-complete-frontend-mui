@@ -11,10 +11,6 @@ const CreateAspectModal = ({ closeFunction, createEntityFunction, isOpen, setIsO
     const [category, setCategory] = useState('');
     const [question, setQuestion] = useState('');
 
-    const handleCategorySelect = (category) => {
-        setCategory(category)
-    }
-
     const handleClose = () => {
         setIsOpen(false);
         closeFunction();

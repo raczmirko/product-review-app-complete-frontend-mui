@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import AspectService from '../../services/AspectService';
 import ModalButton from '../buttons/ModalButton';
 
@@ -10,6 +10,15 @@ const AssignReviewAspectValueModal = ({ review, isOpen, setIsOpen, createReviewB
 
     const [aspects, setAspects] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
+
+    const initAspectScores = useCallback((review, aspects) => {
+        review.reviewBodyItems.forEach(item => {
+            const aspect = aspects.find(aspect => aspect.id === item.id.aspectId);
+            if (aspect) {
+                assignScoreToAspect(aspect.id, item.score);
+            }
+        });
+    }, []);
 
     useEffect(() => {
         AspectService.fetchAspectsByCategory(review.product.article.category.id)
@@ -23,16 +32,7 @@ const AssignReviewAspectValueModal = ({ review, isOpen, setIsOpen, createReviewB
         })
         .catch(error => console.error('Error fetching review aspects:', error))
         .finally(() => setIsLoaded(true))
-    }, [review]);
-
-    function initAspectScores(review, aspects) {
-        review.reviewBodyItems.forEach(item => {
-            const aspect = aspects.find(aspect => aspect.id === item.id.aspectId);
-            if (aspect) {
-                assignScoreToAspect(aspect.id, item.score);
-            }
-        });
-    };
+    }, [review, initAspectScores]);
 
     const handleClose = () => {
         setIsOpen(false);

@@ -30,7 +30,6 @@ const App = () => {
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [username, setUsername] = useState("");
     const [expiryTime, setExpiryTime] = useState(null);
     const navigate = useNavigate();
 
@@ -51,7 +50,6 @@ const App = () => {
 
     const fetchSessionLengthAndUsername = async () => {
         const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-        setUsername(localStorage.getItem('username'));
         const headers = {
             'Authorization': `Bearer ${token}`
         };

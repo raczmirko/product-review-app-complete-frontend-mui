@@ -17,7 +17,7 @@ import {
     GridRowModes
 } from '@mui/x-data-grid';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import EditToolbar from '../../components/EditToolbar';
 import { apiRequest } from '../../services/CrudService';
 import { useNotification } from '../../services/NotificationProvider';
@@ -32,11 +32,9 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
     const [packagings, setPackagings] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(defPageSize);
-    const [totalPages, setTotalPages] = useState('');
     const [totalElements, setTotalElements] = useState(0);
     const [searchValue, setSearchValue] = useState('');
     const [searchColumn, setSearchColumn] = useState('');
-    const [searchOperator, setSearchOperator] = useState('');
     const [orderByColumn, setOrderByColumn] = useState('name');
     const [orderByDirection, setOrderByDirection] = useState('asc');
     const [loading, setLoading] = useState(false);
@@ -64,9 +62,34 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
     
     const showNotification = useNotification();
 
+    const searchEntities = useCallback(async () => {
+        if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('name')};
+        if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('asc')};
+
+        setLoading(true);
+
+        let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
+        if (searchValue) queryParams += `&searchText=${searchValue}`;
+        if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
+        if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
+
+        const endpoint = `${API_BASE_URL}/packaging/search${queryParams}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+    
+        if (result.success) {
+            setPackagings(result.data.content);
+            setTotalElements(result.data.totalElements);
+            setLoading(false);
+        } else {
+            showNotification('error', result.message);
+        }
+    }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, API_BASE_URL, showNotification]);
+
     useEffect(() => {
         searchEntities();
-    }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
+    }, [searchEntities]);
 
     const toggleShowCreationModal = () => {
         setCreationModalActive(!creationModalActive);
@@ -141,32 +164,6 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
         }
     };
 
-    const searchEntities = async () => {
-        if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('name')};
-        if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('asc')};
-
-        setLoading(true);
-
-        let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
-        if (searchValue) queryParams += `&searchText=${searchValue}`;
-        if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
-        if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
-
-        const endpoint = `${API_BASE_URL}/packaging/search${queryParams}`;
-        const requestBody = undefined;
-    
-        const result = await apiRequest(endpoint, 'GET', requestBody);
-    
-        if (result.success) {
-            setPackagings(result.data.content);
-            setTotalPages(result.data.totalPages);
-            setTotalElements(result.data.totalElements);
-            setLoading(false);
-        } else {
-            showNotification('error', result.message);
-        }
-    };
-
     //  --- Pagination, filtering and sorting-related methods --- //
 
     const handleFilterChange = (filterModel) => {
@@ -185,7 +182,6 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
         else {
             setSearchColumn('');
         }
-        if(filterModel.items[0]?.operator){setSearchOperator(filterModel.items[0].operator);}
         if(filterModel.quickFilterValues){setQuickFilterValues(filterModel.quickFilterValues);}
     };
 
@@ -274,7 +270,7 @@ export default function PackagingTable( {defPageSize, defDensity} ) {
 
         try {
             // Make the HTTP request to save in the backend
-            const response = await modifyEntity(newRow);
+            await modifyEntity(newRow);
             resolve(newRow);
             setUpdatePromiseArguments(null);
             searchEntities();

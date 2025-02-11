@@ -20,7 +20,7 @@ const AssignAspectModal = ({ categoryId, closeFunction, createEntityFunction, is
             })
             .catch(error => console.error('Error:', error));
         }
-    }, [isOpen]);
+    }, [isOpen, categoryId]);
 
     useEffect(() => {
         if(name !== null && name !== ''){

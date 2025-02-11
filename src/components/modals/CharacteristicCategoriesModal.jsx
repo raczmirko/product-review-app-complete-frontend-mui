@@ -29,7 +29,7 @@ const ShowCharacteristicCategoriesModal = ({ characteristicId, closeFunction, is
             .then(data => {setCharacteristic(data);})
             .catch(error => console.error('Error:', error));
         }
-    }, [isOpen]);
+    }, [isOpen, characteristicId]);
 
     return (
         <>

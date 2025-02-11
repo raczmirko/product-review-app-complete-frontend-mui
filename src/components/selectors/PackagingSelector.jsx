@@ -18,7 +18,7 @@ const PackagingSelector = ({ selectedPackaging, setSelectedPackaging, articleId,
                 setIsLoaded(true);
             })
             .catch(error => console.error('Error:', error));
-    }, [refreshFlag]);
+    }, [refreshFlag, articleId]);
 
     const handleChange = (event) => {
         const selectedId = event.target.value;

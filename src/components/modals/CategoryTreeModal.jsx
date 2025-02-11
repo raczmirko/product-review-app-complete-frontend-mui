@@ -32,7 +32,7 @@ const CategoryTreeModal = ({ categoryTreeId, closeFunction, isOpen, setIsOpen })
             })
             .catch(error => console.error('Error:', error));
         }
-    }, [isOpen]);
+    }, [isOpen, categoryTreeId]);
 
     return (
         <Modal
