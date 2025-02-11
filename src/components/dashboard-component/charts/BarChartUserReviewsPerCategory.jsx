@@ -7,7 +7,6 @@ import COLORS from '../../../util/colorUtil';
 
 const BarChartUserReviewsPerCategory = () => {
     const [pieChartData, setPieChartData] = useState([]);
-    const [userCount, setUserCount] = useState(3);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
@@ -16,7 +15,7 @@ const BarChartUserReviewsPerCategory = () => {
                 initPieChart(data);
             })
             .catch(error => console.error('Error:', error));
-    }, [userCount]);
+    }, []);
 
     const initPieChart = (data) => {
         setPieChartData(
@@ -28,10 +27,6 @@ const BarChartUserReviewsPerCategory = () => {
             }))
         );
         setIsLoaded(true);
-    }
-
-    const changeUserCount = (amount) => {
-       if(amount > 0) setUserCount(amount);
     }
 
     return (

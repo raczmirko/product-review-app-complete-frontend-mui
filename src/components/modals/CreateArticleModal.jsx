@@ -13,14 +13,6 @@ const CreateArticleModal = ({ closeFunction, createEntityFunction, isOpen, setIs
     const [brand, setBrand] = useState('');
     const [description, setDescription] = useState('');
 
-    const handleCategorySelect = (category) => {
-        setCategory(category)
-    }
-
-    const handleBrandSelect = (brand) => {
-        setBrand(brand)
-    }
-
     const handleClose = () => {
         setIsOpen(false);
         closeFunction();

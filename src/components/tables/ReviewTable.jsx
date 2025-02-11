@@ -22,7 +22,7 @@ import {
     useGridApiContext,
 } from '@mui/x-data-grid';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import CountryService from '../../services/CountryService';
 import { apiRequest } from '../../services/CrudService';
 import { useNotification } from '../../services/NotificationProvider';
@@ -39,11 +39,9 @@ export default function ReviewTable() {
     const [reviews, setReviews] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const [totalPages, setTotalPages] = useState('');
     const [totalElements, setTotalElements] = useState(0);
     const [searchValue, setSearchValue] = useState(localStorage.getItem('username'));
     const [searchColumn, setSearchColumn] = useState('user');
-    const [searchOperator, setSearchOperator] = useState('');
     const [orderByColumn, setOrderByColumn] = useState('date');
     const [orderByDirection, setOrderByDirection] = useState('desc');
     const [loading, setLoading] = useState(false);
@@ -92,9 +90,35 @@ export default function ReviewTable() {
             .catch(error => console.error('Error:', error));
     }, []);
 
+    const searchEntities = useCallback(async () => {
+        if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('date')};
+        if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('desc')};
+
+        setLoading(true);
+
+        let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
+        if (searchValue) queryParams += `&searchText=${searchValue}`;
+        if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
+        if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
+
+        const endpoint = `${API_BASE_URL}/review-head/search${queryParams}`;
+        const requestBody = undefined;
+    
+        const result = await apiRequest(endpoint, 'GET', requestBody);
+    
+        if (result.success) {
+            const reviewsWithIds = generateUniqueIds(result.data.content);
+            setReviews(reviewsWithIds);
+            setTotalElements(result.data.totalElements);
+            setLoading(false);
+        } else {
+            showNotification('error', result.message);
+        }
+    }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, API_BASE_URL, showNotification]);
+
     useEffect(() => {
         searchEntities();
-    }, [searchValue, searchColumn, pageSize, pageNumber, orderByColumn, orderByDirection, quickFilterValues, filterModel]);
+    }, [searchEntities]);
 
     function formatDate(d) {
         const date = new Date(d);
@@ -167,33 +191,6 @@ export default function ReviewTable() {
         }
     };
 
-    const searchEntities = async () => {
-        if (orderByColumn === '' || orderByColumn === undefined) {setOrderByColumn('date')};
-        if (orderByDirection === '' || orderByDirection === undefined) {setOrderByDirection('desc')};
-
-        setLoading(true);
-
-        let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
-        if (searchValue) queryParams += `&searchText=${searchValue}`;
-        if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
-        if (quickFilterValues) queryParams += `&quickFilterValues=${quickFilterValues}`;
-
-        const endpoint = `${API_BASE_URL}/review-head/search${queryParams}`;
-        const requestBody = undefined;
-    
-        const result = await apiRequest(endpoint, 'GET', requestBody);
-    
-        if (result.success) {
-            const reviewsWithIds = generateUniqueIds(result.data.content);
-            setReviews(reviewsWithIds);
-            setTotalPages(result.data.totalPages);
-            setTotalElements(result.data.totalElements);
-            setLoading(false);
-        } else {
-            showNotification('error', result.message);
-        }
-    };
-
     const createReviewBody = async (username, product, reviewAspects) => {
         const endpoint = `${API_BASE_URL}/review-head/${username}/${product.id}/attach-review-body`;
         const requestBody = reviewAspects.filter(aspect => aspect.updated === true);
@@ -262,7 +259,7 @@ export default function ReviewTable() {
         try {
             const username = localStorage.getItem('username');
             // Make the HTTP request to save in the backend
-            const response = await modifyEntity(newRow, username);
+            await modifyEntity(newRow, username);
             resolve(newRow);
             setUpdatePromiseArguments(null);
             searchEntities();
@@ -406,7 +403,6 @@ export default function ReviewTable() {
         else {
             setSearchColumn('');
         }
-        if(filterModel.items[0]?.operator){setSearchOperator(filterModel.items[0].operator);}
         if(filterModel.quickFilterValues){setQuickFilterValues(filterModel.quickFilterValues);}
     };
 

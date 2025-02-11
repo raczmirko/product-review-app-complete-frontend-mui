@@ -33,6 +33,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useNotification } from '../services/NotificationProvider';
+import { useCallback } from 'react';
 
 const drawerWidth = 240;
 
@@ -116,10 +117,10 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
     setOpen(false);
   };
   
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     showNotification('info', 'INFO: You have been logged out.');
     logOut();
-  };
+  }, [showNotification, logOut]);
 
   useEffect(() => {
     setUsername(localStorage.getItem('username'));
@@ -153,7 +154,7 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
 
       // Clear interval on component unmount
       return () => clearInterval(timer);
-  }, [isLoggedIn, expiryTime, logOut]);
+  }, [isLoggedIn, expiryTime, logOut, handleLogout]);
 
   const sidebarOptions = [
       { icon: <DashboardIcon />, text: 'Dashboard', route: '/dashboard', visibleWithoutLogin: false},

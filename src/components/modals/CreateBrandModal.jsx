@@ -11,10 +11,6 @@ const CreateBrandModal = ({ closeFunction, createEntityFunction, isOpen, setIsOp
     const [country, setCountry] = useState('');
     const [description, setDescription] = useState('');
 
-    const handleCountrySelect = (country) => {
-        setCountry(country)
-    }
-
     const handleClose = () => {
         setIsOpen(false);
         closeFunction();

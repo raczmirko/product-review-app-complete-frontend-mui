@@ -31,7 +31,7 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                 })));
             })
             .catch(error => console.error('Error fetching review aspects:', error));
-    }, []);
+    }, [product.article.category.id]);
 
     const assignScoreToAspect = (aspectId, score) => {
         setReviewAspects(prevAspects => prevAspects.map(aspect =>
@@ -143,6 +143,14 @@ const CreateProductModal = ({ product, closeFunction, isOpen, setIsOpen, createR
                                 <Rating size="large" value={aspect.score} onChange={(e, newValue) => assignScoreToAspect(aspect.id, newValue)} />
                             </Box>
                         ))}
+                    </Box>
+                );
+            default:
+                return (
+                    <Box>
+                        <Typography variant="subtitle2" component="div" gutterBottom>
+                            Please select a valid page.
+                        </Typography>
                     </Box>
                 );
         }

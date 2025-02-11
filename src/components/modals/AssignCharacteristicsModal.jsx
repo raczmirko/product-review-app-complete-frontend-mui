@@ -184,7 +184,7 @@ const AssignCharacteristicsModal = ({ categoryId, closeFunction, isOpen, setIsOp
                 setInheritedCharacteristics(data);
             })
         }
-    }, []);
+    }, [categoryId]);
 
     return (
         <>

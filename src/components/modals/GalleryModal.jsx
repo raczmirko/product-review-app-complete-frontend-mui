@@ -23,7 +23,7 @@ export default function GalleryModal({ product, closeFunction, isOpen, setIsOpen
 
     useEffect(() => {
         setImages(product.productImages);
-    }, [])
+    }, [product.productImages])
 
     const handleClose = () => {
         setIsOpen(false);

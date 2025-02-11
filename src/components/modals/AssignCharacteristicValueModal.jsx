@@ -12,14 +12,11 @@ import CharacteristicService from '../../services/CharacteristicService';
 import ProductCharacteristicValueService from '../../services/ProductCharacteristicValueService';
 import ModalButton from '../buttons/ModalButton';
 import ProductService from '../../services/ProductService';
-import { useNotification } from '../../services/NotificationProvider';
 
 const AssignCharacteristicValueModal = ({ product, closeFunction, isOpen, setIsOpen }) => {
 
-    const [inheritedCharacteristics, setInheritedCharacteristics] = useState([]);
     const [characteristicsAndValues, setCharacteristicsAndValues] = useState([]);
     const [loading, setLoading] = useState(false);
-    const showNotification = useNotification();
 
     const handleClose = () => {
         setIsOpen(false);
@@ -41,7 +38,6 @@ const AssignCharacteristicValueModal = ({ product, closeFunction, isOpen, setIsO
                     };
                 });
 
-                setInheritedCharacteristics(characteristicData);
                 setCharacteristicsAndValues(characteristicsAndValue);
             } catch (error) {
                 console.error('Error fetching data:', error);

@@ -11,10 +11,6 @@ const CreateCategoryModal = ({ closeFunction, createEntityFunction, isOpen, setI
     const [parentCategory, setParentCategory] = useState('');
     const [description, setDescription] = useState('');
 
-    const handleCategorySelect = (category) => {
-        setParentCategory(category)
-    }
-
     const handleClose = () => {
         setIsOpen(false);
         closeFunction();

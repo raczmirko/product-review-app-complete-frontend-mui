@@ -11,7 +11,7 @@ const renderCategoryTree = (categoryTree) => {
 
     const { currentCategory, currentParentCategory, currentSubcategories, subSubcategories, parentParentCategory } = categoryTree;
 
-    {/* Expand the tree until current category and select current category*/}
+    // Expand the tree until current category and select current category
     const selectedItemIDs = [];
     const expandedItemIDs = [];
     if (parentParentCategory) {

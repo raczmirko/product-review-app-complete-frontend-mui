@@ -36,7 +36,7 @@ const ListCharacteristicsModal = ({ articleId, closeFunction, isOpen, setIsOpen 
                 .catch(error => console.error('Error:', error));
             })
         }
-    }, [isOpen]);
+    }, [isOpen, articleId]);
 
     return (
         <Modal

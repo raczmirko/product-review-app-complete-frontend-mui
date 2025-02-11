@@ -14,7 +14,6 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import ArticleService from '../../services/ArticleService';
 import CharacteristicService from '../../services/CharacteristicService';
-import PackagingService from '../../services/PackagingService';
 import ProductService from '../../services/ProductService';
 import ImageUploadButton from '../buttons/ImageUploadButton';
 import ModalButton from '../buttons/ModalButton';
@@ -26,8 +25,6 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
 
     const [article, setArticle] = useState('');
     const [packaging, setPackaging] = useState('');
-    const [packagings, setPackagings] = useState([]);
-    const [inheritedCharacteristics, setInheritedCharacteristics] = useState([]);
     const [characteristicAndValue, setCharacteristicAndValue] = useState([]);
     const [selectedPage, setSelectedPage] = useState('structure');
     const [showPackagingTable, setShowPackagingTable] = useState(false);
@@ -82,11 +79,6 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
     };
 
     useEffect(() => {
-        PackagingService.fetchAvailablePackagings(articleId)
-        .then(data => {
-            setPackagings(data);
-        })
-        .catch(error => console.error('Error fetching available packaging options:', error));
         // If articleId is not null, fetch article
         if (articleId !== undefined) {
             ArticleService.fetchArticleById(articleId)
@@ -94,7 +86,6 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
                 setArticle(data);
                 CharacteristicService.listAssignedCharacteristics(data.category.id)
                 .then(data => {
-                    setInheritedCharacteristics(data);
                     // Manually add a value field to characteristics to then send them to the server later
                     const characteristicsAndValue = data.map(characteristic => ({
                         ...characteristic,
@@ -106,7 +97,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
             })
             .catch(error => console.error('Error fetching article:', error));
         }
-    }, [isOpen]);
+    }, [isOpen, articleId]);
 
     const modifyCharacteristicValue = (characteristicId, value) => {
         setCharacteristicAndValue((prevCharacteristics) => {
@@ -169,7 +160,7 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
                                         <Box key={index} sx={{ position: 'relative' }}>
                                             <img
                                                 src={image}
-                                                alt={`Uploaded image ${index}`}
+                                                alt={`Uploaded ${index}`}
                                                 style={{
                                                     width: 'auto',
                                                     height: '200px',
@@ -222,6 +213,14 @@ const CreateProductModal = ({ articleId, closeFunction, isOpen, setIsOpen, showN
                                 )) : <Box>No characteristics are inherited.</Box>
                             }
                         </Box>
+                    </Box>
+                );
+            default:
+                return (
+                    <Box>
+                        <Typography variant="subtitle2" component="div" gutterBottom>
+                            Please select a valid page.
+                        </Typography>
                     </Box>
                 );
         }
