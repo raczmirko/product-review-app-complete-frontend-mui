@@ -6,13 +6,13 @@ class ProductCharacteristicValueService {
     static async findAllByProductId(productId) {
         const endpoint = `${API_BASE_URL}/product-characteristic-value/${productId}/all`;
         const requestBody = undefined;
-    
+
         const result = await apiRequest(endpoint, 'GET', requestBody);
-    
+
         if (result.success) {
-            return {success: true, data: result.data};
+            return { success: true, data: result.data };
         } else {
-            return {success: false};
+            return { success: false };
         }
     }
 }

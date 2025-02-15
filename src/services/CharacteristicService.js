@@ -8,7 +8,7 @@ class CharacteristicService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/characteristic/${categoryId}/list-characteristic-category-trees`, {headers});
+            const response = await fetch(`${API_BASE_URL}/characteristic/${categoryId}/list-characteristic-category-trees`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch assigned category tree');
             }
@@ -27,7 +27,7 @@ class CharacteristicService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/characteristic/${id}`, {headers});
+            const response = await fetch(`${API_BASE_URL}/characteristic/${id}`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch characteristic.');
             }
@@ -46,7 +46,7 @@ class CharacteristicService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/characteristic/${categoryId}/available-characteristics`, {headers});
+            const response = await fetch(`${API_BASE_URL}/characteristic/${categoryId}/available-characteristics`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch available characteristics');
             }
@@ -65,7 +65,7 @@ class CharacteristicService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/characteristic/${categoryId}/list-inherited-characteristics`, {headers});
+            const response = await fetch(`${API_BASE_URL}/characteristic/${categoryId}/list-inherited-characteristics`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch inherited characteristics');
             }
@@ -84,7 +84,7 @@ class CharacteristicService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/characteristic/${categoryId}/list-assigned-characteristics`, {headers});
+            const response = await fetch(`${API_BASE_URL}/characteristic/${categoryId}/list-assigned-characteristics`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch inherited characteristics');
             }

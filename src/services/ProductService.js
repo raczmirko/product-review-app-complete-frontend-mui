@@ -12,9 +12,9 @@ class ProductService {
         try {
             // Create the product and get the product
             const response = await this.createProduct(article, packaging);
-            
+
             if (response.success === true) {
-                if(images.length > 0){
+                if (images.length > 0) {
                     // Create Product API returns the created product as message
                     ProductImageService.uploadProductImages(response.product.id, images);
                 }
@@ -22,7 +22,7 @@ class ProductService {
             }
 
             return { success: true, message: 'SUCCESS: Product created.' };
-        } 
+        }
         catch (error) {
             console.error('Error creating product:', error);
             return { success: false, message: error.message };
@@ -35,27 +35,27 @@ class ProductService {
             article: article,
             packaging: packaging
         };
-    
+
         const response = await apiRequest(endpoint, 'POST', requestBody);
-    
+
         if (response.success) {
             let message = 'Product successfully created.';
-            return { success: true, product: response.data, message: message};
+            return { success: true, product: response.data, message: message };
         } else {
             return { success: false, message: response.message };
         }
     };
 
-    static async assignProductCharacteristicValue (product, characteristic, value) {
+    static async assignProductCharacteristicValue(product, characteristic, value) {
         const endpoint = `${API_BASE_URL}/product-characteristic-value/create`;
         const requestBody = {
             product: product,
             characteristic: characteristic,
             value: value
         };
-    
+
         const response = await apiRequest(endpoint, 'POST', requestBody);
-    
+
         if (response.success) {
             let message = 'SUCCESS: Characteristics value(s) assigned.';
             return { success: true, productId: response.data, message: message };
@@ -63,11 +63,11 @@ class ProductService {
             return { success: false, message: response.message };
         }
     };
-    
-    static async assignProductCharacteristicValues (product, characteristicsList) {
-        try{
+
+    static async assignProductCharacteristicValues(product, characteristicsList) {
+        try {
             characteristicsList.forEach((characteristic) => {
-                if(characteristic.value !== ''){
+                if (characteristic.value !== '') {
                     let char = characteristic;
                     let value = characteristic.value;
                     this.assignProductCharacteristicValue(product, char, value);

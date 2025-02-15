@@ -8,7 +8,7 @@ class PackagingService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/packaging/all`, {headers});
+            const response = await fetch(`${API_BASE_URL}/packaging/all`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch packagings.');
             }
@@ -31,7 +31,7 @@ class PackagingService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/packaging/${articleId}/available-options`, {headers});
+            const response = await fetch(`${API_BASE_URL}/packaging/${articleId}/available-options`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch available packagings.');
             }

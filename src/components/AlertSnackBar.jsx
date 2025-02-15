@@ -1,12 +1,16 @@
-import { Typography } from '@mui/material';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import * as React from 'react';
+import { Typography } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import * as React from "react";
 
-export default function AlertSnackBar({ alertType, alertText, isOpen, setIsOpen }) {
-
+export default function AlertSnackBar({
+  alertType,
+  alertText,
+  isOpen,
+  setIsOpen,
+}) {
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setIsOpen(false);
@@ -19,9 +23,9 @@ export default function AlertSnackBar({ alertType, alertText, isOpen, setIsOpen 
           onClose={handleClose}
           severity={alertType}
           variant="filled"
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
-          <Typography color='white'>{alertText}</Typography>
+          <Typography color="white">{alertText}</Typography>
         </Alert>
       </Snackbar>
     </div>
