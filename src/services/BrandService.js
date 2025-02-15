@@ -8,7 +8,7 @@ class BrandService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/brand/all`, {headers});
+            const response = await fetch(`${API_BASE_URL}/brand/all`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch brands');
             }

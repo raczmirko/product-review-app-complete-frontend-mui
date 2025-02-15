@@ -64,7 +64,7 @@ const renderCategoryTree = (categoryTree) => {
                             ))}
                         </TreeItem>
                     </TreeItem>
-                    
+
                 )}
                 {/* Render from currentCategory */}
                 {!parentParentCategory && !currentParentCategory && (

@@ -8,7 +8,7 @@ class CategoryService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/category/all`, {headers});
+            const response = await fetch(`${API_BASE_URL}/category/all`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch categories');
             }
@@ -31,7 +31,7 @@ class CategoryService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/category/available-parent-categories`, {headers});
+            const response = await fetch(`${API_BASE_URL}/category/available-parent-categories`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch available parent categories');
             }
@@ -54,7 +54,7 @@ class CategoryService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/category/leaf-categories`, {headers});
+            const response = await fetch(`${API_BASE_URL}/category/leaf-categories`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch leaf categories');
             }
@@ -77,7 +77,7 @@ class CategoryService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/category/${id}`, {headers});
+            const response = await fetch(`${API_BASE_URL}/category/${id}`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch category');
             } else {
@@ -97,7 +97,7 @@ class CategoryService {
             'Content-Type': 'application/json'
         };
         try {
-            const response = await fetch(`${API_BASE_URL}/category-hierarchy/${id}`, {headers});
+            const response = await fetch(`${API_BASE_URL}/category-hierarchy/${id}`, { headers });
             if (!response.ok) {
                 throw new Error('Failed to fetch category tree');
             }
