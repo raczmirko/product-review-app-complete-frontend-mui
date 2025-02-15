@@ -1,4 +1,6 @@
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -170,7 +172,21 @@ export default function SignUp() {
                             <Grid item xs={12}>
                                 <CountrySelector selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} isRequired='true'/>
                             </Grid>
-                            
+                            <Grid item xs={12}>
+                                <Accordion sx={{ boxShadow: 'none', bgcolor: 'transparent' }}>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="password-hint-content"
+                                        id="password-hint-header"
+                                        sx={{ fontSize: 12, color: 'gray' }}
+                                    >
+                                        Need help with password requirements?
+                                    </AccordionSummary>
+                                    <AccordionDetails sx={{ fontSize: 12, color: 'gray' }}>
+                                        Password must contain at least one special character, one uppercase letter, and one number.
+                                    </AccordionDetails>
+                                </Accordion>
+                            </Grid>
                         </Grid>
                         <Button
                         type="submit"
