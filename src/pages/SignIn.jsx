@@ -1,4 +1,6 @@
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -6,6 +8,9 @@ import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
+import IconButton from '@mui/material/IconButton';
+import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -29,6 +34,9 @@ const SignInSide = ({ onLogin, isLoggedIn }) => {
   const [rememberMe, setRememberMe] = useState();
   const [isUsernameLoaded, setIsUsernameLoaded] = useState(false);
   const showNotification = useNotification();
+  const [showPassword, setShowPassword] = React.useState(false);
+  
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -152,17 +160,27 @@ const SignInSide = ({ onLogin, isLoggedIn }) => {
                     onChange={(e) => setUsername(e.target.value)}
                     value={username}
                   />
-                  <TextField
-                    margin="normal"
-                    required
+                  <Input
                     fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
+                    required
                     id="password"
-                    autoFocus={username !== ""}
-                    autoComplete="current-password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Password"
                     onChange={(e) => setPassword(e.target.value)}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleClickShowPassword}>
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    sx={{
+                      border: "1px solid rgba(0, 0, 0, 0.23)",
+                      borderRadius: "5px",
+                      padding: "10px",
+                      width: "100%",
+                    }}
                   />
                   <FormControlLabel
                     control={<Checkbox checked={rememberMe} color="primary" />}
