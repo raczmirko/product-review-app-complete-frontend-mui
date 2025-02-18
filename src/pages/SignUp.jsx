@@ -1,5 +1,7 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -7,6 +9,9 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
+import IconButton from '@mui/material/IconButton';
+import Input from '@mui/material/Input';
+import InputAdornment from '@mui/material/InputAdornment';
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
@@ -30,6 +35,9 @@ export default function SignUp() {
   const [selectedCountry, setSelectedCountry] = useState("");
   const navigate = useNavigate();
   const showNotification = useNotification();
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const getNotificationTextByStatusCode = (code) => {
     let text = code + ": An error occurred, please try again later!";
@@ -177,25 +185,51 @@ export default function SignUp() {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    required
+                  <Input
                     fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
+                    required
                     id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Password"
                     onChange={(e) => setPassword(e.target.value)}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleClickShowPassword}>
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    sx={{
+                      border: "1px solid rgba(0, 0, 0, 0.23)",
+                      borderRadius: "5px",
+                      padding: "10px",
+                      width: "100%",
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    required
+                  <Input
                     fullWidth
-                    name="passwordAgain"
-                    label="Password Again"
-                    type="password"
+                    required
                     id="passwordAgain"
+                    name="passwordAgain"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Confirm Password"
                     onChange={(e) => setPasswordAgain(e.target.value)}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleClickShowPassword}>
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    sx={{
+                      border: "1px solid rgba(0, 0, 0, 0.23)",
+                      borderRadius: "5px",
+                      padding: "10px",
+                      width: "100%",
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
