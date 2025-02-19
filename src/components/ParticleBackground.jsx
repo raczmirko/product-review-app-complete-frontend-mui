@@ -1,22 +1,14 @@
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 const ParticleBackground = () => {
-  const [init, setInit] = useState(false);
-
   // this should be run only once per application lifetime
   useEffect(() => {
     initParticlesEngine(async (engine) => {
       await loadSlim(engine);
-    }).then(() => {
-      setInit(true);
     });
   }, []);
-
-  const particlesLoaded = (container) => {
-    console.log(container);
-  };
 
   const options = useMemo(
     () => ({
@@ -89,19 +81,21 @@ const ParticleBackground = () => {
     []
   );
 
-  if (init) {
-    return (
-      <div className="particle-background">
-        <Particles
-          id="tsparticles"
-          particlesLoaded={particlesLoaded}
-          options={options}
-        />
-      </div>
-    );
-  }
-
-  return <></>;
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "#121212",
+        zIndex: -1,
+      }}
+    >
+      <Particles id="tsparticles" options={options} />
+    </div>
+  );
 };
 
 export default ParticleBackground;
