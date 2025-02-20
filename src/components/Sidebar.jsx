@@ -31,9 +31,9 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNotification } from "../services/NotificationProvider";
-import { useCallback } from "react";
+import { getUserRoles } from "../util/jwtUtil";
 
 const drawerWidth = 240;
 
@@ -166,74 +166,99 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
       text: "Dashboard",
       route: "/dashboard",
       visibleWithoutLogin: false,
+      roles: ["ADMIN", "USER"],
     },
     {
       icon: <LoginIcon />,
       text: "Login",
       route: "/login",
       visibleWithoutLogin: true,
+      roles: ["ADMIN", "USER"],
     },
     {
       icon: <PersonAddIcon />,
       text: "Register",
       route: "/register",
       visibleWithoutLogin: true,
+      roles: ["ADMIN", "USER"],
     },
     {
       icon: <StorefrontIcon />,
       text: "Brands",
       route: "/brands",
       visibleWithoutLogin: false,
+      roles: ["ADMIN"],
     },
     {
       icon: <PublicIcon />,
       text: "Countries",
       route: "/countries",
       visibleWithoutLogin: false,
+      roles: ["ADMIN"],
     },
     {
       icon: <CategoryIcon />,
       text: "Categories",
       route: "/categories",
       visibleWithoutLogin: false,
+      roles: ["ADMIN"],
     },
     {
       icon: <CharacteristicsIcon />,
       text: "Characteristics",
       route: "/characteristics",
       visibleWithoutLogin: false,
+      roles: ["ADMIN"],
     },
     {
       icon: <ArticleIcon />,
       text: "Articles",
       route: "/articles",
       visibleWithoutLogin: false,
+      roles: ["ADMIN"],
     },
     {
       icon: <InventoryIcon />,
       text: "Packagings",
       route: "/packagings",
       visibleWithoutLogin: false,
+      roles: ["ADMIN"],
     },
     {
       icon: <QuizIcon />,
       text: "Aspects",
       route: "/aspects",
       visibleWithoutLogin: false,
+      roles: ["ADMIN"],
     },
     {
       icon: <ProductIcon />,
       text: "Products",
       route: "/products",
       visibleWithoutLogin: false,
+      roles: ["ADMIN", "USER"],
     },
     {
       icon: <RateReviewIcon />,
       text: "Reviews",
       route: "/reviews",
       visibleWithoutLogin: false,
+      roles: ["ADMIN", "USER"],
     },
   ];
+
+  // Function to filter menu options based on user roles
+  const getVisibleSidebarOptions = () => {
+    const userRoles = getUserRoles();
+    const isLoggedIn = !!localStorage.getItem("token"); // Check if user is logged in
+
+    return sidebarOptions.filter((option) => {
+      if (!isLoggedIn && option.visibleWithoutLogin) return true; // Show public options
+      return userRoles.some((role) => option.roles.includes(role)); // Match roles
+    });
+  };
+
+  const visibleOptions = getVisibleSidebarOptions();
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -287,40 +312,32 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
 
         <Divider />
         <List>
-          {sidebarOptions.map((option, index) => (
-            <ListItem
-              key={option.text}
-              disablePadding
-              sx={{ display: "block" }}
-            >
-              {(isLoggedIn || (!isLoggedIn && option.visibleWithoutLogin)) && (
-                <ListItemButton
-                  href={option.route}
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <Tooltip title={option.text} placement="right">
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {option.icon}
-                    </ListItemIcon>
-                  </Tooltip>
-                  <ListItemText
-                    primary={option.text}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-              )}
+        {visibleOptions.map((option) => (
+            <ListItem key={option.text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                href={option.route}
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <Tooltip title={option.text} placement="right">
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {option.icon}
+                  </ListItemIcon>
+                </Tooltip>
+                <ListItemText primary={option.text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
             </ListItem>
           ))}
+          {/* Logout button */}
           <Tooltip title="Logout" placement="right">
             <ListItem key={"Logout"} disablePadding sx={{ display: "block" }}>
               {isLoggedIn && (
