@@ -5,11 +5,14 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ProductIcon from "@mui/icons-material/EmojiSymbols";
+import HelpIcon from "@mui/icons-material/Help";
+import InfoIcon from "@mui/icons-material/Info";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
 import PublicIcon from "@mui/icons-material/Public";
 import QuizIcon from "@mui/icons-material/Quiz";
 import RateReviewIcon from "@mui/icons-material/RateReview";
@@ -162,6 +165,13 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
 
   const sidebarOptions = [
     {
+      icon: <InfoIcon />,
+      text: "About",
+      route: "/",
+      visibleWithoutLogin: true,
+      roles: ["ADMIN", "USER"],
+    },
+    {
       icon: <DashboardIcon />,
       text: "Dashboard",
       route: "/dashboard",
@@ -245,6 +255,20 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
       visibleWithoutLogin: false,
       roles: ["ADMIN", "USER"],
     },
+    {
+      icon: <HelpIcon />,
+      text: "Terms & Conditions",
+      route: "/terms",
+      visibleWithoutLogin: true,
+      roles: ["ADMIN", "USER"],
+    },
+    {
+      icon: <PrivacyTipIcon />,
+      text: "Privacy Policy",
+      route: "/privacy",
+      visibleWithoutLogin: true,
+      roles: ["ADMIN", "USER"],
+    },
   ];
 
   // Function to filter menu options based on user roles
@@ -312,8 +336,12 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
 
         <Divider />
         <List>
-        {visibleOptions.map((option) => (
-            <ListItem key={option.text} disablePadding sx={{ display: "block" }}>
+          {visibleOptions.map((option) => (
+            <ListItem
+              key={option.text}
+              disablePadding
+              sx={{ display: "block" }}
+            >
               <ListItemButton
                 href={option.route}
                 sx={{
@@ -333,7 +361,10 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
                     {option.icon}
                   </ListItemIcon>
                 </Tooltip>
-                <ListItemText primary={option.text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary={option.text}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
