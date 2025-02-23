@@ -1,23 +1,22 @@
-import React from "react";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import WebIcon from "@mui/icons-material/Web";
 import {
-  Container,
-  Typography,
   Accordion,
-  AccordionSummary,
   AccordionDetails,
+  AccordionSummary,
+  Box,
   Button,
   Card,
   CardContent,
-  Box,
-  Stack,
+  Container,
   Grid,
-  Paper,
+  Stack,
+  Typography
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import WebIcon from "@mui/icons-material/Web";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import React from "react";
 
 export default function About() {
   return (

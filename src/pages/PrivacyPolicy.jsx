@@ -1,5 +1,5 @@
+import { Container, Grid, Typography } from "@mui/material";
 import React from "react";
-import { Container, Typography, Box, Grid } from "@mui/material";
 
 export const PrivacyPolicy = () => (
   <Grid
