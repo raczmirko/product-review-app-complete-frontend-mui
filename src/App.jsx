@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ParticleBackground from "./components/ParticleBackground";
 import Sidebar from "./components/Sidebar";
+import About from "./pages/About";
 import Articles from "./pages/Articles";
 import Aspects from "./pages/Aspects";
 import Brands from "./pages/Brands";
@@ -13,10 +14,12 @@ import Characteristics from "./pages/Characteristics";
 import Countries from "./pages/Countries";
 import Dashboard from "./pages/Dashboard";
 import Packagings from "./pages/Packagings";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Products from "./pages/Products";
 import Reviews from "./pages/Reviews";
 import SignInSide from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import TermsConditions from "./pages/TermsConditions";
 import { NotificationProvider } from "./services/NotificationProvider";
 
 const darkTheme = createTheme({
@@ -94,6 +97,14 @@ const App = () => {
           logOut={logOut}
         />
         <Routes>
+          <Route
+            path="/"
+            element={
+              <div>
+                <About />
+              </div>
+            }
+          />
           <Route
             path="/dashboard"
             element={
@@ -190,6 +201,22 @@ const App = () => {
             element={
               <div>
                 <Reviews />
+              </div>
+            }
+          />
+          <Route
+            path="/terms"
+            element={
+              <div>
+                <TermsConditions />
+              </div>
+            }
+          />
+          <Route
+            path="/privacy"
+            element={
+              <div>
+                <PrivacyPolicy />
               </div>
             }
           />
