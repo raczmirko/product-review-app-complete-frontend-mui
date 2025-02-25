@@ -11,6 +11,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
+import PeopleIcon from '@mui/icons-material/People';
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
 import PublicIcon from "@mui/icons-material/Public";
@@ -191,6 +192,13 @@ export default function MiniDrawer({ isLoggedIn, expiryTime, logOut }) {
       route: "/register",
       visibleWithoutLogin: true,
       roles: ["ADMIN", "USER"],
+    },
+    {
+      icon: <PeopleIcon />,
+      text: "Users",
+      route: "/users",
+      visibleWithoutLogin: false,
+      roles: ["ADMIN"],
     },
     {
       icon: <StorefrontIcon />,
