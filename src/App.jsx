@@ -20,6 +20,7 @@ import Reviews from "./pages/Reviews";
 import SignInSide from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import TermsConditions from "./pages/TermsConditions";
+import Users from "./pages/Users";
 import { NotificationProvider } from "./services/NotificationProvider";
 
 const darkTheme = createTheme({
@@ -129,6 +130,17 @@ const App = () => {
                   <ParticleBackground />
                 </Container>
                 <SignUp />
+              </div>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <div>
+                <Container sx={{ position: "absolute", zIndex: -1 }}>
+                  <ParticleBackground />
+                </Container>
+                <Users />
               </div>
             }
           />

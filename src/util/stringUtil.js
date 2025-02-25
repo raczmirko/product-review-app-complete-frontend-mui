@@ -36,5 +36,8 @@ export const getLoginErrorByStatus = (statusCode) => {
     if (statusCode === 404) {
         text = statusCode + ": This user does not exist.";
     }
+    if (statusCode === 405) {
+        text = statusCode + ": User is inactive and must be activated by an admin.";
+    }
     return text;
 }
