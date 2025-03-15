@@ -180,10 +180,10 @@ const AssignCharacteristicsModal = ({
     setRight([]);
     // Fetch category tree when the component mounts
     if (categoryId !== undefined) {
-      CategoryService.getCategory(categoryId)
+      CharacteristicService.listAssignedCharacteristics(categoryId)
         .then((data) => {
           setCategory(data);
-          setRight(data.characteristics);
+          setRight(data);
         })
         .catch((error) => console.error("Error:", error));
       CharacteristicService.fetchAvailableCharacteristics(categoryId).then(
