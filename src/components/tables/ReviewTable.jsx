@@ -119,10 +119,14 @@ export default function ReviewTable() {
     setLoading(true);
 
     let queryParams = `?pageSize=${pageSize}&pageNumber=${pageNumber}&orderByColumn=${orderByColumn}&orderByDirection=${orderByDirection}`;
-    if (searchValue) queryParams += `&searchText=${searchValue}`;
-    if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
-    if (quickFilterValues)
+    
+    // Only use quick filter if it exists, otherwise use regular filters
+    if (quickFilterValues) {
       queryParams += `&quickFilterValues=${quickFilterValues}`;
+    } else {
+      if (searchValue) queryParams += `&searchText=${searchValue}`;
+      if (searchColumn) queryParams += `&searchColumn=${searchColumn}`;
+    }
 
     const endpoint = `${API_BASE_URL}/review-head/search${queryParams}`;
     const requestBody = undefined;
@@ -440,21 +444,25 @@ export default function ReviewTable() {
   //  --- Pagination, filtering and sorting-related methods --- //
 
   const handleFilterChange = (filterModel) => {
-    setFilterModel(filterModel);
-    if (filterModel.items[0]?.value) {
-      setSearchValue(filterModel.items[0].value);
-    } else {
-      // If filterModel's value doesn't exist (thus not filtering) set the filter to an empty string
-      // To trigger the table refresh mechanism and display all records
-      setSearchValue("");
-    }
-    if (filterModel.items[0]?.field) {
-      setSearchColumn(filterModel.items[0].field);
-    } else {
-      setSearchColumn("");
-    }
     if (filterModel.quickFilterValues) {
+      // If quick filter is being used, clear the default filter model
+      setFilterModel({ items: [] });
+      setSearchValue("");
+      setSearchColumn("");
       setQuickFilterValues(filterModel.quickFilterValues);
+    } else {
+      setFilterModel(filterModel);
+      if (filterModel.items[0]?.value) {
+        setSearchValue(filterModel.items[0].value);
+      } else {
+        setSearchValue("");
+      }
+      if (filterModel.items[0]?.field) {
+        setSearchColumn(filterModel.items[0].field);
+      } else {
+        setSearchColumn("");
+      }
+      setQuickFilterValues("");
     }
   };
 
