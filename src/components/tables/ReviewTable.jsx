@@ -132,7 +132,7 @@ export default function ReviewTable() {
     if (result.success) {
       const reviewsWithIds = generateUniqueIds(result.data.content);
       setReviews(reviewsWithIds);
-      setTotalElements(result.data.totalElements);
+      setTotalElements(result.data.page.totalElements);
       setLoading(false);
     } else {
       showNotification("error", result.message);

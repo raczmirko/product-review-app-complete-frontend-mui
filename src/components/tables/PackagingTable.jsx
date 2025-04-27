@@ -92,7 +92,7 @@ export default function PackagingTable({ defPageSize, defDensity }) {
 
     if (result.success) {
       setPackagings(result.data.content);
-      setTotalElements(result.data.totalElements);
+      setTotalElements(result.data.page.totalElements);
       setLoading(false);
     } else {
       showNotification("error", result.message);

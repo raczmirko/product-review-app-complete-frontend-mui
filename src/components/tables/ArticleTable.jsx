@@ -123,7 +123,7 @@ export default function ArticleTable() {
 
     if (result.success) {
       setArticles(result.data.content);
-      setTotalElements(result.data.totalElements);
+      setTotalElements(result.data.page.totalElements);
       setLoading(false);
     } else {
       showNotification("error", result.message);

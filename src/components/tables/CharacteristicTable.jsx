@@ -98,7 +98,7 @@ export default function CharacteristicTable() {
 
     if (result.success) {
       setCharacteristics(result.data.content);
-      setTotalElements(result.data.totalElements);
+      setTotalElements(result.data.page.totalElements);
       setLoading(false);
     } else {
       showNotification("error", result.message);

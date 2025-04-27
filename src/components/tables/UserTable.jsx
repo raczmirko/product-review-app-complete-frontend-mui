@@ -96,7 +96,7 @@ export default function UserTable() {
           id: user.username,
         }))
       );
-      setTotalElements(result.data.totalElements);
+      setTotalElements(result.data.page.totalElements);
       setLoading(false);
     } else {
       showNotification("error", result.message);

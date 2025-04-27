@@ -104,7 +104,7 @@ export default function AspectTable() {
 
     if (result.success) {
       setAspects(result.data.content);
-      setTotalElements(result.data.totalElements);
+      setTotalElements(result.data.page.totalElements);
       setLoading(false);
     } else {
       showNotification("error", result.message);
