@@ -219,6 +219,10 @@ export default function CategoryTable() {
 
     if (result.success) {
       searchEntities();
+      // Also fetch updated parent categories
+      CategoryService.fetchAvailableParentCategories()
+        .then((data) => setAvailableParentCategories(data))
+        .catch((error) => console.error("Error:", error));
       showNotification("success", "SUCCESS: Category created.");
     } else {
       showNotification("error", result.message);
