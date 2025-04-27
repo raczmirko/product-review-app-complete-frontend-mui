@@ -205,7 +205,7 @@ export default function ProductTable() {
     const response = await apiRequest(endpoint, "POST", requestBody);
 
     if (response.success) {
-      showNotification("success", "SUCCESS: Product created.");
+      showNotification("success", "SUCCESS: Review created.");
       return { success: true, product: response.data };
     } else {
       showNotification("error", response.message);
