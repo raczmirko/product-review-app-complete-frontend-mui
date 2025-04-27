@@ -119,7 +119,7 @@ export default function CategoryTable() {
 
     if (result.success) {
       setCategories(result.data.content);
-      setTotalElements(result.data.totalElements);
+      setTotalElements(result.data.page.totalElements);
       setLoading(false);
     } else {
       showNotification("error", result.message);

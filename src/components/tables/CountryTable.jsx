@@ -97,7 +97,7 @@ export default function CountriesTable() {
           id: country.countryCode,
         }))
       );
-      setTotalElements(result.data.totalElements);
+      setTotalElements(result.data.page.totalElements);
       setLoading(false);
     } else {
       showNotification("error", result.message);

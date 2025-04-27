@@ -104,7 +104,7 @@ export default function BrandTable() {
 
     if (result.success) {
       setBrands(result.data.content);
-      setTotalElements(result.data.totalElements);
+      setTotalElements(result.data.page.totalElements);
       setLoading(false);
     } else {
       showNotification("error", result.message);
